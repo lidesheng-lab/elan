@@ -1,0 +1,54 @@
+name: Publish ÉLAN
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '14 0 * * *'
+
+concurrency:
+  group: elan-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/cache@v4
+        with:
+          path: public/media
+          key: elan-media-v1-${{ github.run_id }}
+          restore-keys: elan-media-v1-
+      - run: npm ci --no-audit --no-fund
+      - run: npm run sync
+      - run: npm run build
+      - name: Verify Pages bundle
+        run: |
+          test -s dist/index.html
+          test -s dist/data/archive.json
+          test "$(du -sb dist | cut -f1)" -lt 1000000000
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - name: Publish ÉLAN
+        id: publish
+        uses: actions/deploy-pages@v4

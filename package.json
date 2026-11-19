@@ -1,0 +1,9 @@
+{
+  "name": "elan-pages",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": { "build": "vite build", "sync": "python3 scripts/sync_archive.py" },
+  "dependencies": { "client-zip": "2.5.1", "react": "19.2.6", "react-dom": "19.2.6" },
+  "devDependencies": { "vite": "8.0.13" }
+}

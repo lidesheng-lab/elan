@@ -7,7 +7,8 @@ if(!inputPath) throw new Error("Supply a JSON array of verified fashion design c
 const publicKey=readFileSync(resolve(__dirname,"../history-public.pem"));
 const entries=JSON.parse(readFileSync(inputPath,"utf8"));
 const feed=existsSync(outputPath) ? JSON.parse(readFileSync(outputPath,"utf8")) : [];
-const known=new Set(feed.map(entry=>entry.slug));
+const entriesBySlug=new Map(feed.map(entry=>[entry.slug,entry]));
+const submitted=new Set();
 const text=value=>typeof value==="string" && value.trim().length>0;
 for(const item of entries) {
   const {id:slug,kind,title,category,organizer,summary,date,deadline,source}=item;
@@ -17,7 +18,7 @@ for(const item of entries) {
       url.protocol!=="https:" || url.username || url.password ||
       (kind==="recruit" && !/^20\d{2}-\d{2}-\d{2}$/.test(deadline)) ||
       (kind==="award" && !/^20\d{2}(?:-\d{2}(?:-\d{2})?)?$/.test(date))) throw new Error("Invalid contest "+slug);
-  if(known.has(slug)) continue;
+  if(submitted.has(slug)) throw new Error("Duplicate input contest "+slug);
   const id=createHash("sha256").update("contest:"+slug).digest("hex");
   const secret=randomBytes(32);
   const nonce=randomBytes(12);
@@ -26,7 +27,7 @@ for(const item of entries) {
   const body=Buffer.concat([cipher.update(JSON.stringify(item),"utf8"),cipher.final()]);
   const key=publicEncrypt({key:publicKey,padding:constants.RSA_PKCS1_OAEP_PADDING,oaepHash:"sha256"},secret);
   const encode=buffer=>buffer.toString("base64url");
-  feed.push({id,slug,nonce:encode(nonce),tag:encode(cipher.getAuthTag()),key:encode(key),body:encode(body)});
-  known.add(slug);
+  entriesBySlug.set(slug,{id,slug,nonce:encode(nonce),tag:encode(cipher.getAuthTag()),key:encode(key),body:encode(body)});
+  submitted.add(slug);
 }
-writeFileSync(outputPath,JSON.stringify(feed)+"\n");
+writeFileSync(outputPath,JSON.stringify([...entriesBySlug.values()])+"\n");

@@ -1,0 +1,490 @@
+{
+  "study": {
+    "slug": "chanel-spring-2027",
+    "designer": "Chanel",
+    "date": "2026-10-05",
+    "season": "2027 春夏女装 · 巴黎时装周",
+    "title": "松量与抽褶如何改变粗花呢",
+    "summary": "Matthieu Blazy 的 2027 春夏女装在巴黎发布。品牌资料明确提到松弛剪裁，以及带抽褶结构的粗花呢。",
+    "fabric": "官方明确提到粗花呢的表面处理。打样可在同一块试样里对照平整与抽褶区域，测试厚度及边缘是否起翘。",
+    "color": "可用暖白、墨黑与低饱和灰建立色卡，便于比较同类面料的纹理层次。这组色卡为打样提案。",
+    "silhouette": "品牌强调衣身的自由度。试样可在保留肩线结构的同时，为胸背和袖窿留出活动空间。",
+    "techniques": [
+      "粗花呢先试宽间距抽褶，观察回弹和厚度。",
+      "拼接处保留一段平直边，比较平整与抽褶部分的支撑。"
+    ],
+    "tags": [
+      "粗花呢",
+      "解构剪裁",
+      "低饱和"
+    ],
+    "palette": [
+      {
+        "name": "暖白",
+        "hex": "#F1EBDF"
+      },
+      {
+        "name": "墨黑",
+        "hex": "#232229"
+      },
+      {
+        "name": "雾灰",
+        "hex": "#929099"
+      }
+    ],
+    "sources": [
+      {
+        "title": "FHCM · 巴黎时装周官方图集",
+        "url": "https://www.fhcm.paris/en/collection/chanel-womenswear-springsummer-2027"
+      },
+      {
+        "title": "Chanel 官方系列页",
+        "url": "https://www.chanel.com/us/fashion/collection/spring-summer-2027/"
+      }
+    ],
+    "images": [
+      {
+        "label": "秀场造型 01",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/001_245.jpg?itok=sAuA5QYd",
+        "sourceUrl": "https://www.fhcm.paris/en/collection/chanel-womenswear-springsummer-2027",
+        "credit": "FHCM · CHANEL"
+      },
+      {
+        "label": "秀场造型 02",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/002_253.jpg?itok=-PL7jZUm",
+        "sourceUrl": "https://www.fhcm.paris/en/collection/chanel-womenswear-springsummer-2027",
+        "credit": "FHCM · CHANEL"
+      },
+      {
+        "label": "秀场造型 03",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/003_254.jpg?itok=9nVQSZcS",
+        "sourceUrl": "https://www.fhcm.paris/en/collection/chanel-womenswear-springsummer-2027",
+        "credit": "FHCM · CHANEL"
+      }
+    ]
+  },
+  "runway": {
+    "sourceUrl": "https://www.fhcm.paris/en/collection/chanel-womenswear-springsummer-2027",
+    "credit": "FHCM · CHANEL",
+    "total": 83,
+    "complete": true,
+    "kind": "lookbook",
+    "images": [
+      {
+        "number": 1,
+        "label": "秀场造型 01",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/001_245.jpg?itok=sAuA5QYd"
+      },
+      {
+        "number": 2,
+        "label": "秀场造型 02",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/002_253.jpg?itok=-PL7jZUm"
+      },
+      {
+        "number": 3,
+        "label": "秀场造型 03",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/003_254.jpg?itok=9nVQSZcS"
+      },
+      {
+        "number": 4,
+        "label": "秀场造型 04",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/004_254.jpg?itok=5CZ1QKEm"
+      },
+      {
+        "number": 5,
+        "label": "秀场造型 05",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/005_254.jpg?itok=OMhakGxf"
+      },
+      {
+        "number": 6,
+        "label": "秀场造型 06",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/006_253.jpg?itok=mHLn7ULq"
+      },
+      {
+        "number": 7,
+        "label": "秀场造型 07",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/007_253.jpg?itok=UbSIigic"
+      },
+      {
+        "number": 8,
+        "label": "秀场造型 08",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/008_252.jpg?itok=6dChdJg7"
+      },
+      {
+        "number": 9,
+        "label": "秀场造型 09",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/009_255.jpg?itok=jV06BiIZ"
+      },
+      {
+        "number": 10,
+        "label": "秀场造型 10",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/010_241.jpg?itok=xCxVOS1b"
+      },
+      {
+        "number": 11,
+        "label": "秀场造型 11",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/011_238.jpg?itok=BcJLG_Nm"
+      },
+      {
+        "number": 12,
+        "label": "秀场造型 12",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/012_237.jpg?itok=j9QDGSaj"
+      },
+      {
+        "number": 13,
+        "label": "秀场造型 13",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/013_238.jpg?itok=YgMt22ng"
+      },
+      {
+        "number": 14,
+        "label": "秀场造型 14",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/014_239.jpg?itok=GEU0yfKl"
+      },
+      {
+        "number": 15,
+        "label": "秀场造型 15",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/015_234.jpg?itok=f3SDBBXH"
+      },
+      {
+        "number": 16,
+        "label": "秀场造型 16",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/016_234.jpg?itok=JsBr3-7o"
+      },
+      {
+        "number": 17,
+        "label": "秀场造型 17",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/017_231.jpg?itok=fM4uB-kJ"
+      },
+      {
+        "number": 18,
+        "label": "秀场造型 18",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/018_230.jpg?itok=utJVAmM7"
+      },
+      {
+        "number": 19,
+        "label": "秀场造型 19",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/019_231.jpg?itok=XxwTGcaP"
+      },
+      {
+        "number": 20,
+        "label": "秀场造型 20",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/020_224.jpg?itok=ybXD_7cl"
+      },
+      {
+        "number": 21,
+        "label": "秀场造型 21",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/021_215.jpg?itok=452R1iY2"
+      },
+      {
+        "number": 22,
+        "label": "秀场造型 22",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/022_213.jpg?itok=lQamTkhd"
+      },
+      {
+        "number": 23,
+        "label": "秀场造型 23",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/023_209.jpg?itok=ByFxfYIA"
+      },
+      {
+        "number": 24,
+        "label": "秀场造型 24",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/024_207.jpg?itok=0gWkKFgY"
+      },
+      {
+        "number": 25,
+        "label": "秀场造型 25",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/025_201.jpg?itok=l8_m7o7c"
+      },
+      {
+        "number": 26,
+        "label": "秀场造型 26",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/026_190.jpg?itok=X1FUw0_r"
+      },
+      {
+        "number": 27,
+        "label": "秀场造型 27",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/027_182.jpg?itok=KmgKzRxI"
+      },
+      {
+        "number": 28,
+        "label": "秀场造型 28",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/028_174.jpg?itok=U__zlKvp"
+      },
+      {
+        "number": 29,
+        "label": "秀场造型 29",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/029_167.jpg?itok=btjnczuW"
+      },
+      {
+        "number": 30,
+        "label": "秀场造型 30",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/030_161.jpg?itok=-HjVOkG4"
+      },
+      {
+        "number": 31,
+        "label": "秀场造型 31",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/031_139.jpg?itok=7JvpTKCc"
+      },
+      {
+        "number": 32,
+        "label": "秀场造型 32",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/032_135.jpg?itok=VgKFtMEY"
+      },
+      {
+        "number": 33,
+        "label": "秀场造型 33",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/033_123.jpg?itok=UI29aZVO"
+      },
+      {
+        "number": 34,
+        "label": "秀场造型 34",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/034_116.jpg?itok=JvifEr9r"
+      },
+      {
+        "number": 35,
+        "label": "秀场造型 35",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/035_112.jpg?itok=-wAPgOTt"
+      },
+      {
+        "number": 36,
+        "label": "秀场造型 36",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/036_109.jpg?itok=8SmNY8fp"
+      },
+      {
+        "number": 37,
+        "label": "秀场造型 37",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/037_102.jpg?itok=HWnVcmIn"
+      },
+      {
+        "number": 38,
+        "label": "秀场造型 38",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/038_98.jpg?itok=TnQLzhv_"
+      },
+      {
+        "number": 39,
+        "label": "秀场造型 39",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/039_97.jpg?itok=ujzpiU36"
+      },
+      {
+        "number": 40,
+        "label": "秀场造型 40",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/040_86.jpg?itok=pJjKkAst"
+      },
+      {
+        "number": 41,
+        "label": "秀场造型 41",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/041_78.jpg?itok=0CDJhL9a"
+      },
+      {
+        "number": 42,
+        "label": "秀场造型 42",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/042_76.jpg?itok=ZkfbojQT"
+      },
+      {
+        "number": 43,
+        "label": "秀场造型 43",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/043_76.jpg?itok=L8FysIIC"
+      },
+      {
+        "number": 44,
+        "label": "秀场造型 44",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/044_72.jpg?itok=W_k0EZSf"
+      },
+      {
+        "number": 45,
+        "label": "秀场造型 45",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/045_71.jpg?itok=E57JfRrG"
+      },
+      {
+        "number": 46,
+        "label": "秀场造型 46",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/046_64.jpg?itok=Zp07O5uX"
+      },
+      {
+        "number": 47,
+        "label": "秀场造型 47",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/047_57.jpg?itok=dJqTeY0g"
+      },
+      {
+        "number": 48,
+        "label": "秀场造型 48",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/048_55.jpg?itok=Ix4aaqvR"
+      },
+      {
+        "number": 49,
+        "label": "秀场造型 49",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/049_53.jpg?itok=3s8Uq1T4"
+      },
+      {
+        "number": 50,
+        "label": "秀场造型 50",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/050_50.jpg?itok=_3s3eq9v"
+      },
+      {
+        "number": 51,
+        "label": "秀场造型 51",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/051_42.jpg?itok=K_eP7PYw"
+      },
+      {
+        "number": 52,
+        "label": "秀场造型 52",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/052_38.jpg?itok=gxVhbKW-"
+      },
+      {
+        "number": 53,
+        "label": "秀场造型 53",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/053_36.jpg?itok=iF8T5JSP"
+      },
+      {
+        "number": 54,
+        "label": "秀场造型 54",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/054_36.jpg?itok=5ZX0WUwS"
+      },
+      {
+        "number": 55,
+        "label": "秀场造型 55",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/055_35.jpg?itok=EbyD4AjB"
+      },
+      {
+        "number": 56,
+        "label": "秀场造型 56",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/056_34.jpg?itok=YU9AKIqx"
+      },
+      {
+        "number": 57,
+        "label": "秀场造型 57",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/057_29.jpg?itok=wSUtjha5"
+      },
+      {
+        "number": 58,
+        "label": "秀场造型 58",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/058_27.jpg?itok=C4f3td0-"
+      },
+      {
+        "number": 59,
+        "label": "秀场造型 59",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/059_26.jpg?itok=cuLwUJPM"
+      },
+      {
+        "number": 60,
+        "label": "秀场造型 60",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/060_26.jpg?itok=W57LeWSJ"
+      },
+      {
+        "number": 61,
+        "label": "秀场造型 61",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/061_24.jpg?itok=qkLvosXD"
+      },
+      {
+        "number": 62,
+        "label": "秀场造型 62",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/062_23.jpg?itok=OYcbv2fa"
+      },
+      {
+        "number": 63,
+        "label": "秀场造型 63",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/063_21.jpg?itok=gRMCcRQh"
+      },
+      {
+        "number": 64,
+        "label": "秀场造型 64",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/064_20.jpg?itok=pjCtjtks"
+      },
+      {
+        "number": 65,
+        "label": "秀场造型 65",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/065_19.jpg?itok=jjxWE5Df"
+      },
+      {
+        "number": 66,
+        "label": "秀场造型 66",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/066_19.jpg?itok=PXzt2OaK"
+      },
+      {
+        "number": 67,
+        "label": "秀场造型 67",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/067_16.jpg?itok=YdzYzRQs"
+      },
+      {
+        "number": 68,
+        "label": "秀场造型 68",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/068_13.jpg?itok=pRxgFAa1"
+      },
+      {
+        "number": 69,
+        "label": "秀场造型 69",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/069_13.jpg?itok=dgCFaam2"
+      },
+      {
+        "number": 70,
+        "label": "秀场造型 70",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/070_11.jpg?itok=bzoBRR9T"
+      },
+      {
+        "number": 71,
+        "label": "秀场造型 71",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/071_11.jpg?itok=tqToSyzG"
+      },
+      {
+        "number": 72,
+        "label": "秀场造型 72",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/072_9.jpg?itok=2qMa16yW"
+      },
+      {
+        "number": 73,
+        "label": "秀场造型 73",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/073_9.jpg?itok=FOP2-Nrr"
+      },
+      {
+        "number": 74,
+        "label": "秀场造型 74",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/074_7.jpg?itok=TqAyB3-7"
+      },
+      {
+        "number": 75,
+        "label": "秀场造型 75",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/075_6.jpg?itok=lPxiFz7D"
+      },
+      {
+        "number": 76,
+        "label": "秀场造型 76",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/076_6.jpg?itok=OytHYqrr"
+      },
+      {
+        "number": 77,
+        "label": "秀场造型 77",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/077_6.jpg?itok=9mAiRJQp"
+      },
+      {
+        "number": 78,
+        "label": "秀场造型 78",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/078_2.jpg?itok=dpW9NEYc"
+      },
+      {
+        "number": 79,
+        "label": "秀场造型 79",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/079_0.jpg?itok=4cv2m-ws"
+      },
+      {
+        "number": 80,
+        "label": "秀场造型 80",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/080_0.jpg?itok=FrvH5zoD"
+      },
+      {
+        "number": 81,
+        "label": "秀场造型 81",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/081_0.jpg?itok=ymRDa0ls"
+      },
+      {
+        "number": 82,
+        "label": "秀场造型 82",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/082_0.jpg?itok=1JALoEfJ"
+      },
+      {
+        "number": 83,
+        "label": "秀场造型 83",
+        "url": "https://www.fhcm.paris/sites/default/files/styles/lkt/public/coll/gal/083_0.jpg?itok=mHaaSvmU"
+      }
+    ]
+  }
+}

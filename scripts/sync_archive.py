@@ -22,7 +22,7 @@ EXTENSIONS = {
 HOSTS = {
     "assets.vogue.com", "cdn.mos.cms.futurecdn.net", "media.vogue.co.uk",
     "hermes.media.static.aol.com", "media.nowfashion.com", "prcdn.freetls.fastly.net",
-    "fengchenwang.com", "d31flwjaqugbgy.cloudfront.net",
+    "fengchenwang.com", "d31flwjaqugbgy.cloudfront.net", "www.fhcm.paris",
 }
 IMAGE = re.compile(r"\.(?:jpe?g|png|webp|avif|gif)$", re.I)
 KEY = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
@@ -98,6 +98,32 @@ def collect():
     return archive, galleries
 
 
+def add_seasonal_runways(archive, galleries):
+    """Publish seasonal collections alongside the daily research archive."""
+    existing = {study["slug"] for study in archive["studies"]}
+    seasonal = []
+    for path in sorted((ROOT / "data" / "seasonal-runways").glob("*.json")):
+        entry = json.loads(path.read_text())
+        study, gallery = entry["study"], entry["runway"]
+        slug, date = study["slug"], study["date"]
+        if slug != path.stem or len(slug) > 100 or not KEY.fullmatch(slug) or not DATE.fullmatch(date):
+            raise ValueError(f"Invalid seasonal collection identifier: {path.name}")
+        if slug in existing:
+            continue
+        images, total = gallery["images"], gallery["total"]
+        numbers = [image["number"] for image in images]
+        if (not images or numbers != sorted(set(numbers)) or
+                any(type(number) is not int or number < 1 or (total is not None and number > total) for number in numbers) or
+                any(not image_source(image["url"]) or not image_source(image.get("thumbnailUrl", image["url"])) for image in images) or
+                (gallery["complete"] and (total is None or numbers != list(range(1, total + 1))))):
+            raise ValueError(f"Invalid seasonal runway gallery: {path.name}")
+        seasonal.append({**study, "libraryOnly": True, "hasRunway": True})
+        galleries[date + "-" + slug] = gallery
+        existing.add(slug)
+    seasonal.sort(key=lambda study: study["date"], reverse=True)
+    archive["studies"].extend(seasonal)
+
+
 def src_files():
     return [ROOT / "lib" / name for name in ("beauty.ts", "editorial-images.ts", "initial.ts")]
 
@@ -115,6 +141,7 @@ def main():
             seed = json.load(file)
         archive, daily = seed["archive"], seed["galleries"]
         print("Live archive temporarily unavailable; publishing saved archive", flush=True)
+    add_seasonal_runways(archive, daily)
     with gzip.open(ROOT / "data" / "runways.json.gz", "rt", encoding="utf-8") as file:
         runways = json.load(file)
     inline = {

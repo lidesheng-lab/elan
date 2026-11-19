@@ -1,7 +1,9 @@
 # ÉLAN
 
-ÉLAN 的 GitHub Pages 公开浏览版，包含品牌档案、秀场图集、美妆、流行趋势与线稿工作台入口。
+公开网站由 GitHub Pages 托管，账号、完整正文、品牌档案、美妆和图片权限由 CloudBase 提供。
 
-`npm ci` 安装依赖，`npm run sync` 从来源站点同步公开档案并获取图片，`npm run build` 生成 `dist/`。GitHub Actions 会在每次推送后和每天首尔时间 09:14 刷新并发布。图集原始索引来自现有 ÉLAN 的公开图集数据。
+运行 `npm run build` 或 `python3 scripts/build_gate.py` 生成公开站点。公开文件只包含两份试读、文章标题与分类、加密稿件和订阅周报发布数据。普通会员验证邮箱并设置密码后可以阅读趋势，管理员可授予或撤销高级会员权限。
 
-订阅登记入口连接到原 ÉLAN 站点。邮件服务与订阅数据由原站后端处理。每日研究仍由原站的研究任务写入，GitHub Pages 定时同步公开内容。
+趋势作者在私人工作目录编辑 JSON，保留出处及图像授权。运行 `node scripts/seal-trends.cjs ARTICLE.json trend-vault.json` 追加稿件，提交加密清单。公开仓库中不需要存放正文草稿。由会员后端验证权限并返回对应文章。
+
+历年秀场用 `scripts/seal-history.cjs` 写入 `history-feed.json`。新增前用基础档案的 `archive-baseline-ids.json` 以及加密清单中的 ID 查重。两个清单均使用公开加密密钥，解密密钥仅在云函数私有部署包中。

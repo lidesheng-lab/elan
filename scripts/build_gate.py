@@ -1,26 +1,50 @@
 """Package the public ÉLAN pages without member archives or media."""
 from pathlib import Path
-from datetime import date
+from datetime import date, datetime
 from hashlib import sha256
 import json
 import re
 import shutil
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "dist"
 if OUT.exists():
     shutil.rmtree(OUT)
 OUT.mkdir()
-shutil.copyfile(ROOT / "member-shell.html", OUT / "index.html")
+
 shutil.copyfile(ROOT / "member-entry.js", OUT / "member-entry.js")
 shutil.copyfile(ROOT / "community.js", OUT / "community.js")
-shutil.copyfile(ROOT / "home-runway.json", OUT / "home-runway.json")
+shutil.copyfile(ROOT / "photo-viewer.js", OUT / "photo-viewer.js")
 shutil.copyfile(ROOT / "public" / "favicon.svg", OUT / "favicon.svg")
 shutil.copytree(ROOT / "public" / "fonts", OUT / "fonts")
 css = (ROOT / "app" / "globals.css").read_text(encoding="utf-8")
 (OUT / "site.css").write_text(css.replace("../public/fonts/", "./fonts/"), encoding="utf-8")
 (OUT / ".nojekyll").touch()
+
+def versioned(name):
+    return name + "?v=" + sha256((OUT / name).read_bytes()).hexdigest()[:10]
+
+shell = (ROOT / "member-shell.html").read_text(encoding="utf-8")
+for asset in ("site.css", "member-entry.js"):
+    shell = shell.replace(f'./{asset}"', f'./{versioned(asset)}"')
+(OUT / "index.html").write_text(shell, encoding="utf-8")
+
+today = datetime.now(ZoneInfo("Asia/Seoul")).date()
+minimum_season = (today.year - 1, 1) if today.month <= 2 else (today.year, int(today.month >= 9))
+season_pattern = re.compile(r"(20\d{2})(?:/(?:20)?\d{2})?\s*(春夏|秋冬)")
+calendar_year = re.compile(r"(?<![0-9])20[0-9]{2}(?![0-9])")
+
+def current_season(label):
+    seasons = season_pattern.findall(label)
+    return bool(seasons) and all((int(year), int(term == "秋冬")) >= minimum_season for year, term in seasons)
+
+def current_photo(row):
+    descriptions = " ".join(row[key] for key in ("alt", "caption", "sourceUrl") if key in row)
+    years = calendar_year.findall(unquote(descriptions))
+    return bool(years) and all(int(year) >= minimum_season[0] for year in years)
+
 
 def source(row):
     title, url = row["title"], row["url"]
@@ -49,7 +73,7 @@ headlines = [{"title": item["title"], "summary": item["summary"], "source": sour
 if len(headlines) > 4 or any(not isinstance(item[k], str) or not item[k].strip() for item in headlines for k in ("title", "summary")):
     raise ValueError("Invalid public headlines")
 (OUT / "weekly-editorial.json").write_text(json.dumps({"week": edition["week"], "headlines": headlines,
-    "trends": [public_trend(item) for item in edition.get("trends", [])]}, ensure_ascii=False), encoding="utf-8")
+    "trends": [public_trend(item) for item in edition.get("trends", []) if current_season(item.get("season", ""))]}, ensure_ascii=False), encoding="utf-8")
 
 cipher_fields = {"id", "nonce", "tag", "key", "body"}
 article_fields = {"slug", "date", "season", "category", "title"}
@@ -116,7 +140,7 @@ def trend_entry(data, metadata):
         if not isinstance(paragraphs, list) or not paragraphs or any(not isinstance(p, str) or not p.strip() for p in paragraphs):
             raise ValueError("Invalid public trend section")
         entry["sections"].append({**texts(section, ("heading",)), "paragraphs": paragraphs})
-    entry["images"] = [{**cover_image(row), **texts(row, ("caption",))} for row in data["images"]]
+    entry["images"] = [{**cover_image(row), **texts(row, ("caption",))} for row in data["images"] if current_photo(row)]
     entry["sources"] = [source(row) for row in data["sources"]]
     return entry
 
@@ -130,14 +154,35 @@ details_dir.mkdir()
 catalog = []
 for row in articles:
     slug = editorial_slug(row, "trend")
+    if "public" not in row or not current_season(row["season"]):
+        continue
     post = {key: row[key] for key in sorted(article_fields)}
-    if "public" in row:
-        write_json(details_dir / f"{slug}.json", trend_entry(row["public"], post))
-    cover = row.get("cover")
-    if cover is not None:
-        post["cover"] = cover_image(cover)
+    article = trend_entry(row["public"], post)
+    write_json(details_dir / f"{slug}.json", article)
+    if article["images"]:
+        post["cover"] = cover_image(article["images"][0])
     catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")
 catalog.sort(key=lambda row: row["date"], reverse=True)
 write_json(OUT / "trend-articles.json", catalog)
+
+catalog_by_slug = {row["slug"]: row for row in catalog}
+cover_edits = json.loads((ROOT / "home-runway.json").read_text(encoding="utf-8"))
+home_runways = []
+for row in cover_edits:
+    if row["slug"] not in catalog_by_slug or not current_season(row["season"]):
+        continue
+    images = [{**cover_image(photo), **texts(photo, ("caption",))} for photo in row["images"] if current_photo(photo)]
+    if images:
+        home_runways.append({**texts(row, ("slug", "brand", "season", "reason")), "images": images})
+manual_date = max((catalog_by_slug[row["slug"]]["date"] for row in home_runways), default="")
+for row in catalog:
+    if row["date"] <= manual_date:
+        break
+    if row.get("cover"):
+        article = json.loads((details_dir / f'{row["slug"]}.json').read_text(encoding="utf-8"))
+        home_runways.insert(0, {"slug": row["slug"], "brand": row["title"], "season": row["season"],
+            "reason": article["lead"], "images": article["images"][:2]})
+        break
+write_json(OUT / "home-runway.json", home_runways)

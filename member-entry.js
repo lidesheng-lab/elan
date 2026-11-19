@@ -1,3 +1,4 @@
+import { enableMemberPhotoZoom, photoTrigger } from "./photo-viewer.js";
 import { favoriteControl, shareControl, mountTrendDiscussion, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
 
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
@@ -210,6 +211,9 @@ function trendStory(post,featured) {
     else img.loading="lazy";
     img.addEventListener("error",()=>{img.hidden=true;},{once:true});
     frame.append(img);
+  } else {
+    frame.classList.add("trend-graphic", "trend-graphic-" + post.category);
+    frame.setAttribute("aria-hidden", "true");
   }
   const copy=element("div",null,"trend-story-copy");
   const category=categories.find(([key])=>key===post.category)?.[1];
@@ -239,7 +243,7 @@ function renderTrendArticle(output, post) {
     shareControl(post.title,articleLink(post.slug),Boolean(account)));
   article.append(actions);
   const photos = element("div", null, "trend-feature-photos");
-  for (const photo of post.images) {
+  for (const [index, photo] of post.images.entries()) {
     const figure = element("figure");
     const img = element("img");
     img.src = photo.url;
@@ -248,10 +252,10 @@ function renderTrendArticle(output, post) {
     img.loading = "lazy";
     img.referrerPolicy = "no-referrer";
     const caption = element("figcaption", photo.caption);
-    figure.append(img, caption);
+    figure.append(photoTrigger(img, post.images, index), caption);
     photos.append(figure);
   }
-  article.append(photos);
+  if (photos.childElementCount) article.append(photos);
   for (const section of post.sections) {
     const part = element("section");
     part.append(element("h2", section.heading), ...section.paragraphs.map(copy => element("p", copy)));
@@ -279,12 +283,11 @@ async function showTrendArticles(target) {
   const slug = sectionDetail();
   try {
     if (slug) {
-      const post = await feed("./trend-detail/" + slug + ".json", 4000)
-        .catch(() => request({ memberAction: "trendArticle", slug }));
+      const post = await feed("./trend-detail/" + slug + ".json", 5000);
       if (target.isConnected) renderTrendArticle(output, post);
       return;
     }
-    const posts = await feed("./trend-articles.json");
+    const posts = await feed("./trend-articles.json?view=current");
     if (!target.isConnected) return;
     const dateChoice = target.querySelector("#trend-date");
     const categoryChoice = target.querySelector("#trend-article-category");
@@ -302,9 +305,9 @@ async function showTrendArticles(target) {
     dateChoice.onchange = categoryChoice.onchange = paint;
     reset.onclick=()=>{dateChoice.value=categoryChoice.value="";paint();categoryChoice.focus();};
     paint();
-  } catch {
+  } catch (error) {
     if (!target.isConnected) return;
-    output.replaceChildren(element("p", "趋势文章暂时无法显示。", "notice"));
+    output.replaceChildren(element("p", slug && error.status === 404 ? "这篇文章当前不在当季趋势中。" : "趋势文章暂时无法显示。", "notice"));
     if (slug) {
       const back = element("a", "返回全部趋势文章", "text-action");
       back.href = "#trends";
@@ -315,7 +318,7 @@ async function showTrendArticles(target) {
 function feed(path, timeout = 12000) {
   if (!feeds.has(path)) {
     feeds.set(path, fetch(path, { signal: AbortSignal.timeout(timeout) }).then(response => {
-      if (!response.ok) throw new Error("feed");
+      if (!response.ok) throw Object.assign(new Error("feed"), { status:response.status });
       return response.json();
     }).catch(error => { feeds.delete(path); throw error; }));
   }
@@ -344,50 +347,41 @@ function addSource(parent, source) {
     parent.append(anchor);
   } catch { /* Malformed source references are omitted. */ }
 }
-function runwayPhoto(photo,href,priority=false) {
+function runwayPhoto(photo,photos,index) {
   const figure=element("figure",null,"home-runway-photo");
-  const imageLink=element("a");
-  imageLink.href=href;
   const img=element("img");
   img.src=photo.url;
   img.alt=photo.alt;
   img.decoding="async";
-  if(priority) img.fetchPriority="high";
-  else img.loading="lazy";
+  if(index===0) img.fetchPriority="high";
   const caption=element("figcaption",photo.credit+" · ");
   addSource(caption,{title:photo.license,url:photo.licenseUrl});
   caption.append(" · ");
   addSource(caption,{title:"原图",url:photo.sourceUrl});
-  imageLink.append(img);
-  figure.append(imageLink,caption);
+  figure.append(photoTrigger(img,photos,index),caption);
   return figure;
 }
 async function showHomeRunways(target) {
-  try {
-    const [cover,...picks]=await feed("./home-runway.json");
-    if(!target.isConnected || !cover) return;
-    const hero=target.querySelector(".public-cover-art");
+  const coverPromise = feed("./home-runway.json?view=current").catch(()=>[]);
+  const postsPromise = feed("./trend-articles.json?view=current").catch(()=>[]);
+  const [cover] = await coverPromise;
+  if (!target.isConnected) return;
+  if (cover) {
+    const hero = target.querySelector(".public-cover-art");
     hero.removeAttribute("aria-hidden");
-    hero.replaceChildren(...cover.images.map(photo=>runwayPhoto(photo,articleLink(cover.slug),true)));
+    hero.replaceChildren(...cover.images.map((photo,index)=>runwayPhoto(photo,cover.images,index)));
     target.querySelector(".cover-season").textContent=cover.brand+" · "+cover.season;
     target.querySelector(".cover-intro").textContent=cover.reason;
     const action=target.querySelector(".cover-action");
     action.href=articleLink(cover.slug);
     action.textContent="阅读秀场观察";
-    const grid=target.querySelector(".home-runway-grid");
-    for(const item of picks) {
-      const card=element("article",null,"home-runway-card");
-      const href=articleLink(item.slug);
-      const title=element("a",item.brand);
-      title.href=href;
-      const heading=element("h3");
-      heading.append(title);
-      card.append(runwayPhoto(item.images[0],href),element("p",item.season,"eyebrow"),
-        heading,element("p",item.reason,"community-copy"));
-      grid.append(card);
-    }
-    target.querySelector(".home-runways").hidden=!grid.childElementCount;
-  } catch { /* The cover text remains available when the recommendations feed fails. */ }
+  }
+  const posts = await postsPromise;
+  if (!target.isConnected) return;
+  const picks = posts.filter(post=>post.slug!==cover?.slug).slice(0,3);
+  const grid = target.querySelector(".home-runway-grid");
+  grid.replaceChildren(...picks.map(post=>trendStory(post,false)));
+  target.querySelector(".home-runways").hidden=!picks.length;
 }
 function entry() {
   surface = "public";
@@ -433,11 +427,11 @@ function entry() {
     content = `<article class="cover-story public-cover" aria-labelledby="public-cover-title">
       <div class="public-cover-art" aria-hidden="true"><span></span><span></span></div>
       <div class="cover-copy"><p class="eyebrow">秀场推荐</p>
-      <h1 id="public-cover-title">从秀场<br>读设计</h1><p class="cover-season"></p>
+      <h1 id="public-cover-title">从秀场读设计</h1><p class="cover-season"></p>
       <p class="cover-intro">品牌档案、美妆观察与每日趋势长文。</p>
       <a class="primary cover-action" href="#trends">查看流行趋势</a></div></article>
       <section class="home-runways" aria-labelledby="home-runway-title" hidden>
-      <div class="section-title"><h2 id="home-runway-title">秀场档案选读</h2>
+      <div class="section-title"><h2 id="home-runway-title">本季趋势选读</h2>
       <a class="text-action" href="#trends">全部趋势文章</a></div>
       <div class="home-runway-grid"></div></section>`;
   }
@@ -460,6 +454,13 @@ function entry() {
   };
   if (readTrends) void showTrendArticles(document.getElementById("public-content"));
   if (route === "home") void showHomeRunways(document.getElementById("public-content"));
+  const sample = root.querySelector(".tier-preview img");
+  if (sample) {
+    const parent = sample.parentNode;
+    const next = sample.nextSibling;
+    const trigger = photoTrigger(sample,[{url:sample.src,alt:sample.alt}],0);
+    parent.insertBefore(trigger,next);
+  }
   if (readCommunity) {
     const target = document.getElementById("public-content");
     target.replaceChildren();
@@ -569,6 +570,7 @@ async function openArchive(profile) {
   root.replaceChildren();
   const app = URL.createObjectURL(new Blob([script], { type: "text/javascript" }));
   try { await import(app); } finally { URL.revokeObjectURL(app); }
+  enableMemberPhotoZoom(root);
   const signout = document.createElement("button");
   signout.type = "button";
   signout.className = "member-exit";

@@ -388,9 +388,9 @@ function entry() {
     const detail = Boolean(sectionDetail());
     content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>每日一篇秀场观察，按日期与主题选读。</p></div>
       <div class="trend-article-filters">
-        <label for="trend-date">发布日期 <select id="trend-date"><option value="">全部日期</option></select></label>
-        <label for="trend-article-category">主题 <select id="trend-article-category"><option value="">全部主题</option>
-          ${categories.map(([key,title]) => `<option value="${key}">${title}</option>`).join("")}</select></label>
+        <div class="trend-filter"><label for="trend-date">发布日期</label><select id="trend-date"><option value="">全部日期</option></select></div>
+        <div class="trend-filter"><label for="trend-article-category">主题</label><select id="trend-article-category"><option value="">全部主题</option>
+          ${categories.map(([key,title]) => `<option value="${key}">${title}</option>`).join("")}</select></div>
         <button class="text-action" type="button" id="trend-clear" hidden>清除筛选</button>
       </div>`}
       <section class="trend-articles" aria-label="趋势文章"><p class="notice" role="status">正在读取文章…</p></section>`;

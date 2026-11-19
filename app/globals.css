@@ -286,10 +286,10 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(21px,3vw,
 .member-link-fallback summary,.trend-notes>summary{cursor:pointer;width:fit-content}
 .member-link-fallback .member-secondary{margin-top:8px}
 .brand-year,.trend-article-filters label{display:inline-flex;align-items:center;gap:10px;color:var(--quiet);font-size:.9rem}
-.brand-year select,.trend-article-filters select{min-height:42px;padding:6px 10px;border:1px solid var(--rule);background:transparent;color:var(--ink);font:inherit}
+.brand-year select,.trend-article-filters select{min-height:42px;padding:6px 10px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit}
 .trend-article-filters{display:flex;flex-wrap:wrap;gap:12px 24px;margin:20px 0}
 .trend-articles{margin-bottom:42px}
-.trend-story{padding:24px 0;border-bottom:1px solid var(--rule);max-width:850px}
+.trend-story{padding:24px 0;border-bottom:1px solid var(--line);max-width:850px}
 .trend-story h2{font:500 clamp(1.5rem,4vw,2.55rem)/1.18 var(--serif);margin:8px 0 12px}
 .trend-story h2 a:hover,.trend-story h2 a:focus-visible{color:var(--wine)}
 .trend-story>p:last-child{line-height:1.7;color:var(--quiet);max-width:680px}
@@ -304,7 +304,7 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(21px,3vw,
 .trend-feature section,.trend-feature-sources{max-width:710px;margin:36px 0}
 .trend-feature h2{font:500 1.55rem/1.25 var(--serif);margin-bottom:15px}
 .trend-feature section p{line-height:1.86;margin:0 0 14px}
-.trend-feature-sources{border-top:1px solid var(--rule);padding-top:24px}
+.trend-feature-sources{border-top:1px solid var(--line);padding-top:24px}
 .trend-feature-sources>a{display:block;width:fit-content;margin-bottom:10px}
 .trend-feature-sources p{font-size:.82rem;line-height:1.65;color:var(--quiet);margin-top:12px}
 .trend-feature-sources p a{display:inline}

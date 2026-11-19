@@ -201,6 +201,10 @@ function trendStory(post,featured) {
   open.href=articleLink(post.slug);
   open.setAttribute("aria-labelledby","story-"+post.slug);
   const frame=element("div",null,"trend-story-photo");
+  function graphic() {
+    frame.classList.add("trend-graphic", "trend-graphic-" + post.category);
+    frame.setAttribute("aria-hidden", "true");
+  }
   if(post.cover) {
     const img=element("img");
     img.src=post.cover.url;
@@ -209,12 +213,9 @@ function trendStory(post,featured) {
     img.decoding="async";
     if(featured) img.fetchPriority="high";
     else img.loading="lazy";
-    img.addEventListener("error",()=>{img.hidden=true;},{once:true});
+    img.addEventListener("error",()=>{img.remove();graphic();},{once:true});
     frame.append(img);
-  } else {
-    frame.classList.add("trend-graphic", "trend-graphic-" + post.category);
-    frame.setAttribute("aria-hidden", "true");
-  }
+  } else graphic();
   const copy=element("div",null,"trend-story-copy");
   const category=categories.find(([key])=>key===post.category)?.[1];
   const heading=element("h2",post.title);
@@ -533,7 +534,7 @@ async function loadMember() {
       history.replaceState(null,"","/#profile");
       entry();
     }
-    else if (profile.premium && (publicRoute()==="home" || lockedSections.has(publicRoute()))) await openArchive(profile);
+    else if (profile.premium && lockedSections.has(publicRoute())) await openArchive(profile);
     else entry();
   } catch (error) {
     if ([401,403].includes(error.status)) {
@@ -655,10 +656,17 @@ root.addEventListener("click", event => {
   event.preventDefault();
   showAccess("subscribe", trigger);
 });
+root.addEventListener("click", event => {
+  if (surface !== "member" || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  if (!(event.target instanceof Element) || !event.target.closest('a[href="#home"]')) return;
+  event.preventDefault();
+  event.stopPropagation();
+  window.location.assign(location.search ? "/#home" : "/?editorial=1#home");
+}, true);
 window.addEventListener("hashchange", () => {
   if (surface !== "public") return;
   const route = publicRoute();
-  if (account?.premium && (route === "home" || lockedSections.has(route))) {
+  if (account?.premium && lockedSections.has(route)) {
     if (location.search) history.replaceState(null, "", "/" + location.hash);
     void loadMember();
   } else entry();

@@ -164,7 +164,7 @@ for row in articles:
     catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")
-catalog.sort(key=lambda row: row["date"], reverse=True)
+catalog.sort(key=lambda row: (row["date"], "cover" in row), reverse=True)
 write_json(OUT / "trend-articles.json", catalog)
 
 catalog_by_slug = {row["slug"]: row for row in catalog}

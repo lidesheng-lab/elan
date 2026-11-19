@@ -1,7 +1,11 @@
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 const storageKey = "elan-member-session";
 const root = document.getElementById("root");
+const sessionPattern = /^[A-Za-z0-9_-]{43}$/;
+const loginPattern = /^#member-login\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/;
+const loginChannel = typeof BroadcastChannel === "function" ? new BroadcastChannel("elan-member-login") : null;
 let session = sessionStorage.getItem(storageKey) || "";
+let awaitingLogin = "";
 let surface = "public";
 const sections = [
   ["home", "首页"], ["designers", "品牌索引"], ["beauty", "美妆"], ["trends", "流行趋势"], ["studio", "线稿工作台"],
@@ -31,7 +35,10 @@ function panel(label, text, markup) {
     </section>
   </main>`;
 }
-function message(text) { document.getElementById("member-message").textContent = text; }
+function message(text) {
+  const status = document.getElementById("member-message");
+  if (status) status.textContent = text;
+}
 function bindForm(id, operation) {
   const form = document.getElementById(id);
   form.addEventListener("submit", async event => {
@@ -53,13 +60,32 @@ function accessForm() {
         <button class="primary" type="submit" value="login">发送登录邮件</button>
         <button class="member-secondary" type="submit" value="apply">申请会员</button>
       </div>
-    </form>`;
+    </form>
+    <details class="member-link-fallback">
+      <summary>在当前浏览器完成登录</summary>
+      <form id="paste-login-form">
+        <label for="paste-login">粘贴邮件里的完整登录链接</label>
+        <input id="paste-login" name="link" required maxlength="2048" type="url" autocomplete="off">
+        <button class="member-secondary" type="submit">验证并登录</button>
+      </form>
+    </details>`;
 }
 function bindAccess() {
   bindForm("access-form", async (data, button) => {
     const action = button.value;
+    if (action === "login" && loginChannel) {
+      const bytes = new TextEncoder().encode(String(data.get("email")).trim().toLowerCase());
+      const digest = await crypto.subtle.digest("SHA-256", bytes);
+      awaitingLogin = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+    }
     await request({ memberAction: action, email: data.get("email") }, undefined, "");
-    message(action === "apply" ? "申请已登记，请联系管理员审核。" : "已获授权的邮箱会收到 ÉLAN 登录邮件。");
+    message(action === "apply" ? "申请已登记，请联系管理员审核。" : "请查收登录邮件。同一浏览器确认后，这一页会自动打开会员档案。");
+  });
+  bindForm("paste-login-form", async data => {
+    const url = new URL(String(data.get("link")).trim());
+    const parts = loginPattern.exec(url.hash);
+    if (url.origin !== location.origin || url.username || url.password || !parts) throw new Error("请粘贴 ÉLAN 邮件里的完整登录链接。");
+    await exchangeLogin(parts[1], parts[2]);
   });
 }
 
@@ -222,11 +248,7 @@ function confirmLink(action, id, token) {
     `<form id="mail-form"><button class="primary" type="submit">${title}</button></form>`);
   bindForm("mail-form", async () => {
     if (login) {
-      const result = await request({ memberAction: "exchange", id, token }, undefined, "");
-      session = result.session;
-      sessionStorage.setItem(storageKey, session);
-      history.replaceState(null, "", "/");
-      await openMember();
+      await exchangeLogin(id, token);
       return;
     }
     await request({ action, id, token }, undefined, "");
@@ -234,6 +256,42 @@ function confirmLink(action, id, token) {
     message(unsubscribe ? "已退订 ÉLAN 周报。" : "已确认订阅 ÉLAN 周报。");
   });
 }
+function startSession(token) {
+  if (!sessionPattern.test(token)) throw new Error("登录状态无效，请重新发送登录邮件。");
+  session = token;
+  sessionStorage.setItem(storageKey, token);
+  awaitingLogin = "";
+}
+async function loadMember() {
+  panel("会员档案", "正在读取档案…", "");
+  try {
+    await openMember();
+  } catch (error) {
+    if (error.status === 403) {
+      sessionStorage.removeItem(storageKey);
+      session = "";
+      history.replaceState(null, "", "/#login");
+      entry();
+      message("登录状态已失效，请重新发送登录邮件。");
+      return;
+    }
+    panel("会员档案", "会员档案暂时无法加载。", '<button class="primary" id="retry-member" type="button">重新加载</button>');
+    document.getElementById("retry-member").onclick = () => void loadMember();
+  }
+}
+async function exchangeLogin(id, token) {
+  const result = await request({ memberAction: "exchange", id, token }, undefined, "");
+  startSession(result.session);
+  loginChannel?.postMessage({ id, session });
+  if (loginPattern.test(location.hash) || location.hash === "#login") history.replaceState(null, "", "/");
+  await loadMember();
+}
+if (loginChannel) loginChannel.onmessage = event => {
+  if (!awaitingLogin || event.data?.id !== awaitingLogin || !document.getElementById("access-form") || !sessionPattern.test(event.data?.session)) return;
+  startSession(event.data.session);
+  if (location.hash === "#login") history.replaceState(null, "", "/");
+  void loadMember();
+};
 async function logout() {
   try { await request({ memberAction: "logout" }); }
   finally {
@@ -333,18 +391,10 @@ async function openMember() {
   else await openArchive(profile);
 }
 
-const login = /^#member-login\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/.exec(location.hash);
+const login = loginPattern.exec(location.hash);
 const newsletter = /^#newsletter\/(confirm|unsubscribe)\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/.exec(location.hash);
 window.addEventListener("hashchange", () => { if (surface === "public") entry(); });
 if (login) confirmLink("exchange", login[1], login[2]);
 else if (newsletter) confirmLink(newsletter[1], newsletter[2], newsletter[3]);
-else if (session) {
-  panel("会员档案", "正在核验访问权限。", "");
-  openMember().catch(error => {
-    if (error.status === 403) {
-      sessionStorage.removeItem(storageKey);
-      session = "";
-    }
-    entry();
-  });
-} else entry();
+else if (session) void loadMember();
+else entry();

@@ -27,7 +27,7 @@ def versioned(name):
     return name + "?v=" + sha256((OUT / name).read_bytes()).hexdigest()[:10]
 
 shell = (ROOT / "member-shell.html").read_text(encoding="utf-8")
-for asset in ("site.css", "member-entry.js"):
+for asset in ("site.css", "member-entry.js", "favicon.svg"):
     shell = shell.replace(f'./{asset}"', f'./{versioned(asset)}"')
 (OUT / "index.html").write_text(shell, encoding="utf-8")
 
@@ -186,3 +186,14 @@ for row in catalog:
             "reason": article["lead"], "images": article["images"][:2]})
         break
 write_json(OUT / "home-runway.json", home_runways)
+
+brand_preview = json.loads((ROOT / "brand-preview.json").read_text(encoding="utf-8"))
+if current_season(brand_preview["season"]) and current_photo(brand_preview["image"]):
+    brand_preview = {
+        **texts(brand_preview, ("brand", "collection", "season", "city", "headline", "intro", "note")),
+        "source": source(brand_preview["source"]),
+        "image": {**cover_image(brand_preview["image"]), **texts(brand_preview["image"], ("caption",))},
+    }
+else:
+    brand_preview = None
+write_json(OUT / "brand-preview.json", brand_preview)

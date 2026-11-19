@@ -162,29 +162,57 @@ function bindAccess(mode) {
 }
 function lockedPreview(title, copy, action) {
   return `<section class="tier-locked">
-    <div class="tier-blur" aria-hidden="true"><i></i><i></i><i></i></div>
-    <div class="tier-lock-copy"><h2>${title}</h2><p>${copy}</p>${action || ""}</div>
+    <div class="tier-lock-copy"><h2>${title}</h2><p>${copy}</p><div class="archive-actions">${action || ""}</div></div>
   </section>`;
 }
 function preview(route) {
-  if (route === "designers") return `<article class="tier-preview">
-    <p class="eyebrow">品牌索引 · 2010 秋冬</p><h2>Y-3｜针织衣身怎样开合</h2>
-    <p>Yohji Yamamoto 在纽约秀场用拉链调整针织裙和棉衬衫的轮廓。软布沿开口弯折，拉链让边缘在闭合时保持干净。</p>
-    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Y-3_Fall-Winter_2010_226.jpg/960px-Y-3_Fall-Winter_2010_226.jpg" alt="Y-3 2010 秋冬纽约秀场现场" loading="lazy">
-    <p class="eyebrow">Masaki-H · <a href="https://commons.wikimedia.org/wiki/File:Y-3_Fall-Winter_2010_226.jpg" target="_blank" rel="noreferrer">原图</a> · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noreferrer">CC BY 2.0</a></p>
-    <p>打样时先稳定拉链边，再比较开合状态下的摆量。用相同机位拍站姿和一步行走，更容易判断面料有没有被拉拽。</p>
-  </article>`;
-  if (route === "beauty") return `<article class="tier-preview">
-    <p class="eyebrow">秀场美妆 · 2027 春夏</p><h2>Collina Strada｜薄底妆与局部珠光</h2>
+  if (route === "designers") return '<section class="archive-preview" aria-label="本季品牌选读"><p class="notice" role="status">正在读取品牌选读…</p></section>';
+  if (route === "beauty") return `<article class="beauty-preview">
+    <div class="beauty-preview-art" aria-hidden="true"></div>
+    <div class="beauty-preview-copy"><p class="eyebrow">2027 春夏 · 秀场美妆</p>
+    <p class="archive-brand">Collina Strada</p><h2>薄底妆与局部珠光</h2>
     <p>化妆师 Francelle Daly 在上粉底前使用珠光妆前产品，把细小的反光留在底妆下。观察颧骨、鼻梁和眼角如何随着光线变化。</p>
     <p>拍摄可以从侧前方柔光开始，让高光落在颧骨和内眼角。鼻颊保留细小绒毛和皮肤纹理，衣料和皮肤的光泽更容易区分。</p>
-    <p><a class="text-action" href="https://www.aol.com/articles/collina-strada-dreamy-nyfw-beauty-194148000.html" target="_blank" rel="noreferrer">阅读 ELLE 秀场报道</a></p>
+    <a class="text-action" href="https://www.aol.com/articles/collina-strada-dreamy-nyfw-beauty-194148000.html" target="_blank" rel="noreferrer">阅读 ELLE 秀场报道</a></div>
   </article>`;
   return "";
 }
-function premiumLink() {
-  return '<a class="primary" href="#upgrade">申请高级会员</a>';
+
+async function showBrandPreview(target) {
+  try {
+    const feature = await feed("./brand-preview.json", 5000);
+    if (!target.isConnected) return;
+    if (!feature) {
+      target.hidden = true;
+      return;
+    }
+    const article = element("article",null,"archive-feature");
+    const photo = runwayPhoto(feature.image,[feature.image],0);
+    const copy = element("div",null,"archive-feature-copy");
+    copy.append(
+      element("p",feature.season+" · "+feature.city,"eyebrow"),
+      element("p",feature.brand,"archive-brand"),
+      element("h2",feature.headline),
+      element("p",feature.collection,"archive-collection"),
+      element("p",feature.intro,"archive-intro"),
+      element("p",feature.note,"archive-note")
+    );
+    addSource(copy,feature.source);
+    article.append(photo,copy);
+    target.replaceChildren(article);
+  } catch {
+    if (target.isConnected) target.hidden = true;
+  }
 }
+
+function premiumActions() {
+  return `<a class="primary" href="#upgrade">申请高级会员</a>${account ? "" : '<a class="text-action" href="#login">登录</a>'}`;
+}
+const sectionDescriptions = {
+  designers: "按品牌与系列年份查阅秀场、面料和造型研究。",
+  beauty: "从秀场妆容与发型提取可应用于影像的做法。",
+  studio: "从服装线稿出发，整理适合打样的面料、色彩和结构方向。",
+};
 function publicRoute() {
   const route = location.hash.slice(1).split("?")[0];
   if (/^trends\/[a-z0-9-]+$/.test(route)) return "trends";
@@ -416,8 +444,8 @@ function entry() {
       `<div class="section-title"><h1>${communityPage[0]}</h1></div>${lockedPreview("请先登录", "普通会员和高级会员均可使用。", '<a class="primary" href="#login">会员登录</a>')}`;
   } else if (lockedSections.has(route)) {
     const title = sections.find(([key]) => key === route)[1];
-    content = `<div class="section-title"><h1>${title}</h1></div>${preview(route)}
-      ${lockedPreview("高级会员专享", "通过管理员授权后，可查看完整内容。", premiumLink())}`;
+    content = `<div class="section-title"><h1>${title}</h1><p>${sectionDescriptions[route]}</p></div>${preview(route)}
+      ${lockedPreview("高级会员专享", "获授权后可使用完整内容。", premiumActions())}`;
   } else if (route === "upgrade") {
     content = `<section class="member-panel public-access"><h1>申请高级会员</h1>
       <p>提交申请后，管理员将收到邮件。获得授权后即可查看完整品牌档案、美妆和线稿工作台。</p>
@@ -428,7 +456,7 @@ function entry() {
     content = `<article class="cover-story public-cover" aria-labelledby="public-cover-title">
       <div class="public-cover-art" aria-hidden="true"><span></span><span></span></div>
       <div class="cover-copy"><p class="eyebrow">秀场推荐</p>
-      <h1 id="public-cover-title">从秀场读设计</h1><p class="cover-season"></p>
+      <h1 id="public-cover-title">从秀场<br>读设计</h1><p class="cover-season"></p>
       <p class="cover-intro">品牌档案、美妆观察与每日趋势长文。</p>
       <a class="primary cover-action" href="#trends">查看流行趋势</a></div></article>
       <section class="home-runways" aria-labelledby="home-runway-title" hidden>
@@ -443,7 +471,7 @@ function entry() {
       '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe" aria-haspopup="dialog">免费订阅</a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
-    <main id="public-content" tabindex="-1">${content}</main>
+    <main id="public-content" class="page-${route}" tabindex="-1">${content}</main>
     <footer class="site-footer public-footer"><a class="footer-wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#contests">服装设计大赛</a><a href="#square">设计广场</a>
     <a href="${account?"#profile":"#login"}">${account?"个人中心":"会员登录"}</a></nav></footer>`;
@@ -455,13 +483,8 @@ function entry() {
   };
   if (readTrends) void showTrendArticles(document.getElementById("public-content"));
   if (route === "home") void showHomeRunways(document.getElementById("public-content"));
-  const sample = root.querySelector(".tier-preview img");
-  if (sample) {
-    const parent = sample.parentNode;
-    const next = sample.nextSibling;
-    const trigger = photoTrigger(sample,[{url:sample.src,alt:sample.alt}],0);
-    parent.insertBefore(trigger,next);
-  }
+  const brandPreview = root.querySelector(".archive-preview");
+  if (brandPreview) void showBrandPreview(brandPreview);
   if (readCommunity) {
     const target = document.getElementById("public-content");
     target.replaceChildren();

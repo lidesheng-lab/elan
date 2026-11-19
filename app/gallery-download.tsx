@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { RunwayGallery } from "../lib/initial";
+import { fetchMemberPhoto } from "../lib/download-image";
 
 export default function GalleryDownload({gallery, slug}: {gallery: RunwayGallery; slug: string}) {
   const [progress, setProgress] = useState("");
@@ -14,7 +15,7 @@ export default function GalleryDownload({gallery, slug}: {gallery: RunwayGallery
       async function* files() {
         for (const image of gallery.images) {
           try {
-            const response = await fetch(image.url, { signal: AbortSignal.timeout(12000) });
+            const response = await fetchMemberPhoto(image.url, AbortSignal.timeout(12000));
             if (!response.ok || !response.headers.get("Content-Type")?.startsWith("image/")) {
               throw new Error("image");
             }

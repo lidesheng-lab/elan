@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ImgHTMLAttributes } from "react";
-import { imageDownloadPath, mediaUrl } from "../lib/download-image";
+import { downloadMemberPhoto, fetchMemberPhoto, imageDownloadPath, mediaUrl } from "../lib/download-image";
 
 export type SaveTarget = { url: string; label: string; title: string };
 export type OpenSave = (image: SaveTarget) => void;
@@ -18,6 +18,43 @@ export function SavableImage({ save, onSave, onClick, ...props }: ImageProps) {
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const start = useRef<{ x: number; y: number } | null>(null);
   const held = useRef(false);
+  const image = useRef<HTMLImageElement>(null);
+  const [objectUrl, setObjectUrl] = useState<string>();
+  useEffect(() => {
+    const src = props.src;
+    if (!src) return;
+    setObjectUrl(undefined);
+    const controller = new AbortController();
+    let object: string | undefined;
+    async function load() {
+      try {
+        const response = await fetchMemberPhoto(src!, controller.signal);
+        if (!response.ok) throw new Error("image");
+        const blob = await response.blob();
+        if (!controller.signal.aborted) {
+          object = URL.createObjectURL(blob);
+          setObjectUrl(object);
+        }
+      } catch {
+        if (!controller.signal.aborted) image.current?.dispatchEvent(new Event("error"));
+      }
+    }
+    let observer: IntersectionObserver | undefined;
+    if (props.loading === "lazy" && "IntersectionObserver" in window && image.current) {
+      observer = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          observer?.disconnect();
+          void load();
+        }
+      }, { rootMargin: "180px" });
+      observer.observe(image.current);
+    } else void load();
+    return () => {
+      observer?.disconnect();
+      controller.abort();
+      if (object) URL.revokeObjectURL(object);
+    };
+  }, [props.src, props.loading]);
 
   function cancelHold() {
     clearTimeout(timer.current);
@@ -31,7 +68,7 @@ export function SavableImage({ save, onSave, onClick, ...props }: ImageProps) {
   }
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  return <img {...props} src={props.src ? mediaUrl(props.src) : undefined} className={["savable-image", props.className].filter(Boolean).join(" ")}
+  return <img {...props} ref={image} src={objectUrl} className={["savable-image", props.className].filter(Boolean).join(" ")}
     onPointerDown={event=>{
       held.current = false;
       cancelHold();
@@ -57,13 +94,14 @@ export function SavableImage({ save, onSave, onClick, ...props }: ImageProps) {
 
 export function SaveOptions({ image }: { image: SaveTarget }) {
   const [file, setFile] = useState<File | null>(null);
+  const [problem, setProblem] = useState("");
   const href = imageDownloadPath(image.url, image.title + " · " + image.label);
   useEffect(()=>{
     if (!href || !navigator.share || !navigator.canShare) return;
     const controller = new AbortController();
     async function prepare() {
       try {
-        const response = await fetch(href!, { signal: controller.signal });
+        const response = await fetchMemberPhoto(href!, controller.signal);
         if (!response.ok) return;
         const blob = await response.blob();
         const extension = ({ "image/jpeg":"jpg", "image/png":"png", "image/webp":"webp", "image/avif":"avif", "image/gif":"gif" } as Record<string,string>)[blob.type];
@@ -71,7 +109,7 @@ export function SaveOptions({ image }: { image: SaveTarget }) {
         const ready = new File([blob], image.title + " - " + image.label + "." + extension, { type: blob.type });
         if (navigator.canShare({ files:[ready] })) setFile(ready);
       } catch {
-        // The direct download and original image remain available.
+        // The download control retries on demand.
       }
     }
     void prepare();
@@ -80,7 +118,8 @@ export function SaveOptions({ image }: { image: SaveTarget }) {
 
   return <div className="save-options">
     {file && <button type="button" className="primary" onClick={()=>void navigator.share({files:[file]}).catch(()=>{})}>分享或保存图片</button>}
-    {href && <a className="image-download" href={href} download>下载图片</a>}
-    <a className="text-action" href={image.url} target="_blank" rel="noreferrer">打开原图</a>
+    {href && <button type="button" className="image-download"
+      onClick={()=>void downloadMemberPhoto(href,image.title + " - " + image.label).catch(()=>setProblem("图片暂时无法下载。"))}>下载图片</button>}
+    {problem && <span role="status">{problem}</span>}
   </div>;
 }

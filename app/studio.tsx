@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { initialStudies, initialTrends, collectionTrends, type Source, type Study, type Trend, type TrendCategory, type RunwayGallery } from "../lib/initial";
 import { beautyNotes } from "../lib/beauty";
 import GalleryDownload from "./gallery-download";
-import { imageDownloadPath, isImageUrl } from "../lib/download-image";
+import { downloadMemberPhoto, imageDownloadPath, isImageUrl } from "../lib/download-image";
 import Subscribe from "./subscribe";
 import { membership } from "./member-transport";
 import Editorial from "./editorial";
@@ -46,10 +46,12 @@ function categoryOf(trend:Trend):TrendCategory {
 }
 
 function ImageDownload({item,title,compact=false}:{item:{url:string;label:string};title:string;compact?:boolean}) {
+  const [failed,setFailed]=useState(false);
   const href = imageDownloadPath(item.url, title + " · " + item.label);
   if(!href) return null;
-  return <a className={"image-download"+(compact?" image-download-compact":"")} href={href} download
-    aria-label={"下载"+item.label}>{compact?"下载":"下载图片"}</a>;
+  return <button className={"image-download"+(compact?" image-download-compact":"")} type="button"
+    onClick={()=>{setFailed(false);void downloadMemberPhoto(href,title+" - "+item.label).catch(()=>setFailed(true));}}
+    aria-label={"下载"+item.label}>{failed?"重试下载":compact?"下载":"下载图片"}</button>;
 }
 
 function RunwayThumb({item,designer,onOpen,onSave}:{item:RunwayImage;designer:string;onOpen:()=>void;onSave:OpenSave}) {
@@ -72,7 +74,8 @@ function RunwayPhoto({item,designer,onSave}:{item:RunwayImage;designer:string;on
   if(stage==="failed") return <p className="photo-unavailable">这张照片暂时无法载入。</p>;
   const preview=stage==="main" && !loaded && item.thumbnailUrl!==item.url ? item.thumbnailUrl : undefined;
   return <div className="photo-frame">
-    {preview && <img className="runway-photo photo-preview" src={preview} alt="" referrerPolicy="no-referrer"/>}
+    {preview && <SavableImage className="runway-photo photo-preview" src={preview} alt="" referrerPolicy="no-referrer"
+      save={{url:item.url,label:item.label,title:designer}} onSave={onSave}/>}
     <SavableImage className={"runway-photo"+(preview?" photo-loading":"")}
       src={stage==="thumbnail" ? item.thumbnailUrl : item.url}
       save={{url:stage==="thumbnail" ? item.thumbnailUrl ?? item.url : item.url,label:item.label,title:designer}}

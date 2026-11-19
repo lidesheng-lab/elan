@@ -87,7 +87,7 @@ async function openArchive(profile) {
     request,
     photo(url) {
       if (!/^https:\/\//i.test(url) || url.startsWith(api + "?")) return url;
-      return api + "?" + new URLSearchParams({ picture: profile.grant, src: url });
+      return api + "?" + new URLSearchParams({ picture: "1", src: url });
     },
   };
   root.replaceChildren();

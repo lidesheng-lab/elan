@@ -19,11 +19,12 @@ const communityRoutes = new Map([
   ["contests",["服装设计大赛",target=>renderContests(target,request,Boolean(account),sectionDetail())]],
   ["square",["设计广场",target=>renderSquare(target,request,Boolean(account),sectionDetail())]],
 ]);
-const accessRoutes = new Set(["login", "register", "reset"]);
+const accessRoutes = new Set(["login", "register", "reset", "subscribe"]);
 const accessCopy = {
   login: ["会员登录", "使用注册邮箱和密码登录。"],
   register: ["注册普通会员", "验证邮箱并设置密码后，即可免费登录。"],
   reset: ["找回密码", "输入你的注册邮箱。"],
+  subscribe: ["免费订阅", "每周收到时尚资讯与流行趋势。登记后请确认邮箱，也可通过邮件退订。"],
 };
 const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["silhouette", "廓形趋势"]];
 const feeds = new Map();
@@ -66,7 +67,7 @@ function panel(label, text, markup) {
   </main>`;
 }
 function message(text) {
-  const status = document.getElementById("member-message");
+  const status = document.getElementById("access-message") || document.getElementById("member-message");
   if (status) status.textContent = text;
 }
 function bindForm(id, operation) {
@@ -82,6 +83,12 @@ function bindForm(id, operation) {
   });
 }
 function accessForm(mode) {
+  if (mode === "subscribe") return `
+    <form id="access-form">
+      <label for="member-email">订阅邮箱</label>
+      <input id="member-email" name="email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254">
+      <button class="primary" type="submit">免费订阅</button>
+    </form>`;
   const login = mode === "login";
   return `
     <form id="access-form">
@@ -95,11 +102,10 @@ function accessForm(mode) {
         : '<a class="text-action" href="#login">返回登录</a>'}
     </div>`;
 }
-function showAccess(mode) {
+function showAccess(mode, trigger = document.activeElement) {
   let dialog = document.getElementById("member-access");
   const email = dialog?.querySelector("#member-email")?.value ?? "";
   if (!dialog) {
-    const trigger = document.activeElement;
     dialog = document.createElement("dialog");
     dialog.id = "member-access";
     dialog.className = "access-dialog member-panel";
@@ -115,14 +121,17 @@ function showAccess(mode) {
       if (wantsAdmin() || accessRoutes.has(publicRoute())) history.replaceState(null, "", location.pathname + (wantsAdmin() ? "" : location.search) + pageHash);
       if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus({preventScroll:true});
     });
-    root.append(dialog);
+    (surface === "member" ? document.body : root).append(dialog);
   }
   const [title, help] = accessCopy[mode];
-  dialog.innerHTML = `<button class="access-close" type="button" aria-label="关闭会员窗口"><span aria-hidden="true">×</span> 关闭</button>
+  const subscribing = mode === "subscribe";
+  dialog.innerHTML = `<button class="access-close" type="button" aria-label="${subscribing ? "关闭订阅窗口" : "关闭会员窗口"}"><span aria-hidden="true">×</span> 关闭</button>
     <h1 id="access-title" tabindex="-1" autofocus>${title}</h1><p>${help}</p>
-    ${accessForm(mode)}<p class="member-message" role="status" id="member-message"></p>`;
+    ${accessForm(mode)}<p class="member-message" role="status" id="access-message"></p>`;
   dialog.querySelector(".access-close").onclick = () => dialog.close();
-  dialog.querySelector("#member-email").value = email;
+  const address = dialog.querySelector("#member-email");
+  address.value = subscribing ? account?.email || "" : email;
+  address.readOnly = subscribing && Boolean(account?.premium);
   bindAccess(mode);
   if (!dialog.open) dialog.showModal();
   dialog.querySelector("#access-title").focus({preventScroll:true});
@@ -131,7 +140,13 @@ function bindAccess(mode) {
   const form = document.getElementById("access-form");
   bindForm("access-form", async data => {
     const email = data.get("email");
-    if (mode === "login") {
+    if (mode === "subscribe") {
+      const result = await request({ email }, undefined, "");
+      if (!result.registered) throw new Error("暂时无法登记，请稍后再试。");
+      if (!form.isConnected) return;
+      form.remove();
+      message("邮箱已登记。首次订阅请查收确认邮件。");
+    } else if (mode === "login") {
       const result = await request({ memberAction: "passwordLogin", email, password: data.get("password") }, undefined, "");
       if (!form.isConnected) return;
       startSession(result.session);
@@ -175,7 +190,7 @@ function publicRoute() {
   if (/^contests\/[a-z0-9-]{1,110}$/.test(route)) return "contests";
   if (/^square\/[a-f0-9-]{36}$/.test(route)) return "square";
   return sections.some(([key]) => key === route) || accessRoutes.has(route) || communityRoutes.has(route) ||
-    ["subscribe","upgrade"].includes(route) ? route : "home";
+    route === "upgrade" ? route : "home";
 }
 function articleLink(slug) { return "#trends/" + slug; }
 function trendStory(post,featured) {
@@ -377,7 +392,7 @@ function entry() {
   }
   const route = access ? "home" : current;
   pageHash = access ? "#home" : location.hash;
-  const activeSection = route === "subscribe" ? "home" : route;
+  const activeSection = route;
   const navigation = sections.map(([key, label]) =>
     `<a href="${account?.premium && lockedSections.has(key) ? "/" : ""}#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   let content;
@@ -423,17 +438,10 @@ function entry() {
     <header class="topbar public-masthead${activeSection==="home"?"":" topbar-compact"}">
     <div class="masthead-tools"><div class="masthead-account">${account ?
       `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin===true ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
-      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe">免费订阅</a></div>
+      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe" aria-haspopup="dialog">免费订阅</a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
     <main id="public-content" tabindex="-1">${content}</main>
-    <div class="subscribe-wrap" id="subscribe"><section class="subscribe-section" aria-labelledby="public-subscribe-title">
-      <div><h2 id="public-subscribe-title">免费订阅</h2><p>每周时尚资讯与流行趋势。登记后请确认邮箱，邮件内可退订。</p></div>
-      <form id="public-subscribe-form"><label for="public-email">订阅邮箱</label>
-      <div class="subscribe-fields"><input id="public-email" name="email" type="email" required maxlength="254" autocomplete="email" placeholder="name@example.com">
-      <button class="primary" type="submit">免费订阅</button></div>
-      <p class="member-message" id="public-subscribe-status" role="status"></p></form>
-    </section></div>
     <footer class="site-footer public-footer"><a class="footer-wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#contests">服装设计大赛</a><a href="#square">设计广场</a>
     <a href="${account?"#profile":"#login"}">${account?"个人中心":"会员登录"}</a></nav></footer>`;
@@ -443,22 +451,8 @@ function entry() {
     main.focus();
     main.scrollIntoView();
   };
-  const form = document.getElementById("public-subscribe-form");
-  form.onsubmit = async event => {
-    event.preventDefault();
-    const button = form.querySelector("button");
-    const status = document.getElementById("public-subscribe-status");
-    button.disabled = true;
-    status.textContent = "正在登记…";
-    try {
-      await request({ email: new FormData(form).get("email") }, undefined, "");
-      status.textContent = "邮箱已登记。首次订阅请查收确认邮件。";
-      form.reset();
-    } catch (error) { status.textContent = error.message; }
-    finally { button.disabled = false; }
-  };
   if (readTrends) void showTrendArticles(document.getElementById("public-content"));
-  if (route === "home" || route === "subscribe") void showHomeRunways(document.getElementById("public-content"));
+  if (route === "home") void showHomeRunways(document.getElementById("public-content"));
   if (readCommunity) {
     const target = document.getElementById("public-content");
     target.replaceChildren();
@@ -482,8 +476,7 @@ function entry() {
       }
     };
   }
-  if (route === "subscribe") document.getElementById("subscribe").scrollIntoView();
-  else window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
   if (access) showAccess(current);
 }
 function confirmLink(action, id, token) {
@@ -646,6 +639,13 @@ async function adminPanel(profile) {
 }
 const setup = setPasswordPattern.exec(location.hash);
 const newsletter = /^#newsletter\/(confirm|unsubscribe)\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/.exec(location.hash);
+root.addEventListener("click", event => {
+  if (!(event.target instanceof Element)) return;
+  const trigger = event.target.closest('a[href="#subscribe"]');
+  if (!trigger || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  showAccess("subscribe", trigger);
+});
 window.addEventListener("hashchange", () => {
   if (surface !== "public") return;
   const route = publicRoute();

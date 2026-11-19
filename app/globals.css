@@ -133,13 +133,10 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(21px,3vw,
 .sources a{text-decoration:underline;text-underline-offset:3px;line-height:1.6}
 .studio-closed{padding:22px 0;border-bottom:1px solid var(--line);color:var(--quiet);line-height:1.6}
 
-.subscribe-wrap{max-width:var(--page);margin:auto;padding:0 var(--pad) 34px}
 .subscribe-section{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:24px;padding:clamp(20px,4vw,52px);background:#efe7e3;border-top:1px solid var(--wine)}
 .subscribe-section h2{font:500 clamp(1.65rem,3.2vw,3.45rem)/1.1 var(--serif);margin-bottom:11px}
 .subscribe-section p{line-height:1.55;color:var(--quiet)}
 .subscribe-section label{display:block;font-size:.875rem;font-weight:700;margin-bottom:8px}
-.subscribe-fields{display:flex;flex-wrap:wrap;gap:8px}
-.subscribe-fields input{flex:1;min-width:min(180px,100%);min-height:46px;padding:8px 12px;border:1px solid #b4a19d;background:white}
 .subscribe-section .subscribe-error{margin-top:8px;color:var(--wine)}
 .subscribe-section .subscribe-success{font-weight:700;color:var(--wine)}
 .newsletter-manage{max-width:760px;margin:clamp(24px,12vh,120px) auto;padding:0 20px}

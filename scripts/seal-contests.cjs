@@ -10,12 +10,18 @@ const feed=existsSync(outputPath) ? JSON.parse(readFileSync(outputPath,"utf8")) 
 const entriesBySlug=new Map(feed.map(entry=>[entry.slug,entry]));
 const submitted=new Set();
 const text=value=>typeof value==="string" && value.trim().length>0;
+function validSource(source) {
+  if(!text(source?.title) || !text(source?.url)) return false;
+  try {
+    const url=new URL(source.url);
+    return url.protocol==="https:" && !url.username && !url.password;
+  } catch { return false; }
+}
 for(const item of entries) {
-  const {id:slug,kind,title,category,organizer,summary,date,deadline,source,details}=item;
-  const url=new URL(source.url);
+  const {id:slug,kind,title,category,organizer,summary,date,deadline,source,details,references}=item;
   if(!/^[a-z0-9-]{1,100}$/.test(slug) || !["recruit","award"].includes(kind) ||
-      ![title,category,organizer,summary,source.title].every(text) ||
-      url.protocol!=="https:" || url.username || url.password ||
+      ![title,category,organizer,summary].every(text) || !validSource(source) ||
+      (references!==undefined && (!Array.isArray(references) || references.length>4 || !references.every(validSource))) ||
       (details!==undefined && (!Array.isArray(details) || details.length>8 ||
         !details.every(detail=>text(detail?.title) && text(detail?.text) && detail.title.length<=45 && detail.text.length<=650))) ||
       (kind==="recruit" && !/^20\d{2}-\d{2}-\d{2}$/.test(deadline)) ||

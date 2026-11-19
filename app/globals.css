@@ -442,7 +442,9 @@ body:has(.access-dialog[open]){overflow:hidden}
 .contest-feature-copy h2{font:500 clamp(1.26rem,2.6vw,1.82rem)/1.3 var(--serif);margin-bottom:8px}
 .contest-feature-lead{font-size:clamp(1rem,2vw,1.2rem)}
 .contest-feature-copy>section,.contest-source{margin-top:clamp(18px,4vw,34px)}
+.contest-feature-copy>section p+p{margin-top:9px}
 .contest-source{border-top:1px solid var(--line);padding-top:18px}
+.contest-source a{display:flex;width:fit-content;max-width:100%;overflow-wrap:anywhere}
 .contest-detail-actions{margin-top:17px}
 .contest-discussion:empty{display:none}
 @media (prefers-reduced-motion:no-preference) and (hover:hover){

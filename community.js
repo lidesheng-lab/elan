@@ -370,10 +370,10 @@ function renderContestDetail(target,request,item,signedIn,today) {
   header.append(node("p",contestStatus(item,today)+" · "+item.category,"eyebrow"),node("h1",item.title));
   const content=node("div",null,"contest-feature-layout");
   const copy=node("div",null,"contest-feature-copy");
-  copy.append(node("h2",recruit ? "征稿简报" : "获奖简报"),node("p",item.summary,"contest-feature-lead"));
+  copy.append(node("h2",recruit ? "赛事概览" : "结果概览"),node("p",item.summary,"contest-feature-lead"));
   for(const detail of item.details || []) {
     const section=node("section");
-    section.append(node("h2",detail.title),node("p",detail.text));
+    section.append(node("h2",detail.title),...detail.text.split("\n").map(paragraph=>node("p",paragraph)));
     copy.append(section);
   }
   const facts=node("dl",null,"contest-facts");
@@ -385,10 +385,14 @@ function renderContestDetail(target,request,item,signedIn,today) {
     facts.append(row);
   }
   const source=node("footer",null,"contest-source");
-  const original=link(item.source.title+" ↗",item.source.url);
-  original.target="_blank";
-  original.rel="noreferrer";
-  source.append(node("h2",recruit ? "报名与完整章程" : "完整结果与作品"),original);
+  source.append(node("h2",recruit ? "报名与原公告" : "结果来源与作品"));
+  for(const reference of [item.source,...(item.references || [])]) {
+    if(typeof reference?.url!=="string" || !reference.url.startsWith("https://")) continue;
+    const original=link(reference.title+" ↗",reference.url);
+    original.target="_blank";
+    original.rel="noreferrer";
+    source.append(original);
+  }
   const tools=node("div",null,"community-actions contest-detail-actions");
   tools.append(favoriteControl(request,"contest",item.id,signedIn),
     shareControl(item.title,contestHref(item.id),signedIn));

@@ -256,7 +256,8 @@ function trendStory(post, variant="") {
     copy.append(element("p",post.description,"trend-story-deck"));
   }
   copy.append(season);
-  open.append(copy);
+  if (featured) open.prepend(copy);
+  else open.append(copy);
   story.append(open);
   return story;
 }

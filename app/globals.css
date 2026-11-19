@@ -320,7 +320,10 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(23px,3.4v
 .trend-story-deck{line-height:1.65;color:var(--quiet);margin:0 0 12px}
 .trend-story-featured .trend-story-title{font-size:clamp(2rem,3.85vw,3.8rem);margin:8px 0 12px}
 .trend-story-featured .trend-story-photo{aspect-ratio:3/1.8}
-.trend-story-featured .trend-story-copy{padding-top:16px}
+.trend-story-featured .trend-story-link{grid-template-rows:auto auto}
+.trend-story-featured .trend-story-copy{padding:0 0 17px}
+.trend-story-featured:not(.trend-story-no-photo){padding-bottom:12px}
+.trend-story-brief .trend-story-photo img{object-position:center 28%}
 .trend-story-brief .trend-story-photo{aspect-ratio:2.05}
 .trend-story-brief+.trend-story-brief{margin-top:17px}
 .trend-story-brief .trend-story-title{font-size:clamp(1.25rem,1.9vw,1.78rem);margin-block:5px 8px}

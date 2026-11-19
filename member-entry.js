@@ -494,5 +494,5 @@ const newsletter = /^#newsletter\/(confirm|unsubscribe)\/([a-f0-9]{64})\/([A-Za-
 window.addEventListener("hashchange", () => { if (surface === "public") entry(); });
 if (login) confirmLink("exchange", login[1], login[2]);
 else if (newsletter) confirmLink(newsletter[1], newsletter[2], newsletter[3]);
-else if (session && new URLSearchParams(location.search).get("editorial") !== "1") void loadMember();
+else if (session && publicRoute() !== "trends" && new URLSearchParams(location.search).get("editorial") !== "1") void loadMember();
 else entry();

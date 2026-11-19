@@ -6,6 +6,7 @@ import { beautyNotes } from "../lib/beauty";
 import GalleryDownload from "./gallery-download";
 import { imageDownloadPath, isImageUrl } from "../lib/download-image";
 import Subscribe from "./subscribe";
+import { membership } from "./member-transport";
 import Editorial from "./editorial";
 import { SavableImage, SaveOptions, type OpenSave, type SaveTarget } from "./savable-image";
 import { publicationName } from "../lib/publication";
@@ -117,9 +118,7 @@ export default function Studio({features}:{features:Study[]}) {
     let active=true;
     async function refresh() {
       try {
-        const response=await fetch("./data/archive.json",{cache:"no-cache"});
-        if (!response.ok) throw new Error("archive");
-        const data=await response.json() as Archive;
+        const data=await membership().request({memberAction:"archive"}) as Archive;
         if(active) {setArchive(data);setStatus("ready");}
       } catch {if(active) setStatus("offline");}
     }
@@ -132,14 +131,10 @@ export default function Studio({features}:{features:Study[]}) {
     if(!selected) return;
     const {slug,date,hasRunway}=selected;
     const controller=new AbortController();
-    const endpoint=hasRunway
-      ? "./data/runways/"+encodeURIComponent(date)+"-"+encodeURIComponent(slug)+".json"
-      : "./runways/"+encodeURIComponent(slug)+".json";
+    const key=hasRunway ? date+"-"+slug : slug;
     async function loadGallery() {
       try {
-        const response=await fetch(endpoint,{signal:controller.signal});
-        if(!response.ok) throw new Error("gallery");
-        const gallery=await response.json() as RunwayGallery;
+        const gallery=await membership().request({memberAction:"gallery",key},controller.signal) as RunwayGallery;
         if(!controller.signal.aborted) setGalleryResult({slug,gallery});
       } catch {
         if(!controller.signal.aborted) setGalleryResult({slug,gallery:null});

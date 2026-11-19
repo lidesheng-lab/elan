@@ -4,8 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  schedule:
-    - cron: '14 0 * * *'
 
 concurrency:
   group: elan-pages
@@ -14,28 +12,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: npm
-      - uses: actions/cache@v4
-        with:
-          path: public/media
-          key: elan-media-v1-${{ github.run_id }}
-          restore-keys: elan-media-v1-
-      - run: npm ci --no-audit --no-fund
-      - run: npm run sync
-      - run: npm run build
-      - name: Verify Pages bundle
+      - run: python3 scripts/build_gate.py
+      - name: Verify public membership entry
         run: |
           test -s dist/index.html
-          test -s dist/data/archive.json
-          test "$(du -sb dist | cut -f1)" -lt 1000000000
+          test -s dist/member-entry.js
+          test ! -e dist/data
+          test ! -e dist/media
+          test ! -e dist/runways
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist

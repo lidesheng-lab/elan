@@ -1,12 +1,13 @@
 import { useState, type FormEvent } from "react";
+import { membership } from "./member-transport";
 
 const endpoint = import.meta.env.VITE_ELAN_SUBSCRIBE_URL?.trim() ||
   "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 
-async function submitNewsletter(payload: Record<string, string>) {
+async function submitNewsletter(payload: Record<string, string>, session?: string) {
   const response = await fetch(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(session ? { Authorization: "Bearer " + session } : {}) },
     body: JSON.stringify(payload),
     signal: AbortSignal.timeout(12000),
   });
@@ -58,7 +59,7 @@ export function NewsletterManage() {
 }
 
 export default function Subscribe() {
-  const [email, setEmail] = useState("");
+  const email = membership().email;
   const [status, setStatus] = useState<"idle" | "submitting" | "registered">("idle");
   const [error, setError] = useState("");
 
@@ -68,7 +69,7 @@ export default function Subscribe() {
     setStatus("submitting");
     setError("");
     try {
-      const result = await submitNewsletter({ email });
+      const result = await submitNewsletter({ email }, membership().session);
       if (result.registered) {
         setStatus("registered");
         return;
@@ -90,9 +91,7 @@ export default function Subscribe() {
         : <form onSubmit={register}>
           <label htmlFor="subscribe-email">订阅邮箱</label>
           <div className="subscribe-fields">
-            <input id="subscribe-email" type="email" autoComplete="email" maxLength={254} required
-              value={email} onChange={event => setEmail(event.target.value)} placeholder="name@example.com"
-              disabled={status === "submitting"}/>
+            <input id="subscribe-email" type="email" value={email} readOnly/>
             <button className="primary" type="submit" disabled={status === "submitting"}>
               {status === "submitting" ? "登记中…" : "免费订阅"}
             </button>

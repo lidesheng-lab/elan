@@ -1,16 +1,16 @@
-import mediaMap from "./media-map.json";
+import { memberAsset } from "../app/member-transport";
 
-const localImage = /^\.\/media\/[a-f0-9]{64}\.(?:jpe?g|png|webp|avif|gif)$/i;
+const privateImage = /^https:\/\/elan-d8gtdxsaw5a7788d2-1507516836\.ap-shanghai\.app\.tcloudbase\.com\/newsletter\?picture=/;
 
 export function isImageUrl(url: string) {
-  return localImage.test(url) || /^https:\/\/[^\s]+\.(?:jpe?g|png|webp|avif|gif)(?:[?#]|$)/i.test(url);
+  return privateImage.test(url) || /^https:\/\/[^\s]+\.(?:jpe?g|png|webp|avif|gif)(?:[?#]|$)/i.test(url);
 }
 
 export function mediaUrl(url: string) {
-  return (mediaMap as Record<string, string>)[url] ?? url;
+  return isImageUrl(url) ? memberAsset(url) : url;
 }
 
 export function imageDownloadPath(url: string, _name: string): string | null {
   const asset = mediaUrl(url);
-  return localImage.test(asset) ? asset : null;
+  return privateImage.test(asset) ? asset : null;
 }

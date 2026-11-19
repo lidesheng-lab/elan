@@ -19,7 +19,8 @@ export default function GalleryDownload({gallery, slug}: {gallery: RunwayGallery
               throw new Error("image");
             }
             const name = "look-" + String(image.number).padStart(2, "0");
-            const extension = /\.([a-z0-9]+)(?:[?#]|$)/i.exec(image.url)?.[1] ?? "jpg";
+            const type = response.headers.get("Content-Type")?.split(";")[0].slice(6);
+            const extension = type === "jpeg" ? "jpg" : type || "jpg";
             yield { name: name + "." + extension, input: await response.blob() };
           } catch {
             missing.push(image.number);

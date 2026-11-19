@@ -64,7 +64,7 @@ function sectionTitle(target,title,subtitle) {
   target.append(header);
 }
 function badge({kind,label}) {
-  return node("span",(kind==="judge" ? "◇ " : "✦ ")+label,"community-badge "+kind);
+  return node("span",(kind==="official" ? "" : kind==="judge" ? "◇ " : "✦ ")+label,"community-badge "+kind);
 }
 function imageHref(file) {
   if(!file || !["image/jpeg","image/png","image/webp"].includes(file.mime)) return "";
@@ -124,7 +124,8 @@ async function upload(file,{side=1200,cap=200000,pdf=false}={}) {
   } finally { URL.revokeObjectURL(src); }
 }
 
-export function favoriteControl(request,kind,id) {
+export function favoriteControl(request,kind,id,signedIn=true) {
+  if(!signedIn) return link("登录后收藏","#login","member-secondary");
   const wrapper=node("div",null,"favorite-control");
   const control=button("收藏","member-secondary");
   const message=status();
@@ -139,6 +140,35 @@ export function favoriteControl(request,kind,id) {
   request({memberAction:"communityFavorite",kind,id}).then(update,()=>{ message.textContent="暂时无法读取收藏状态。"; })
     .finally(()=>{control.disabled=false;});
   interact(control,message,async()=>update(await request({memberAction:"communityFavorite",kind,id,saved:!saved})));
+  return wrapper;
+}
+
+export function shareControl(title,href,signedIn) {
+  if(!signedIn) return link("登录后分享","#login","member-secondary");
+  const wrapper=node("div",null,"favorite-control");
+  const control=button("分享");
+  const message=status();
+  wrapper.append(control,message);
+  interact(control,message,async()=>{
+    const url=new URL(href,location.origin).href;
+    if(navigator.share) {
+      try { await navigator.share({title,url}); return; }
+      catch(error) { if(error.name==="AbortError") return; }
+    }
+    if(navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+        message.textContent="链接已复制。";
+        return;
+      } catch { /* Present a selectable link if clipboard access is unavailable. */ }
+    }
+    const field=node("input");
+    field.readOnly=true;
+    field.value=url;
+    field.setAttribute("aria-label","分享链接");
+    message.replaceChildren(field);
+    field.select();
+  });
   return wrapper;
 }
 
@@ -193,8 +223,8 @@ export async function renderProfile(target,request,logout) {
     const who=authorLine({...model.profile,badges:approved});
     const signout=button("退出登录");
     const actions=node("div",null,"community-actions");
-    if(model.admin) actions.append(link("会员与认证审核","/?panel=admin"));
-    if(!model.premium) actions.append(link("申请高级会员","#upgrade"));
+    if(model.admin===true) actions.append(link("会员与认证审核","/?panel=admin"));
+    if(!model.premium) actions.append(link(model.premiumPending ? "高级会员待审核" : "申请高级会员","#upgrade"));
     actions.append(signout);
     signout.onclick=()=>void logout();
     header.append(who,actions);
@@ -218,7 +248,7 @@ export async function renderProfile(target,request,logout) {
     },"submit");
     const shelf=node("section",null,"community-panel");
     shelf.append(node("h2","我的收藏"));
-    for(const [kind,title] of [["runway","秀场"],["trend","趋势文章"]]){
+    for(const [kind,title] of [["runway","秀场"],["trend","趋势文章"],["contest","服装设计大赛"],["post","设计广场"]]){
       const records=model.favorites.filter(item=>item.kind===kind);
       shelf.append(node("h3",title,"community-shelf-label"));
       if(!records.length) shelf.append(node("p","暂无收藏。","community-meta"));
@@ -246,7 +276,7 @@ export async function renderProfile(target,request,logout) {
   try { await load(); } catch(error) { message.textContent=error.message; }
 }
 
-function thread(request,target,state) {
+function thread(request,target,state,signedIn) {
   const wrapper=node("div",null,"community-thread");
   const bar=node("div",null,"community-actions");
   const like=button("点赞","member-secondary");
@@ -267,10 +297,20 @@ function thread(request,target,state) {
   const list=node("div",null,"community-comment-list");
   const more=button("查看更多评论","text-action");
   more.hidden=true;
-  const form=node("form",null,"community-form community-comment-form");
-  const field=formControl(form,"写评论",{name:"text",multiline:true,rows:2,required:true,limit:600});
-  submitButton(form,"发布评论");
-  replies.append(form,list,more);
+  if(signedIn) {
+    const form=node("form",null,"community-form community-comment-form");
+    const field=formControl(form,"写评论",{name:"text",multiline:true,rows:2,required:true,limit:600});
+    submitButton(form,"发布评论");
+    let commentId=crypto.randomUUID();
+    interact(form,message,async()=>{
+      await request({memberAction:"communityComment",target,text:field.value,id:commentId});
+      field.value="";
+      commentId=crypto.randomUUID();
+      await fill();
+    },"submit");
+    replies.append(form);
+  } else replies.append(link("登录后评论","#login","member-secondary"));
+  replies.append(list,more);
   let next=null;
   async function fill(offset=0) {
     const result=await request({memberAction:"communityThread",target,offset});
@@ -296,58 +336,99 @@ function thread(request,target,state) {
     update(state);
   });
   interact(more,message,async()=>{if(next!==null) await fill(next);});
-  let commentId=crypto.randomUUID();
-  interact(form,message,async()=>{
-    await request({memberAction:"communityComment",target,text:field.value,id:commentId});
-    field.value="";
-    commentId=crypto.randomUUID();
-    await fill();
-  },"submit");
   return wrapper;
 }
-export async function renderContests(target,request) {
+export async function mountTrendDiscussion(output,request,slug,signedIn) {
+  try {
+    const target="trend:"+slug;
+    const state=await request({memberAction:"communityThread",target});
+    if(output.isConnected) output.append(thread(request,target,state,signedIn));
+  } catch {
+    if(output.isConnected) output.append(node("p","评论暂时无法读取。","community-meta"));
+  }
+}
+
+export async function renderContests(target,request,signedIn,selected) {
   target.classList.add("community-page");
   sectionTitle(target,"服装设计大赛","按征稿和获奖整理。报名要求、截止时间和完整名单以来源公告为准。");
   const tabs=node("div",null,"pills");
+  const search=node("input",null,"contest-search");
+  search.type="search";
+  search.placeholder="搜索赛事、类别或主办方";
+  search.setAttribute("aria-label","搜索赛事");
   const list=node("div",null,"community-contest-list");
+  const more=button("查看更多赛事");
+  more.hidden=true;
   const message=status();
-  target.append(tabs,list,message);
+  if(selected) target.append(link("← 全部赛事","#contests"));
+  else target.append(tabs,search);
+  target.append(list,more,message);
   message.textContent="正在读取赛事…";
   try {
     const {items}=await request({memberAction:"communityContests"});
     if(!target.isConnected) return;
+    const engagement=new Map();
+    let selection=items.find(item=>item.id===selected)?.kind || "recruit",visible=12,revision=0;
     const filters=[["recruit","征稿"],["award","获奖"]];
     const controls=filters.map(([kind,label])=>{
-      const control=button(label,"");
-      control.onclick=()=>paint(kind);
+      const control=button(label+" · "+items.filter(item=>item.kind===kind).length,"");
+      control.onclick=()=>{selection=kind;visible=12;paint();};
       tabs.append(control);
       return control;
     });
     const today=dateKey.format(new Date());
-    function paint(kind) {
+    function paint() {
+      const kind=selection;
+      const term=search.value.trim().toLowerCase();
+      const version=++revision;
       for(let i=0;i<filters.length;i++) controls[i].setAttribute("aria-pressed",String(filters[i][0]===kind));
       list.replaceChildren();
-      const rows=items.filter(item=>item.kind===kind).sort((a,b)=>kind==="award" ? b.date.localeCompare(a.date) :
+      const rows=items.filter(item=>selected ? item.id===selected :
+        item.kind===kind && [item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
+        .sort((a,b)=>kind==="award" ? b.date.localeCompare(a.date) :
         Number(a.deadline<today)-Number(b.deadline<today) || a.deadline.localeCompare(b.deadline));
-      for(const item of rows) {
+      const holders=new Map();
+      for(const item of rows.slice(0,visible)) {
         const card=node("article",null,"community-panel contest-card");
         const label=kind==="award" ? "获奖公示" : item.deadline<today ? "已截止" : "征稿中";
         const href=link(item.source.title+" ↗",item.source.url);
         href.target="_blank";
         href.rel="noreferrer";
+        const holder=node("div");
+        const actions=node("div",null,"community-actions");
+        actions.append(favoriteControl(request,"contest",item.id,signedIn),shareControl(item.title,"/#contests/"+item.id,signedIn));
+        holders.set(item.id,holder);
         card.append(node("p",label+" · "+item.category,"eyebrow"),node("h2",item.title),
           node("p",item.organizer+" · "+(item.deadline ? "截止 "+item.deadline : item.date),"community-meta"),
-          node("p",item.summary,"community-copy"),href,thread(request,"contest:"+item.id,item.engagement));
+          node("p",item.summary,"community-copy"),href,actions,holder);
+        if(engagement.has(item.id)) holder.append(thread(request,"contest:"+item.id,engagement.get(item.id),signedIn));
         list.append(card);
       }
       if(!rows.length) list.append(node("p","暂无相关赛事。","notice"));
+      more.hidden=rows.length<=visible;
+      const pending=[...holders.keys()].filter(id=>!engagement.has(id));
+      for(let step=0;step<pending.length;step+=12) {
+        const ids=pending.slice(step,step+12);
+        void request({memberAction:"communityContestEngagement",ids}).then(({items:states})=>{
+          if(version!==revision) return;
+          for(const [id,state] of Object.entries(states)){
+            engagement.set(id,state);
+            holders.get(id).replaceChildren(thread(request,"contest:"+id,state,signedIn));
+          }
+        },()=>{
+          if(version!==revision) return;
+          for(const id of ids) holders.get(id).textContent="暂时无法读取评论与点赞。";
+        });
+      }
     }
-    paint("recruit");
+    search.oninput=()=>{visible=12;paint();};
+    more.onclick=()=>{visible+=12;paint();};
+    paint();
     message.remove();
   } catch(error) { message.textContent=error.message; }
 }
 
-export async function renderSquare(target,request) {
+export async function renderSquare(target,request,signedIn,selected) {
   target.classList.add("community-page");
   sectionTitle(target,"设计广场","分享原创设计、参赛心得和评审观察。");
   const composer=node("details",null,"community-panel community-composer");
@@ -365,20 +446,22 @@ export async function renderSquare(target,request) {
   const more=button("加载更多帖子");
   const message=status();
   more.hidden=true;
-  target.append(composer,list,more,message);
+  if(selected) target.append(link("← 返回设计广场","#square"));
+  else target.append(signedIn ? composer : link("登录后发布作品","#login","member-secondary"));
+  target.append(list,more,message);
   let offset=0;
   async function load(reset=false) {
     if(reset) offset=0;
-    const {items,next}=await request({memberAction:"communityPosts",offset});
+    const {items,next}=await request({memberAction:"communityPosts",offset,id:selected || undefined});
     if(!target.isConnected) return;
     if(reset) list.replaceChildren();
     if(!items.length && !list.childElementCount) list.append(node("p","还没有帖子。","notice"));
     offset=next;
     for(const item of items) {
       if(document.getElementById("board-"+item.id)) continue;
-      const card=node("article",null,"community-panel square-card");
+      const card=node("article",null,"community-panel square-card"+(item.official ? " official-post" : ""));
       card.id="board-"+item.id;
-      card.append(node("p",item.category+" · "+dateFormat.format(item.createdAt),"eyebrow"),
+      card.append(node("p",(item.official ? "置顶 · " : "")+item.category+" · "+dateFormat.format(item.createdAt),"eyebrow"),
         node("h2",item.title),authorLine(item.author),node("p",item.content,"community-copy"));
       if(item.hasImage) {
         const loadImage=button("查看作品图","text-action");
@@ -392,7 +475,9 @@ export async function renderSquare(target,request) {
           loadImage.replaceWith(graphic);
         });
       }
-      card.append(thread(request,"post:"+item.id,item.engagement));
+      const actions=node("div",null,"community-actions");
+      actions.append(favoriteControl(request,"post",item.id,signedIn),shareControl(item.title,"/#square/"+item.id,signedIn));
+      card.append(actions,thread(request,"post:"+item.id,item.engagement,signedIn));
       if(item.canRemove) {
         const remove=button("移除帖子","text-action");
         const result=status();

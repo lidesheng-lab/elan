@@ -14,6 +14,7 @@ OUT.mkdir()
 shutil.copyfile(ROOT / "member-shell.html", OUT / "index.html")
 shutil.copyfile(ROOT / "member-entry.js", OUT / "member-entry.js")
 shutil.copyfile(ROOT / "community.js", OUT / "community.js")
+shutil.copyfile(ROOT / "home-runway.json", OUT / "home-runway.json")
 shutil.copyfile(ROOT / "public" / "favicon.svg", OUT / "favicon.svg")
 shutil.copytree(ROOT / "public" / "fonts", OUT / "fonts")
 css = (ROOT / "app" / "globals.css").read_text(encoding="utf-8")
@@ -64,6 +65,7 @@ def encrypted_feed(filename, public_metadata=frozenset()):
     return rows
 
 encrypted_feed("history-feed.json")
+encrypted_feed("contest-feed.json", {"slug"})
 articles = encrypted_feed("trend-vault.json", article_fields)
 catalog = [{key: row[key] for key in sorted(article_fields)} for row in articles]
 if len({row["slug"] for row in catalog}) != len(catalog):

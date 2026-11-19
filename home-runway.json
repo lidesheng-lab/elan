@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "seoul-spring-2027-opening-runway",
+    "brand": "首尔时装周",
+    "season": "2027 春夏",
+    "reason": "从肩部、腰位和鞋履读全身比例。用两张现场照片对照，看造型的重心怎样移动。",
+    "images": [
+      {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Seoul_Fashion_Week_2027_SS_05.jpg/960px-Seoul_Fashion_Week_2027_SS_05.jpg",
+        "alt": "2027 春夏首尔时装周开幕日，一位模特走在东大门设计广场的秀场上",
+        "caption": "首尔时装周开幕日，东大门设计广场 · 2026 年 9 月 1 日",
+        "credit": "朴大镇（Park Dae-jin） / 韩国文化体育观光部 · 原幅缩放",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Seoul_Fashion_Week_2027_SS_05.jpg",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      },
+      {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Seoul_Fashion_Week_2027_SS_07.jpg/960px-Seoul_Fashion_Week_2027_SS_07.jpg",
+        "alt": "首尔时装周开幕日现场的全身秀场照片",
+        "caption": "同场活动的另一张现场记录",
+        "credit": "朴大镇（Park Dae-jin） / 韩国文化体育观光部 · 原幅缩放",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Seoul_Fashion_Week_2027_SS_07.jpg",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+      }
+    ]
+  },
+  {
+    "slug": "y3-2010-technical-drape",
+    "brand": "Y-3",
+    "season": "2010 秋冬 · 档案回看",
+    "reason": "对照针织、拉链开合和摆量，观察运动感怎样来自服装结构。",
+    "images": [
+      {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Y-3_Fall-Winter_2010_226.jpg/960px-Y-3_Fall-Winter_2010_226.jpg",
+        "alt": "Y-3 2010 秋冬纽约时装周的秀场现场",
+        "caption": "Y-3 2010 秋冬 · 纽约秀场原照",
+        "credit": "Masaki-H · 原幅缩放",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Y-3_Fall-Winter_2010_226.jpg",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/"
+      }
+    ]
+  },
+  {
+    "slug": "patinated-neutrals-aw27-28",
+    "brand": "Michael Kors",
+    "season": "2010 秋冬 · 档案回看",
+    "reason": "用同一组中性色对照厚针织、麂皮和亮面材质，观察光泽怎样拉开层次。",
+    "images": [
+      {
+        "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Michael_Kors_Fall-Winter_2010_202.jpg/960px-Michael_Kors_Fall-Winter_2010_202.jpg",
+        "alt": "Michael Kors 2010 秋冬纽约时装周秀场造型",
+        "caption": "Michael Kors 2010 秋冬 · 摄影档案 202",
+        "credit": "Masaki-H · 原幅缩放",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Michael_Kors_Fall-Winter_2010_202.jpg",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/"
+      }
+    ]
+  }
+]

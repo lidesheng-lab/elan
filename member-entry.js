@@ -1,4 +1,4 @@
-import { favoriteControl, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
+import { favoriteControl, shareControl, mountTrendDiscussion, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
 
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 const storageKey = "elan-member-session";
@@ -16,8 +16,8 @@ const sections = [
 const lockedSections = new Set(["designers", "beauty", "studio"]);
 const communityRoutes = new Map([
   ["profile",["个人中心",target=>renderProfile(target,request,logout)]],
-  ["contests",["服装设计大赛",target=>renderContests(target,request)]],
-  ["square",["设计广场",target=>renderSquare(target,request)]],
+  ["contests",["服装设计大赛",target=>renderContests(target,request,Boolean(account),sectionDetail())]],
+  ["square",["设计广场",target=>renderSquare(target,request,Boolean(account),sectionDetail())]],
 ]);
 const accessRoutes = new Set(["login", "register", "reset"]);
 const accessCopy = {
@@ -27,10 +27,26 @@ const accessCopy = {
 };
 const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["silhouette", "廓形趋势"]];
 const feeds = new Map();
+const wantsAdmin = () => new URLSearchParams(location.search).get("panel")==="admin";
+const sectionDetail = () => location.hash.split("/")[1] || "";
+const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike"]);
+let visitorId;
+
+function visitorDevice() {
+  if (visitorId) return visitorId;
+  visitorId = crypto.randomUUID();
+  try {
+    const saved = localStorage.getItem("elan-visitor-reactions");
+    if (saved && /^[a-f0-9-]{36}$/.test(saved)) visitorId = saved;
+    else localStorage.setItem("elan-visitor-reactions",visitorId);
+  } catch { /* Use the in-page identifier when storage is unavailable. */ }
+  return visitorId;
+}
 
 async function request(body, signal, credentials = session) {
   const headers = { "Content-Type": "application/json" };
   if (credentials) headers.Authorization = "Bearer " + credentials;
+  else if (visitorActions.has(body.memberAction)) body = {...body,device:visitorDevice()};
   const response = await fetch(api, { method: "POST", headers, body: JSON.stringify(body),
     signal: signal || AbortSignal.timeout(15000) });
   const result = await response.json();
@@ -96,7 +112,7 @@ function showAccess(mode) {
     dialog.addEventListener("close", () => {
       if (!dialog.isConnected) return;
       dialog.remove();
-      if (accessRoutes.has(publicRoute())) history.replaceState(null, "", location.pathname + location.search + pageHash);
+      if (wantsAdmin() || accessRoutes.has(publicRoute())) history.replaceState(null, "", location.pathname + (wantsAdmin() ? "" : location.search) + pageHash);
       if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus({preventScroll:true});
     });
     root.append(dialog);
@@ -119,7 +135,7 @@ function bindAccess(mode) {
       const result = await request({ memberAction: "passwordLogin", email, password: data.get("password") }, undefined, "");
       if (!form.isConnected) return;
       startSession(result.session);
-      history.replaceState(null, "", "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile"));
+      history.replaceState(null, "", wantsAdmin() ? "/?panel=admin" : "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile"));
       await loadMember();
     } else {
       await request({ memberAction: mode, email }, undefined, "");
@@ -156,6 +172,8 @@ function publicRoute() {
   const route = location.hash.slice(1);
   if (/^trends\/[a-z0-9-]+$/.test(route)) return "trends";
   if (/^designers\/[a-z0-9-]+$/.test(route)) return "designers";
+  if (/^contests\/[a-z0-9-]{1,110}$/.test(route)) return "contests";
+  if (/^square\/[a-f0-9-]{36}$/.test(route)) return "square";
   return sections.some(([key]) => key === route) || accessRoutes.has(route) || communityRoutes.has(route) ||
     ["subscribe","upgrade"].includes(route) ? route : "home";
 }
@@ -169,7 +187,10 @@ function renderTrendArticle(output, post) {
   const meta = element("p", null, "eyebrow");
   meta.append(date, " · " + post.season + " · " + categories.find(([key]) => key === post.category)[1]);
   article.append(back, meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
-  article.append(favoriteControl(request,"trend",post.slug));
+  const actions = element("div", null, "community-actions");
+  actions.append(favoriteControl(request,"trend",post.slug,Boolean(account)),
+    shareControl(post.title,articleLink(post.slug),Boolean(account)));
+  article.append(actions);
   const photos = element("div", null, "trend-feature-photos");
   for (const photo of post.images) {
     const figure = element("figure");
@@ -200,7 +221,11 @@ function renderTrendArticle(output, post) {
     sources.append(credit);
   }
   article.append(sources);
+  const discussion = element("section", null, "trend-discussion");
+  discussion.setAttribute("aria-label","文章评论");
+  article.append(discussion);
   output.replaceChildren(article);
+  void mountTrendDiscussion(discussion,request,post.slug,Boolean(account));
 }
 async function showTrendArticles(target) {
   const output = target.querySelector(".trend-articles");
@@ -270,9 +295,54 @@ function addSource(parent, source) {
     parent.append(anchor);
   } catch { /* Malformed source references are omitted. */ }
 }
+function runwayPhoto(photo,href,priority=false) {
+  const figure=element("figure",null,"home-runway-photo");
+  const imageLink=element("a");
+  imageLink.href=href;
+  const img=element("img");
+  img.src=photo.url;
+  img.alt=photo.alt;
+  img.decoding="async";
+  if(priority) img.fetchPriority="high";
+  else img.loading="lazy";
+  const caption=element("figcaption",photo.credit+" · ");
+  addSource(caption,{title:photo.license,url:photo.licenseUrl});
+  caption.append(" · ");
+  addSource(caption,{title:"原图",url:photo.sourceUrl});
+  imageLink.append(img);
+  figure.append(imageLink,caption);
+  return figure;
+}
+async function showHomeRunways(target) {
+  try {
+    const [cover,...picks]=await feed("./home-runway.json");
+    if(!target.isConnected || !cover) return;
+    const hero=target.querySelector(".public-cover-art");
+    hero.removeAttribute("aria-hidden");
+    hero.replaceChildren(...cover.images.map(photo=>runwayPhoto(photo,articleLink(cover.slug),true)));
+    target.querySelector(".cover-season").textContent=cover.brand+" · "+cover.season;
+    target.querySelector(".cover-intro").textContent=cover.reason;
+    const action=target.querySelector(".cover-action");
+    action.href=articleLink(cover.slug);
+    action.textContent="阅读秀场观察";
+    const grid=target.querySelector(".home-runway-grid");
+    for(const item of picks) {
+      const card=element("article",null,"home-runway-card");
+      const href=articleLink(item.slug);
+      const title=element("a",item.brand);
+      title.href=href;
+      const heading=element("h3");
+      heading.append(title);
+      card.append(runwayPhoto(item.images[0],href),element("p",item.season,"eyebrow"),
+        heading,element("p",item.reason,"community-copy"));
+      grid.append(card);
+    }
+    target.querySelector(".home-runways").hidden=!grid.childElementCount;
+  } catch { /* The cover text remains available when the recommendations feed fails. */ }
+}
 function entry() {
   surface = "public";
-  const current = publicRoute();
+  const current = wantsAdmin() && !account && !accessRoutes.has(publicRoute()) ? "login" : publicRoute();
   const access = accessRoutes.has(current);
   if (access && document.getElementById("public-content")) {
     showAccess(current);
@@ -284,8 +354,9 @@ function entry() {
   const navigation = sections.map(([key, label]) =>
     `<a href="${account?.premium && lockedSections.has(key) ? "/" : ""}#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   let content;
-  const readTrends = route === "trends" && account;
+  const readTrends = route === "trends";
   const communityPage = communityRoutes.get(route);
+  const readCommunity = communityPage && (account || route !== "profile");
   if (readTrends) {
     const detail = location.hash.startsWith("#trends/");
     content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>每日一篇秀场观察，按日期与主题选读。</p></div>
@@ -295,10 +366,8 @@ function entry() {
           ${categories.map(([key,title]) => `<option value="${key}">${title}</option>`).join("")}</select></label>
       </div>`}
       <section class="trend-articles" aria-label="趋势文章"><p class="notice" role="status">正在读取文章…</p></section>`;
-  } else if (route === "trends") {
-    content = `<div class="section-title"><h1>流行趋势</h1></div>${lockedPreview("趋势文章需要登录", "普通会员可阅读每日文章。", '<a class="primary" href="#login">登录后阅读</a>')}`;
   } else if (communityPage) {
-    content = account ? '<p class="notice" role="status">正在读取…</p>' :
+    content = readCommunity ? '<p class="notice" role="status">正在读取…</p>' :
       `<div class="section-title"><h1>${communityPage[0]}</h1></div>${lockedPreview("请先登录", "普通会员和高级会员均可使用。", '<a class="primary" href="#login">会员登录</a>')}`;
   } else if (lockedSections.has(route)) {
     const title = sections.find(([key]) => key === route)[1];
@@ -306,20 +375,25 @@ function entry() {
       ${lockedPreview("高级会员专享", "通过管理员授权后，可查看完整内容。", premiumLink())}`;
   } else if (route === "upgrade") {
     content = `<section class="member-panel public-access"><h1>申请高级会员</h1>
-      <p>请联系管理员，提供你的 ÉLAN 注册邮箱。管理员授权后即可查看完整品牌档案、美妆和线稿工作台。</p>
-      <p><strong>微信 LDSH557788</strong></p>
-      <div class="member-actions">${account ? '<a class="primary" href="/?refresh=1">刷新权限</a>' : '<a class="primary" href="#login">会员登录</a>'}</div></section>`;
+      <p>提交申请后，管理员将收到邮件。获得授权后即可查看完整品牌档案、美妆和线稿工作台。</p>
+      <div class="member-actions">${account ? (account.premium ? '<a class="primary" href="#profile">已开通高级会员</a>' :
+        '<button class="primary" type="button" id="apply-premium">提交申请</button>') : '<a class="primary" href="#login">会员登录</a>'}</div>
+      <p class="member-message" id="member-message" role="status"></p></section>`;
   } else {
     content = `<article class="cover-story public-cover" aria-labelledby="public-cover-title">
       <div class="public-cover-art" aria-hidden="true"><span></span><span></span></div>
-      <div class="cover-copy"><p class="eyebrow">ÉLAN</p>
-      <h1 id="public-cover-title">从秀场<br>读设计</h1>
+      <div class="cover-copy"><p class="eyebrow">秀场推荐</p>
+      <h1 id="public-cover-title">从秀场<br>读设计</h1><p class="cover-season"></p>
       <p class="cover-intro">品牌档案、美妆观察与每日趋势长文。</p>
-      <a class="primary cover-action" href="${account ? "#trends" : "#login"}">${account ? "查看流行趋势" : "会员登录"}</a></div></article>`;
+      <a class="primary cover-action" href="#trends">查看流行趋势</a></div></article>
+      <section class="home-runways" aria-labelledby="home-runway-title" hidden>
+      <div class="section-title"><h2 id="home-runway-title">秀场档案选读</h2>
+      <a class="text-action" href="#trends">全部趋势文章</a></div>
+      <div class="home-runway-grid"></div></section>`;
   }
   root.innerHTML = `<header class="topbar">
     <div class="masthead-tools"><div class="masthead-account">${account ?
-      `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
+      `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin===true ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
       '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe">免费订阅</a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
@@ -347,10 +421,29 @@ function entry() {
     finally { button.disabled = false; }
   };
   if (readTrends) void showTrendArticles(document.getElementById("public-content"));
-  if (communityPage && account) {
+  if (route === "home" || route === "subscribe") void showHomeRunways(document.getElementById("public-content"));
+  if (readCommunity) {
     const target = document.getElementById("public-content");
     target.replaceChildren();
     void communityPage[1](target);
+  }
+  const apply=document.getElementById("apply-premium");
+  if(apply) {
+    apply.disabled=true;
+    request({memberAction:"communityAccount"}).then(data=>{
+      if(data.premiumPending) { apply.textContent="已申请 · 待审核"; }
+      else apply.disabled=false;
+    },()=>{apply.disabled=false;});
+    apply.onclick=async()=>{
+      apply.disabled=true;
+      try {
+        await request({memberAction:"communityRequestPremium"});
+        apply.textContent="已申请 · 待审核";
+      } catch(error) {
+        if(apply.isConnected) message(error.message);
+        apply.disabled=false;
+      }
+    };
   }
   if (route === "subscribe") document.getElementById("subscribe").scrollIntoView();
   else window.scrollTo(0, 0);
@@ -397,7 +490,11 @@ async function loadMember() {
   try {
     const profile = await request({ memberAction: "profile" });
     account = profile;
-    if (profile.admin && new URLSearchParams(location.search).get("panel") === "admin") await adminPanel(profile);
+    if (profile.admin===true && wantsAdmin()) await adminPanel(profile);
+    else if(wantsAdmin()) {
+      history.replaceState(null,"","/#profile");
+      entry();
+    }
     else if (profile.premium && (publicRoute()==="home" || lockedSections.has(publicRoute()))) await openArchive(profile);
     else entry();
   } catch (error) {
@@ -441,7 +538,7 @@ async function openArchive(profile) {
   signout.textContent = "退出";
   signout.onclick = () => void logout();
   root.after(signout);
-  if (profile.admin) {
+  if (profile.admin===true) {
     const admin = document.createElement("a");
     admin.className = "member-exit member-admin-link";
     admin.href = "/?panel=admin";
@@ -462,7 +559,7 @@ async function adminPanel(profile) {
       <button class="primary" type="submit">授予高级会员</button>
     </form>
     <label for="member-state">按状态查看</label>
-    <select id="member-state"><option value="standard">普通会员</option><option value="approved">高级会员</option></select>
+    <select id="member-state"><option value="pending">待审高级会员申请</option><option value="standard">普通会员</option><option value="approved">高级会员</option></select>
     <ul id="members" class="member-list"></ul>
     <section id="certification-review" class="community-admin"></section>`);
   document.getElementById("exit-admin").onclick = () => void logout();
@@ -470,7 +567,8 @@ async function adminPanel(profile) {
   const list = document.getElementById("members");
   async function refresh() {
     const current = state.value;
-    const { members } = await request({ memberAction: "members", state: current });
+    const members = current==="pending" ? (await request({memberAction:"communityPremiumQueue"})).items :
+      (await request({memberAction:"members",state:current})).members;
     if (current !== state.value) return;
     list.replaceChildren();
     for (const member of members) {

@@ -142,6 +142,8 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(21px,3vw,
 .subscribe-fields input{flex:1;min-width:min(180px,100%);min-height:46px;padding:8px 12px;border:1px solid #b4a19d;background:white}
 .subscribe-section .subscribe-error{margin-top:8px;color:var(--wine)}
 .subscribe-section .subscribe-success{font-weight:700;color:var(--wine)}
+.newsletter-manage{max-width:760px;margin:clamp(24px,12vh,120px) auto;padding:0 20px}
+.newsletter-manage h1{margin-bottom:12px;font:500 2.5rem/1 var(--serif)}
 .site-footer{background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:18px;padding:28px max(var(--pad),calc((100% - var(--page))/2 + var(--pad)))}
 .footer-wordmark{font-size:clamp(2.6rem,4.5vw,4.65rem)}
 .site-footer nav{display:flex;flex-wrap:wrap;gap:12px 22px;font-size:.875rem}

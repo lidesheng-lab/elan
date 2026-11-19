@@ -1,6 +1,7 @@
 const { readFileSync, writeFileSync, existsSync } = require("node:fs");
 const { resolve } = require("node:path");
 const { constants, createCipheriv, createHash, publicEncrypt, randomBytes } = require("node:crypto");
+const { trendPage } = require("./public-editorial.cjs");
 
 const [inputPath, outputPath = resolve(__dirname, "../trend-vault.json")] = process.argv.slice(2);
 if (!inputPath) throw new Error("Supply a JSON file containing one article or an array of articles");
@@ -43,7 +44,8 @@ for (const post of entries) {
   const body = Buffer.concat([cipher.update(JSON.stringify(post), "utf8"), cipher.final()]);
   const wrapped = publicEncrypt({key:encryptionKey, padding:constants.RSA_PKCS1_OAEP_PADDING, oaepHash:"sha256"}, secret);
   const encode = buffer => buffer.toString("base64url");
-  feed.push({id, slug, date, season, category, title, cover, nonce:encode(nonce), tag:encode(cipher.getAuthTag()), key:encode(wrapped), body:encode(body)});
+  feed.push({id, slug, date, season, category, title, cover, nonce:encode(nonce), tag:encode(cipher.getAuthTag()), key:encode(wrapped), body:encode(body),
+    public:trendPage(post)});
   known.add(slug);
 }
 writeFileSync(outputPath, JSON.stringify(feed) + "\n");

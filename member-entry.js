@@ -16,7 +16,7 @@ const sections = [
 const lockedSections = new Set(["designers", "beauty", "studio"]);
 const communityRoutes = new Map([
   ["profile",["个人中心",target=>renderProfile(target,request,logout)]],
-  ["contests",["服装设计大赛",target=>renderContests(target,request,Boolean(account),sectionDetail())]],
+  ["contests",["服装设计大赛",target=>renderContests(target,request,readPublicContests,Boolean(account),sectionDetail())]],
   ["square",["设计广场",target=>renderSquare(target,request,Boolean(account),sectionDetail())]],
 ]);
 const accessRoutes = new Set(["login", "register", "reset", "subscribe"]);
@@ -32,6 +32,7 @@ const wantsAdmin = () => new URLSearchParams(location.search).get("panel")==="ad
 const sectionDetail = () => location.hash.slice(1).split("?")[0].split("/")[1] || "";
 const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike"]);
 let visitorId;
+let contestCatalog;
 
 function visitorDevice() {
   if (visitorId) return visitorId;
@@ -277,14 +278,14 @@ async function showTrendArticles(target) {
   const output = target.querySelector(".trend-articles");
   const slug = sectionDetail();
   try {
-    const posts = await feed("./trend-articles.json");
-    if (!target.isConnected) return;
     if (slug) {
-      if (!posts.some(item => item.slug === slug)) throw new Error("Article unavailable");
-      const post = await request({ memberAction: "trendArticle", slug });
+      const post = await feed("./trend-detail/" + slug + ".json", 4000)
+        .catch(() => request({ memberAction: "trendArticle", slug }));
       if (target.isConnected) renderTrendArticle(output, post);
       return;
     }
+    const posts = await feed("./trend-articles.json");
+    if (!target.isConnected) return;
     const dateChoice = target.querySelector("#trend-date");
     const categoryChoice = target.querySelector("#trend-article-category");
     const reset = target.querySelector("#trend-clear");
@@ -311,14 +312,20 @@ async function showTrendArticles(target) {
     }
   }
 }
-function feed(path) {
+function feed(path, timeout = 12000) {
   if (!feeds.has(path)) {
-    feeds.set(path, fetch(path, { signal: AbortSignal.timeout(12000) }).then(response => {
+    feeds.set(path, fetch(path, { signal: AbortSignal.timeout(timeout) }).then(response => {
       if (!response.ok) throw new Error("feed");
       return response.json();
     }).catch(error => { feeds.delete(path); throw error; }));
   }
   return feeds.get(path);
+}
+function readPublicContests() {
+  contestCatalog ??= feed("./public-contests.json", 4000)
+    .catch(() => request({ memberAction: "communityContests" }))
+    .catch(error => { contestCatalog = undefined; throw error; });
+  return contestCatalog;
 }
 function element(tag, value, className) {
   const node = document.createElement(tag);

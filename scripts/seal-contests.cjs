@@ -1,6 +1,7 @@
 const {existsSync,readFileSync,writeFileSync}=require("node:fs");
 const {resolve}=require("node:path");
 const {constants,createCipheriv,createHash,publicEncrypt,randomBytes}=require("node:crypto");
+const {contestPage}=require("./public-editorial.cjs");
 
 const [inputPath,outputPath=resolve(__dirname,"../contest-feed.json")]=process.argv.slice(2);
 if(!inputPath) throw new Error("Supply a JSON array of verified fashion design contests");
@@ -35,7 +36,8 @@ for(const item of entries) {
   const body=Buffer.concat([cipher.update(JSON.stringify(item),"utf8"),cipher.final()]);
   const key=publicEncrypt({key:publicKey,padding:constants.RSA_PKCS1_OAEP_PADDING,oaepHash:"sha256"},secret);
   const encode=buffer=>buffer.toString("base64url");
-  entriesBySlug.set(slug,{id,slug,nonce:encode(nonce),tag:encode(cipher.getAuthTag()),key:encode(key),body:encode(body)});
+  entriesBySlug.set(slug,{id,slug,nonce:encode(nonce),tag:encode(cipher.getAuthTag()),key:encode(key),body:encode(body),
+    public:contestPage(item)});
   submitted.add(slug);
 }
 writeFileSync(outputPath,JSON.stringify([...entriesBySlug.values()])+"\n");

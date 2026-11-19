@@ -409,13 +409,13 @@ function renderContestDetail(target,request,item,signedIn,today) {
   });
 }
 
-export async function renderContests(target,request,signedIn,selected) {
+export async function renderContests(target,request,loadContests,signedIn,selected) {
   target.classList.add("community-page","contest-page");
   const message=status();
   message.textContent="正在读取赛事…";
   target.append(message);
   try {
-    const {items}=await request({memberAction:"communityContests"});
+    const {items}=await loadContests();
     if(!target.isConnected) return;
     const today=dateKey.format(new Date());
     message.remove();
@@ -483,7 +483,7 @@ export async function renderContests(target,request,signedIn,selected) {
   } catch(error) {
     message.textContent=error.message;
     const retry=button("重新加载");
-    retry.onclick=()=>{target.replaceChildren();void renderContests(target,request,signedIn,selected);};
+    retry.onclick=()=>{target.replaceChildren();void renderContests(target,request,loadContests,signedIn,selected);};
     target.append(retry);
   }
 }

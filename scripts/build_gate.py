@@ -1,6 +1,7 @@
 """Package the public ÉLAN pages without member archives or media."""
 from pathlib import Path
 from datetime import date
+from hashlib import sha256
 import json
 import re
 import shutil
@@ -63,29 +64,80 @@ def encrypted_feed(filename, public_metadata=frozenset(), optional_metadata=froz
                 or any(not re.fullmatch(r"[A-Za-z0-9_-]+", row[field]) for field in ("nonce", "tag", "key", "body"))):
             raise ValueError(f"{filename} must only contain encrypted entries and catalog fields")
         ids.add(row["id"])
-    (OUT / filename).write_text(json.dumps(rows, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    write_json(OUT / filename, [{key: value for key, value in row.items() if key != "public"} for row in rows])
     return rows
 
+def write_json(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+def texts(row, keys):
+    fields = {key: row[key] for key in keys}
+    if any(not isinstance(value, str) or not value.strip() for value in fields.values()):
+        raise ValueError("Invalid public editorial text")
+    return fields
+
+def editorial_slug(row, namespace):
+    slug = row["slug"]
+    if not re.fullmatch(r"[a-z0-9-]{1,100}", slug) or sha256(f"{namespace}:{slug}".encode()).hexdigest() != row["id"]:
+        raise ValueError("Invalid public editorial slug")
+    return slug
+
+def cover_image(value):
+    cover = texts(value, sorted(cover_fields))
+    image, original, license_url = (urlparse(cover[key]) for key in ("url", "sourceUrl", "licenseUrl"))
+    if (any(url.scheme != "https" or url.username or url.password for url in (image, original, license_url))
+            or image.netloc not in {"thumb.wikimedia.org", "upload.wikimedia.org"}
+            or original.netloc != "commons.wikimedia.org" or not original.path.startswith("/wiki/File:")
+            or license_url.netloc != "creativecommons.org"
+            or not re.fullmatch(r"/(?:licenses/by(?:-sa)?/(?:2\.0|2\.5|3\.0|4\.0)|publicdomain/(?:zero|mark)/1\.0)/", license_url.path)):
+        raise ValueError("Invalid trend cover source or license")
+    return cover
+
+def contest_entry(row):
+    data = row["public"]
+    entry = texts(data, ("kind", "title", "category", "organizer", "summary"))
+    entry["id"] = editorial_slug(row, "contest")
+    if entry["kind"] == "recruit":
+        entry["deadline"] = date.fromisoformat(data["deadline"]).isoformat()
+    elif entry["kind"] == "award" and re.fullmatch(r"20\d{2}(?:-\d{2}(?:-\d{2})?)?", data["date"]):
+        entry["date"] = data["date"]
+    else:
+        raise ValueError("Invalid contest kind or date")
+    entry["source"] = source(data["source"])
+    entry["details"] = [texts(section, ("title", "text")) for section in data.get("details", [])]
+    entry["references"] = [source(reference) for reference in data.get("references", [])]
+    return entry
+
+def trend_entry(data, metadata):
+    entry = {**metadata, **texts(data, ("lead",))}
+    entry["sections"] = []
+    for section in data["sections"]:
+        paragraphs = section["paragraphs"]
+        if not isinstance(paragraphs, list) or not paragraphs or any(not isinstance(p, str) or not p.strip() for p in paragraphs):
+            raise ValueError("Invalid public trend section")
+        entry["sections"].append({**texts(section, ("heading",)), "paragraphs": paragraphs})
+    entry["images"] = [{**cover_image(row), **texts(row, ("caption",))} for row in data["images"]]
+    entry["sources"] = [source(row) for row in data["sources"]]
+    return entry
+
 encrypted_feed("history-feed.json")
-encrypted_feed("contest-feed.json", {"slug"})
-articles = encrypted_feed("trend-vault.json", article_fields, {"cover"})
+contests = encrypted_feed("contest-feed.json", {"slug"}, {"public"})
+if contests and all("public" in row for row in contests):
+    write_json(OUT / "public-contests.json", {"items": [contest_entry(row) for row in contests]})
+articles = encrypted_feed("trend-vault.json", article_fields, {"cover", "public"})
+details_dir = OUT / "trend-detail"
+details_dir.mkdir()
 catalog = []
 for row in articles:
+    slug = editorial_slug(row, "trend")
     post = {key: row[key] for key in sorted(article_fields)}
+    if "public" in row:
+        write_json(details_dir / f"{slug}.json", trend_entry(row["public"], post))
     cover = row.get("cover")
     if cover is not None:
-        if not isinstance(cover, dict) or set(cover) != cover_fields or any(not isinstance(v, str) or not v.strip() for v in cover.values()):
-            raise ValueError("Invalid trend cover")
-        image, original, license_url = (urlparse(cover[key]) for key in ("url", "sourceUrl", "licenseUrl"))
-        if (any(url.scheme != "https" or url.username or url.password for url in (image, original, license_url))
-                or image.netloc not in {"thumb.wikimedia.org", "upload.wikimedia.org"}
-                or original.netloc != "commons.wikimedia.org" or not original.path.startswith("/wiki/File:")
-                or license_url.netloc != "creativecommons.org"
-                or not re.fullmatch(r"/(?:licenses/by(?:-sa)?/(?:2\.0|2\.5|3\.0|4\.0)|publicdomain/(?:zero|mark)/1\.0)/", license_url.path)):
-            raise ValueError("Invalid trend cover source or license")
-        post["cover"] = cover
+        post["cover"] = cover_image(cover)
     catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")
 catalog.sort(key=lambda row: row["date"], reverse=True)
-(OUT / "trend-articles.json").write_text(json.dumps(catalog, ensure_ascii=False), encoding="utf-8")
+write_json(OUT / "trend-articles.json", catalog)

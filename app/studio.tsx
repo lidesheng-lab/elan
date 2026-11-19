@@ -6,6 +6,7 @@ import { beautyNotes } from "../lib/beauty";
 import GalleryDownload from "./gallery-download";
 import { downloadMemberPhoto, imageDownloadPath, isImageUrl } from "../lib/download-image";
 import Subscribe from "./subscribe";
+import Workbench from "./workbench";
 import { membership } from "./member-transport";
 import Editorial from "./editorial";
 import { SavableImage, SaveOptions, type OpenSave, type SaveTarget } from "./savable-image";
@@ -240,7 +241,7 @@ export default function Studio({features}:{features:Study[]}) {
 
     {section==="studio" && <>
       <SectionTitle title="线稿工作台"/>
-      <p className="studio-closed">线稿生成图片暂不对外开放。</p>
+      <Workbench studies={archive.studies}/>
     </>}
     </main>
 

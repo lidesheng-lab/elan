@@ -22,7 +22,7 @@ for (const post of entries) {
       !Array.isArray(sections) || sections.length < 2 ||
       !sections.every(section => text(section.heading) && Array.isArray(section.paragraphs) &&
         section.paragraphs.length && section.paragraphs.every(text)) ||
-      !Array.isArray(images) || !Array.isArray(sources) || !sources.length ||
+      !Array.isArray(images) || !images.length || !Array.isArray(sources) || !sources.length ||
       !sources.every(source => text(source.title) && secureUrl(source.url))) {
     throw new Error("Invalid trend article " + slug);
   }

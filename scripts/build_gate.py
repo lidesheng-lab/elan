@@ -127,18 +127,6 @@ def contest_entry(row):
     entry["references"] = [source(reference) for reference in data.get("references", [])]
     return entry
 
-trend_visuals = json.loads((ROOT / "trend-visuals.json").read_text(encoding="utf-8"))
-visuals_dir = OUT / "trend-visuals"
-visuals_dir.mkdir()
-
-def illustration(slug):
-    asset = ROOT / "public" / "trend-visuals" / f"{slug}.webp"
-    alt = trend_visuals[slug]
-    if not isinstance(alt, str) or not alt.strip():
-        raise ValueError(f"Invalid trend illustration description: {slug}")
-    shutil.copyfile(asset, visuals_dir / asset.name)
-    return {"url": "./trend-visuals/" + asset.name, "alt": alt, "caption": alt, "kind": "illustration"}
-
 def trend_entry(data, metadata):
     entry = {**metadata, **texts(data, ("lead",))}
     entry["sections"] = []
@@ -148,8 +136,6 @@ def trend_entry(data, metadata):
             raise ValueError("Invalid public trend section")
         entry["sections"].append({**texts(section, ("heading",)), "paragraphs": paragraphs})
     entry["images"] = [{**cover_image(row), **texts(row, ("caption",))} for row in data["images"] if current_photo(row)]
-    if not entry["images"] and metadata["slug"] in trend_visuals:
-        entry["images"].append(illustration(metadata["slug"]))
     entry["sources"] = [source(row) for row in data["sources"]]
     return entry
 
@@ -167,15 +153,15 @@ for row in articles:
         continue
     post = {key: row[key] for key in sorted(article_fields)}
     article = trend_entry(row["public"], post)
+    if not article["images"]:
+        continue
     write_json(details_dir / f"{slug}.json", article)
     post["description"] = article["lead"]
-    if article["images"]:
-        photo = article["images"][0]
-        post["cover"] = {key: value for key, value in photo.items() if key != "caption"}
+    post["cover"] = cover_image(article["images"][0])
     catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")
-catalog.sort(key=lambda row: (row["date"], bool(row.get("cover") and row["cover"].get("kind") != "illustration")), reverse=True)
+catalog.sort(key=lambda row: row["date"], reverse=True)
 write_json(OUT / "trend-articles.json", catalog)
 
 catalog_by_slug = {row["slug"]: row for row in catalog}
@@ -191,7 +177,7 @@ manual_date = max((catalog_by_slug[row["slug"]]["date"] for row in home_runways)
 for row in catalog:
     if row["date"] <= manual_date:
         break
-    if row.get("cover") and row["cover"].get("kind") != "illustration":
+    if row.get("cover"):
         article = json.loads((details_dir / f'{row["slug"]}.json').read_text(encoding="utf-8"))
         home_runways.insert(0, {"slug": row["slug"], "brand": row["title"], "season": row["season"],
             "reason": article["lead"], "images": article["images"][:2]})
@@ -212,7 +198,7 @@ write_json(OUT / "brand-preview.json", brand_preview)
 
 entry_js = (OUT / "member-entry.js").read_text(encoding="utf-8")
 entry_js = entry_js.replace("trend-articles.json?view=current", versioned("trend-articles.json"))
-issue_version = sha256((OUT / "trend-vault.json").read_bytes() + (ROOT / "trend-visuals.json").read_bytes()).hexdigest()[:10]
+issue_version = sha256((OUT / "trend-vault.json").read_bytes() + (OUT / "trend-articles.json").read_bytes()).hexdigest()[:10]
 entry_js = entry_js.replace('slug + ".json?view=current"', 'slug + ".json?v=' + issue_version + '"')
 (OUT / "member-entry.js").write_text(entry_js, encoding="utf-8")
 shell = (ROOT / "member-shell.html").read_text(encoding="utf-8")

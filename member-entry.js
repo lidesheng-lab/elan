@@ -240,7 +240,6 @@ function trendStory(post, variant="") {
     img.addEventListener("error",()=>{frame.remove();story.classList.add("trend-story-no-photo");},{once:true});
     img.src=post.cover.url;
     frame.append(img);
-    if (post.cover.kind==="illustration") frame.append(element("figcaption","AI 示意","trend-cover-credit"));
     open.append(frame);
   } else story.classList.add("trend-story-no-photo");
   const copy = element("div",null,"trend-story-copy");
@@ -272,7 +271,6 @@ function trendFigure(photo, images, index) {
   else img.loading = "lazy";
   img.src = photo.url;
   const caption = element("figcaption");
-  if (photo.kind === "illustration") caption.append(element("strong","AI 示意")," · ");
   caption.append(photo.caption);
   figure.append(photoTrigger(img, images, index), caption);
   return figure;
@@ -308,7 +306,6 @@ function renderTrendArticle(output, post) {
   sources.append(element("h2", "秀场与资料来源"));
   for (const source of post.sources) addSource(sources, source);
   for (const photo of post.images) {
-    if (photo.kind==="illustration") continue;
     const credit = element("p", photo.credit + " · ");
     addSource(credit, {title:"照片原页", url:photo.sourceUrl});
     credit.append(" · ");
@@ -483,7 +480,7 @@ function entry() {
   const readCommunity = communityPage && (account || route !== "profile");
   if (readTrends) {
     const detail = Boolean(sectionDetail());
-    content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>每日一篇秀场观察，按日期与主题选读。</p></div>
+    content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>从当季秀场出发，看清色彩、面料和廓形。</p></div>
       <div class="trend-article-filters">
         <div class="trend-filter"><label for="trend-date">发布日期</label><select id="trend-date"><option value="">全部日期</option></select></div>
         <div class="trend-filter"><label for="trend-article-category">主题</label><select id="trend-article-category"><option value="">全部主题</option>

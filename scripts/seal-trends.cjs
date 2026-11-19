@@ -33,6 +33,8 @@ for (const post of entries) {
         ![image.alt,image.caption,image.credit,image.license].every(text)) throw new Error("Invalid trend image " + slug);
   }
   if (known.has(slug)) continue;
+  const {url,alt,credit,license,licenseUrl,sourceUrl}=images[0];
+  const cover = {url,alt,credit,license,licenseUrl,sourceUrl};
   const id = createHash("sha256").update("trend:" + slug).digest("hex");
   const secret = randomBytes(32);
   const nonce = randomBytes(12);
@@ -41,7 +43,7 @@ for (const post of entries) {
   const body = Buffer.concat([cipher.update(JSON.stringify(post), "utf8"), cipher.final()]);
   const wrapped = publicEncrypt({key:encryptionKey, padding:constants.RSA_PKCS1_OAEP_PADDING, oaepHash:"sha256"}, secret);
   const encode = buffer => buffer.toString("base64url");
-  feed.push({id, slug, date, season, category, title, nonce:encode(nonce), tag:encode(cipher.getAuthTag()), key:encode(wrapped), body:encode(body)});
+  feed.push({id, slug, date, season, category, title, cover, nonce:encode(nonce), tag:encode(cipher.getAuthTag()), key:encode(wrapped), body:encode(body)});
   known.add(slug);
 }
 writeFileSync(outputPath, JSON.stringify(feed) + "\n");

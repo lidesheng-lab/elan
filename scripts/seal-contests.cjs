@@ -11,11 +11,13 @@ const entriesBySlug=new Map(feed.map(entry=>[entry.slug,entry]));
 const submitted=new Set();
 const text=value=>typeof value==="string" && value.trim().length>0;
 for(const item of entries) {
-  const {id:slug,kind,title,category,organizer,summary,date,deadline,source}=item;
+  const {id:slug,kind,title,category,organizer,summary,date,deadline,source,details}=item;
   const url=new URL(source.url);
   if(!/^[a-z0-9-]{1,100}$/.test(slug) || !["recruit","award"].includes(kind) ||
       ![title,category,organizer,summary,source.title].every(text) ||
       url.protocol!=="https:" || url.username || url.password ||
+      (details!==undefined && (!Array.isArray(details) || details.length>8 ||
+        !details.every(detail=>text(detail?.title) && text(detail?.text) && detail.title.length<=45 && detail.text.length<=650))) ||
       (kind==="recruit" && !/^20\d{2}-\d{2}-\d{2}$/.test(deadline)) ||
       (kind==="award" && !/^20\d{2}(?:-\d{2}(?:-\d{2})?)?$/.test(date))) throw new Error("Invalid contest "+slug);
   if(submitted.has(slug)) throw new Error("Duplicate input contest "+slug);

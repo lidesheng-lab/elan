@@ -348,84 +348,140 @@ export async function mountTrendDiscussion(output,request,slug,signedIn) {
   }
 }
 
+function contestStatus(item,today) {
+  return item.kind==="award" ? "获奖公示" : item.deadline<today ? "已截止" : "征稿中";
+}
+function contestListHref(kind) {
+  return kind==="award" ? "#contests?tab=award" : "#contests";
+}
+function contestHref(id) {
+  return "#contests/"+id;
+}
+function contestDate(item) {
+  const time=node("time",item.deadline || item.date);
+  time.dateTime=item.deadline || item.date;
+  return time;
+}
+
+function renderContestDetail(target,request,item,signedIn,today) {
+  const recruit=item.kind==="recruit";
+  const article=node("article",null,"contest-feature");
+  const header=node("header",null,"contest-feature-header");
+  header.append(node("p",contestStatus(item,today)+" · "+item.category,"eyebrow"),node("h1",item.title));
+  const content=node("div",null,"contest-feature-layout");
+  const copy=node("div",null,"contest-feature-copy");
+  copy.append(node("h2",recruit ? "征稿简报" : "获奖简报"),node("p",item.summary,"contest-feature-lead"));
+  for(const detail of item.details || []) {
+    const section=node("section");
+    section.append(node("h2",detail.title),node("p",detail.text));
+    copy.append(section);
+  }
+  const facts=node("dl",null,"contest-facts");
+  for(const [label,value] of [["主办方",item.organizer],[recruit?"截稿日期":"结果日期",contestDate(item)],["设计类别",item.category]]) {
+    const row=node("div");
+    const description=node("dd",typeof value==="string" ? value : "");
+    if(typeof value!=="string") description.append(value);
+    row.append(node("dt",label),description);
+    facts.append(row);
+  }
+  const source=node("footer",null,"contest-source");
+  const original=link(item.source.title+" ↗",item.source.url);
+  original.target="_blank";
+  original.rel="noreferrer";
+  source.append(node("h2",recruit ? "报名与完整章程" : "完整结果与作品"),original);
+  const tools=node("div",null,"community-actions contest-detail-actions");
+  tools.append(favoriteControl(request,"contest",item.id,signedIn),
+    shareControl(item.title,contestHref(item.id),signedIn));
+  const discussion=node("section",null,"contest-discussion");
+  discussion.setAttribute("aria-label","赛事评论");
+  copy.append(source,tools,discussion);
+  content.append(facts,copy);
+  article.append(header,content);
+  target.replaceChildren(link("← 返回赛事目录",contestListHref(item.kind),"reader-back"),article);
+  request({memberAction:"communityContestEngagement",ids:[item.id]}).then(({items})=>{
+    if(discussion.isConnected && items[item.id]) discussion.append(thread(request,"contest:"+item.id,items[item.id],signedIn));
+  },()=>{
+    if(discussion.isConnected) discussion.append(node("p","评论与点赞暂时无法读取。","community-meta"));
+  });
+}
+
 export async function renderContests(target,request,signedIn,selected) {
-  target.classList.add("community-page");
-  sectionTitle(target,"服装设计大赛","按征稿和获奖整理。报名要求、截止时间和完整名单以来源公告为准。");
-  const tabs=node("div",null,"pills");
-  const search=node("input",null,"contest-search");
-  search.type="search";
-  search.placeholder="搜索赛事、类别或主办方";
-  search.setAttribute("aria-label","搜索赛事");
-  const list=node("div",null,"community-contest-list");
-  const more=button("查看更多赛事");
-  more.hidden=true;
+  target.classList.add("community-page","contest-page");
   const message=status();
-  if(selected) target.append(link("← 全部赛事","#contests"));
-  else target.append(tabs,search);
-  target.append(list,more,message);
   message.textContent="正在读取赛事…";
+  target.append(message);
   try {
     const {items}=await request({memberAction:"communityContests"});
     if(!target.isConnected) return;
-    const engagement=new Map();
-    let selection=items.find(item=>item.id===selected)?.kind || "recruit",visible=12,revision=0;
+    const today=dateKey.format(new Date());
+    message.remove();
+    if(selected) {
+      const item=items.find(item=>item.id===selected);
+      if(item) renderContestDetail(target,request,item,signedIn,today);
+      else target.append(link("← 返回赛事目录","#contests","reader-back"),node("p","该赛事暂不可用。","notice"));
+      return;
+    }
+    sectionTitle(target,"服装设计大赛","浏览国内外赛事征稿、截稿时间与获奖公示。");
     const filters=[["recruit","征稿"],["award","获奖"]];
+    const toolbar=node("div",null,"contest-toolbar");
+    const tabs=node("div",null,"pills");
+    tabs.setAttribute("aria-label","赛事类型");
+    const search=node("input",null,"contest-search");
+    search.type="search";
+    search.placeholder="搜索赛事、类别或主办方";
+    search.setAttribute("aria-label","搜索赛事");
+    toolbar.append(tabs,search);
+    const list=node("div",null,"community-contest-list");
+    const more=button("查看更多赛事");
+    target.append(toolbar,list,more);
+    const params=new URLSearchParams(location.hash.split("?")[1]);
+    let selection=params.get("tab")==="award" ? "award" : "recruit";
+    let visible=12;
     const controls=filters.map(([kind,label])=>{
       const control=button(label+" · "+items.filter(item=>item.kind===kind).length,"");
-      control.onclick=()=>{selection=kind;visible=12;paint();};
+      control.onclick=()=>{
+        selection=kind;
+        visible=12;
+        history.replaceState(null,"",location.pathname+location.search+contestListHref(kind));
+        paint();
+      };
       tabs.append(control);
       return control;
     });
-    const today=dateKey.format(new Date());
     function paint() {
-      const kind=selection;
       const term=search.value.trim().toLowerCase();
-      const version=++revision;
-      for(let i=0;i<filters.length;i++) controls[i].setAttribute("aria-pressed",String(filters[i][0]===kind));
+      for(const [i,[kind]] of filters.entries()) controls[i].setAttribute("aria-pressed",String(kind===selection));
+      const rows=items.filter(item=>item.kind===selection && [item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
+        .sort((a,b)=>selection==="award" ? b.date.localeCompare(a.date) :
+          Number(a.deadline<today)-Number(b.deadline<today) || a.deadline.localeCompare(b.deadline));
       list.replaceChildren();
-      const rows=items.filter(item=>selected ? item.id===selected :
-        item.kind===kind && [item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
-        .sort((a,b)=>kind==="award" ? b.date.localeCompare(a.date) :
-        Number(a.deadline<today)-Number(b.deadline<today) || a.deadline.localeCompare(b.deadline));
-      const holders=new Map();
       for(const item of rows.slice(0,visible)) {
-        const card=node("article",null,"community-panel contest-card");
-        const label=kind==="award" ? "获奖公示" : item.deadline<today ? "已截止" : "征稿中";
-        const href=link(item.source.title+" ↗",item.source.url);
-        href.target="_blank";
-        href.rel="noreferrer";
-        const holder=node("div");
-        const actions=node("div",null,"community-actions");
-        actions.append(favoriteControl(request,"contest",item.id,signedIn),shareControl(item.title,"/#contests/"+item.id,signedIn));
-        holders.set(item.id,holder);
-        card.append(node("p",label+" · "+item.category,"eyebrow"),node("h2",item.title),
-          node("p",item.organizer+" · "+(item.deadline ? "截止 "+item.deadline : item.date),"community-meta"),
-          node("p",item.summary,"community-copy"),href,actions,holder);
-        if(engagement.has(item.id)) holder.append(thread(request,"contest:"+item.id,engagement.get(item.id),signedIn));
+        const card=node("article",null,"contest-card");
+        const open=link("",contestHref(item.id),"contest-card-link");
+        open.setAttribute("aria-labelledby","contest-"+item.id);
+        const heading=node("h2",item.title);
+        heading.id="contest-"+item.id;
+        const meta=node("p",null,"community-meta");
+        meta.append(item.organizer," · ",item.deadline?"截止 ":"",contestDate(item));
+        const action=node("span",item.kind==="recruit"?"查看征稿 →":"查看获奖 →","contest-card-action");
+        action.setAttribute("aria-hidden","true");
+        open.append(node("p",contestStatus(item,today)+" · "+item.category,"eyebrow"),heading,meta,
+          node("p",item.summary,"contest-card-copy"),action);
+        card.append(open);
         list.append(card);
       }
       if(!rows.length) list.append(node("p","暂无相关赛事。","notice"));
       more.hidden=rows.length<=visible;
-      const pending=[...holders.keys()].filter(id=>!engagement.has(id));
-      for(let step=0;step<pending.length;step+=12) {
-        const ids=pending.slice(step,step+12);
-        void request({memberAction:"communityContestEngagement",ids}).then(({items:states})=>{
-          if(version!==revision) return;
-          for(const [id,state] of Object.entries(states)){
-            engagement.set(id,state);
-            holders.get(id).replaceChildren(thread(request,"contest:"+id,state,signedIn));
-          }
-        },()=>{
-          if(version!==revision) return;
-          for(const id of ids) holders.get(id).textContent="暂时无法读取评论与点赞。";
-        });
-      }
     }
     search.oninput=()=>{visible=12;paint();};
     more.onclick=()=>{visible+=12;paint();};
     paint();
-    message.remove();
-  } catch(error) { message.textContent=error.message; }
+  } catch(error) {
+    message.textContent=error.message;
+    const retry=button("重新加载");
+    retry.onclick=()=>{target.replaceChildren();void renderContests(target,request,signedIn,selected);};
+    target.append(retry);
+  }
 }
 
 export async function renderSquare(target,request,signedIn,selected) {

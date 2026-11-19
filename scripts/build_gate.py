@@ -52,11 +52,13 @@ if len(headlines) > 4 or any(not isinstance(item[k], str) or not item[k].strip()
 
 cipher_fields = {"id", "nonce", "tag", "key", "body"}
 article_fields = {"slug", "date", "season", "category", "title"}
-def encrypted_feed(filename, public_metadata=frozenset()):
+cover_fields = {"url", "alt", "credit", "license", "licenseUrl", "sourceUrl"}
+def encrypted_feed(filename, public_metadata=frozenset(), optional_metadata=frozenset()):
     rows = json.loads((ROOT / filename).read_text(encoding="utf-8"))
     ids = set()
     for row in rows:
-        if (set(row) != cipher_fields | public_metadata
+        required = cipher_fields | public_metadata
+        if (set(row) - optional_metadata != required
                 or not re.fullmatch(r"[0-9a-f]{64}", row["id"]) or row["id"] in ids
                 or any(not re.fullmatch(r"[A-Za-z0-9_-]+", row[field]) for field in ("nonce", "tag", "key", "body"))):
             raise ValueError(f"{filename} must only contain encrypted entries and catalog fields")
@@ -66,8 +68,23 @@ def encrypted_feed(filename, public_metadata=frozenset()):
 
 encrypted_feed("history-feed.json")
 encrypted_feed("contest-feed.json", {"slug"})
-articles = encrypted_feed("trend-vault.json", article_fields)
-catalog = [{key: row[key] for key in sorted(article_fields)} for row in articles]
+articles = encrypted_feed("trend-vault.json", article_fields, {"cover"})
+catalog = []
+for row in articles:
+    post = {key: row[key] for key in sorted(article_fields)}
+    cover = row.get("cover")
+    if cover is not None:
+        if not isinstance(cover, dict) or set(cover) != cover_fields or any(not isinstance(v, str) or not v.strip() for v in cover.values()):
+            raise ValueError("Invalid trend cover")
+        image, original, license_url = (urlparse(cover[key]) for key in ("url", "sourceUrl", "licenseUrl"))
+        if (any(url.scheme != "https" or url.username or url.password for url in (image, original, license_url))
+                or image.netloc not in {"thumb.wikimedia.org", "upload.wikimedia.org"}
+                or original.netloc != "commons.wikimedia.org" or not original.path.startswith("/wiki/File:")
+                or license_url.netloc != "creativecommons.org"
+                or not re.fullmatch(r"/(?:licenses/by(?:-sa)?/(?:2\.0|2\.5|3\.0|4\.0)|publicdomain/(?:zero|mark)/1\.0)/", license_url.path)):
+            raise ValueError("Invalid trend cover source or license")
+        post["cover"] = cover
+    catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")
 catalog.sort(key=lambda row: row["date"], reverse=True)

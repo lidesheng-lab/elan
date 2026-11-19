@@ -28,7 +28,7 @@ const accessCopy = {
 const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["silhouette", "廓形趋势"]];
 const feeds = new Map();
 const wantsAdmin = () => new URLSearchParams(location.search).get("panel")==="admin";
-const sectionDetail = () => location.hash.split("/")[1] || "";
+const sectionDetail = () => location.hash.slice(1).split("?")[0].split("/")[1] || "";
 const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike"]);
 let visitorId;
 
@@ -169,7 +169,7 @@ function premiumLink() {
   return '<a class="primary" href="#upgrade">申请高级会员</a>';
 }
 function publicRoute() {
-  const route = location.hash.slice(1);
+  const route = location.hash.slice(1).split("?")[0];
   if (/^trends\/[a-z0-9-]+$/.test(route)) return "trends";
   if (/^designers\/[a-z0-9-]+$/.test(route)) return "designers";
   if (/^contests\/[a-z0-9-]{1,110}$/.test(route)) return "contests";
@@ -178,6 +178,37 @@ function publicRoute() {
     ["subscribe","upgrade"].includes(route) ? route : "home";
 }
 function articleLink(slug) { return "#trends/" + slug; }
+function trendStory(post,featured) {
+  const story=element("article",null,"trend-story"+(featured?" trend-story-featured":""));
+  const open=element("a",null,"trend-story-link");
+  open.href=articleLink(post.slug);
+  open.setAttribute("aria-labelledby","story-"+post.slug);
+  const frame=element("div",null,"trend-story-photo");
+  if(post.cover) {
+    const img=element("img");
+    img.src=post.cover.url;
+    img.alt=post.cover.alt;
+    img.title=post.cover.credit+" · "+post.cover.license;
+    img.decoding="async";
+    if(featured) img.fetchPriority="high";
+    else img.loading="lazy";
+    img.addEventListener("error",()=>{img.hidden=true;},{once:true});
+    frame.append(img);
+  }
+  const copy=element("div",null,"trend-story-copy");
+  const category=categories.find(([key])=>key===post.category)?.[1];
+  const heading=element("h2",post.title);
+  heading.id="story-"+post.slug;
+  const time=element("time",post.date);
+  time.dateTime=post.date;
+  const season=element("p",null,"trend-story-meta");
+  season.append(post.season," · ",time);
+  copy.append(element("p",category,"eyebrow"),heading,season);
+  open.append(frame,copy);
+  story.append(open);
+  return story;
+}
+
 function renderTrendArticle(output, post) {
   const article = element("article", null, "trend-feature");
   const back = element("a", "← 全部趋势文章", "text-action");
@@ -229,7 +260,7 @@ function renderTrendArticle(output, post) {
 }
 async function showTrendArticles(target) {
   const output = target.querySelector(".trend-articles");
-  const slug = location.hash.startsWith("#trends/") ? location.hash.slice(8) : "";
+  const slug = sectionDetail();
   try {
     const posts = await feed("./trend-articles.json");
     if (!target.isConnected) return;
@@ -241,23 +272,19 @@ async function showTrendArticles(target) {
     }
     const dateChoice = target.querySelector("#trend-date");
     const categoryChoice = target.querySelector("#trend-article-category");
+    const reset = target.querySelector("#trend-clear");
     for (const date of [...new Set(posts.map(post => post.date))]) dateChoice.add(new Option(date, date));
     function paint() {
       const shown = posts.filter(post => (!dateChoice.value || post.date === dateChoice.value) &&
         (!categoryChoice.value || post.category === categoryChoice.value));
-      output.replaceChildren();
-      for (const post of shown) {
-        const story = element("article", null, "trend-story");
-        const title = element("a", post.title);
-        title.href = articleLink(post.slug);
-        const heading = element("h2");
-        heading.append(title);
-        story.append(element("p", post.date + " · " + post.season, "eyebrow"), heading);
-        output.append(story);
-      }
+      const filtered=Boolean(dateChoice.value || categoryChoice.value);
+      reset.hidden=!filtered;
+      output.classList.add("trend-grid");
+      output.replaceChildren(...shown.map((post,index)=>trendStory(post,index===0 && !filtered)));
       if (!shown.length) output.append(element("p", "没有符合筛选条件的文章。", "notice"));
     }
     dateChoice.onchange = categoryChoice.onchange = paint;
+    reset.onclick=()=>{dateChoice.value=categoryChoice.value="";paint();categoryChoice.focus();};
     paint();
   } catch {
     if (!target.isConnected) return;
@@ -358,12 +385,13 @@ function entry() {
   const communityPage = communityRoutes.get(route);
   const readCommunity = communityPage && (account || route !== "profile");
   if (readTrends) {
-    const detail = location.hash.startsWith("#trends/");
+    const detail = Boolean(sectionDetail());
     content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>每日一篇秀场观察，按日期与主题选读。</p></div>
       <div class="trend-article-filters">
         <label for="trend-date">发布日期 <select id="trend-date"><option value="">全部日期</option></select></label>
         <label for="trend-article-category">主题 <select id="trend-article-category"><option value="">全部主题</option>
           ${categories.map(([key,title]) => `<option value="${key}">${title}</option>`).join("")}</select></label>
+        <button class="text-action" type="button" id="trend-clear" hidden>清除筛选</button>
       </div>`}
       <section class="trend-articles" aria-label="趋势文章"><p class="notice" role="status">正在读取文章…</p></section>`;
   } else if (communityPage) {
@@ -391,13 +419,14 @@ function entry() {
       <a class="text-action" href="#trends">全部趋势文章</a></div>
       <div class="home-runway-grid"></div></section>`;
   }
-  root.innerHTML = `<header class="topbar">
+  root.innerHTML = `<a class="skip-main" href="#public-content">跳到正文</a>
+    <header class="topbar public-masthead${activeSection==="home"?"":" topbar-compact"}">
     <div class="masthead-tools"><div class="masthead-account">${account ?
       `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin===true ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
       '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe">免费订阅</a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
-    <main id="public-content">${content}</main>
+    <main id="public-content" tabindex="-1">${content}</main>
     <div class="subscribe-wrap" id="subscribe"><section class="subscribe-section" aria-labelledby="public-subscribe-title">
       <div><h2 id="public-subscribe-title">免费订阅</h2><p>每周时尚资讯与流行趋势。登记后请确认邮箱，邮件内可退订。</p></div>
       <form id="public-subscribe-form"><label for="public-email">订阅邮箱</label>
@@ -405,7 +434,15 @@ function entry() {
       <button class="primary" type="submit">免费订阅</button></div>
       <p class="member-message" id="public-subscribe-status" role="status"></p></form>
     </section></div>
-    <footer class="site-footer"><a class="footer-wordmark" href="#home">ÉLAN</a><nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#login">会员登录</a></nav></footer>`;
+    <footer class="site-footer public-footer"><a class="footer-wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
+    <nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#contests">服装设计大赛</a><a href="#square">设计广场</a>
+    <a href="${account?"#profile":"#login"}">${account?"个人中心":"会员登录"}</a></nav></footer>`;
+  root.querySelector(".skip-main").onclick=event=>{
+    event.preventDefault();
+    const main=document.getElementById("public-content");
+    main.focus();
+    main.scrollIntoView();
+  };
   const form = document.getElementById("public-subscribe-form");
   form.onsubmit = async event => {
     event.preventDefault();

@@ -1,3 +1,5 @@
+import { favoriteControl, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
+
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 const storageKey = "elan-member-session";
 const root = document.getElementById("root");
@@ -6,10 +8,23 @@ const setPasswordPattern = /^#set-password\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$
 let session = sessionStorage.getItem(storageKey) || "";
 let account = null;
 let surface = "public";
+let pageHash = "#home";
 const sections = [
-  ["home", "首页"], ["designers", "品牌索引"], ["beauty", "美妆"], ["trends", "流行趋势"], ["studio", "线稿工作台"],
+  ["home", "首页"], ["designers", "品牌索引"], ["beauty", "美妆"], ["trends", "流行趋势"],
+  ["contests", "服装设计大赛"], ["square", "设计广场"], ["studio", "线稿工作台"],
 ];
 const lockedSections = new Set(["designers", "beauty", "studio"]);
+const communityRoutes = new Map([
+  ["profile",["个人中心",target=>renderProfile(target,request,logout)]],
+  ["contests",["服装设计大赛",target=>renderContests(target,request)]],
+  ["square",["设计广场",target=>renderSquare(target,request)]],
+]);
+const accessRoutes = new Set(["login", "register", "reset"]);
+const accessCopy = {
+  login: ["会员登录", "使用注册邮箱和密码登录。"],
+  register: ["注册普通会员", "验证邮箱并设置密码后，即可免费登录。"],
+  reset: ["找回密码", "输入你的注册邮箱。"],
+};
 const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["silhouette", "廓形趋势"]];
 const feeds = new Map();
 
@@ -46,36 +61,69 @@ function bindForm(id, operation) {
     button.disabled = true;
     message("正在处理…");
     try { await operation(new FormData(form), button); }
-    catch (error) { message(error.message); }
+    catch (error) { if (form.isConnected) message(error.message); }
     finally { button.disabled = false; }
   });
 }
 function accessForm(mode) {
   const login = mode === "login";
-  const label = login ? "登录" : mode === "register" ? "发送注册邮件" : "发送重置邮件";
   return `
     <form id="access-form">
       <label for="member-email">邮箱地址</label>
       <input id="member-email" name="email" type="email" autocomplete="username" required maxlength="254">
       ${login ? '<label for="member-password">密码</label><input id="member-password" name="password" type="password" autocomplete="current-password" required maxlength="512">' : ""}
-      <button class="primary" type="submit">${label}</button>
+      <button class="primary" type="submit">${login ? "登录" : mode === "register" ? "发送注册邮件" : "发送重置邮件"}</button>
     </form>
-    <div class="member-actions">
-      ${login ? '<a class="text-action" href="#register">注册普通会员</a><a class="text-action" href="#reset">忘记密码</a>'
+    <div class="access-actions">
+      ${login ? '<p>还没有账号？ <a class="text-action" href="#register">注册普通会员</a></p><a class="text-action" href="#reset">忘记密码</a>'
         : '<a class="text-action" href="#login">返回登录</a>'}
     </div>`;
 }
+function showAccess(mode) {
+  let dialog = document.getElementById("member-access");
+  const email = dialog?.querySelector("#member-email")?.value ?? "";
+  if (!dialog) {
+    const trigger = document.activeElement;
+    dialog = document.createElement("dialog");
+    dialog.id = "member-access";
+    dialog.className = "access-dialog member-panel";
+    dialog.setAttribute("aria-labelledby", "access-title");
+    dialog.addEventListener("click", event => {
+      if (event.target !== dialog) return;
+      const rect = dialog.getBoundingClientRect();
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      if (!dialog.isConnected) return;
+      dialog.remove();
+      if (accessRoutes.has(publicRoute())) history.replaceState(null, "", location.pathname + location.search + pageHash);
+      if (trigger instanceof HTMLElement && trigger.isConnected) trigger.focus({preventScroll:true});
+    });
+    root.append(dialog);
+  }
+  const [title, help] = accessCopy[mode];
+  dialog.innerHTML = `<button class="access-close" type="button" aria-label="关闭会员窗口"><span aria-hidden="true">×</span> 关闭</button>
+    <h1 id="access-title" tabindex="-1" autofocus>${title}</h1><p>${help}</p>
+    ${accessForm(mode)}<p class="member-message" role="status" id="member-message"></p>`;
+  dialog.querySelector(".access-close").onclick = () => dialog.close();
+  dialog.querySelector("#member-email").value = email;
+  bindAccess(mode);
+  if (!dialog.open) dialog.showModal();
+  dialog.querySelector("#access-title").focus({preventScroll:true});
+}
 function bindAccess(mode) {
+  const form = document.getElementById("access-form");
   bindForm("access-form", async data => {
     const email = data.get("email");
     if (mode === "login") {
       const result = await request({ memberAction: "passwordLogin", email, password: data.get("password") }, undefined, "");
+      if (!form.isConnected) return;
       startSession(result.session);
-      history.replaceState(null, "", "/#trends");
-      await loadMember({welcome:true});
+      history.replaceState(null, "", "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile"));
+      await loadMember();
     } else {
       await request({ memberAction: mode, email }, undefined, "");
-      message(mode === "register" ? "请查收注册邮件，验证邮箱并设置密码后即可登录。" : "如果邮箱已注册，请查收重置邮件。");
+      if (form.isConnected) message(mode === "register" ? "请查收注册邮件，验证邮箱并设置密码后即可登录。" : "如果邮箱已注册，请查收重置邮件。");
     }
   });
 }
@@ -107,7 +155,9 @@ function premiumLink() {
 function publicRoute() {
   const route = location.hash.slice(1);
   if (/^trends\/[a-z0-9-]+$/.test(route)) return "trends";
-  return sections.some(([key]) => key === route) || ["login","register","reset","subscribe","upgrade"].includes(route) ? route : "home";
+  if (/^designers\/[a-z0-9-]+$/.test(route)) return "designers";
+  return sections.some(([key]) => key === route) || accessRoutes.has(route) || communityRoutes.has(route) ||
+    ["subscribe","upgrade"].includes(route) ? route : "home";
 }
 function articleLink(slug) { return "#trends/" + slug; }
 function renderTrendArticle(output, post) {
@@ -119,6 +169,7 @@ function renderTrendArticle(output, post) {
   const meta = element("p", null, "eyebrow");
   meta.append(date, " · " + post.season + " · " + categories.find(([key]) => key === post.category)[1]);
   article.append(back, meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
+  article.append(favoriteControl(request,"trend",post.slug));
   const photos = element("div", null, "trend-feature-photos");
   for (const photo of post.images) {
     const figure = element("figure");
@@ -221,12 +272,20 @@ function addSource(parent, source) {
 }
 function entry() {
   surface = "public";
-  const route = publicRoute();
+  const current = publicRoute();
+  const access = accessRoutes.has(current);
+  if (access && document.getElementById("public-content")) {
+    showAccess(current);
+    return;
+  }
+  const route = access ? "home" : current;
+  pageHash = access ? "#home" : location.hash;
+  const activeSection = route === "subscribe" ? "home" : route;
   const navigation = sections.map(([key, label]) =>
-    `<a href="${account?.premium && lockedSections.has(key) ? "/" : ""}#${key}" aria-current="${(route === "subscribe" ? "home" : route) === key ? "page" : "false"}">${label}</a>`).join("");
+    `<a href="${account?.premium && lockedSections.has(key) ? "/" : ""}#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   let content;
   const readTrends = route === "trends" && account;
-  const accountRoutes = ["login","register","reset"];
+  const communityPage = communityRoutes.get(route);
   if (readTrends) {
     const detail = location.hash.startsWith("#trends/");
     content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>每日一篇秀场观察，按日期与主题选读。</p></div>
@@ -237,31 +296,31 @@ function entry() {
       </div>`}
       <section class="trend-articles" aria-label="趋势文章"><p class="notice" role="status">正在读取文章…</p></section>`;
   } else if (route === "trends") {
-    content = `<div class="section-title"><h1>流行趋势</h1></div>${lockedPreview("趋势文章需要登录", "免费注册普通会员即可读每日文章。", '<a class="primary" href="#register">注册普通会员</a><a class="text-action" href="#login">登录</a>')}`;
+    content = `<div class="section-title"><h1>流行趋势</h1></div>${lockedPreview("趋势文章需要登录", "普通会员可阅读每日文章。", '<a class="primary" href="#login">登录后阅读</a>')}`;
+  } else if (communityPage) {
+    content = account ? '<p class="notice" role="status">正在读取…</p>' :
+      `<div class="section-title"><h1>${communityPage[0]}</h1></div>${lockedPreview("请先登录", "普通会员和高级会员均可使用。", '<a class="primary" href="#login">会员登录</a>')}`;
   } else if (lockedSections.has(route)) {
     const title = sections.find(([key]) => key === route)[1];
     content = `<div class="section-title"><h1>${title}</h1></div>${preview(route)}
       ${lockedPreview("高级会员专享", "通过管理员授权后，可查看完整内容。", premiumLink())}`;
-  } else if (accountRoutes.includes(route)) {
-    const title = route === "login" ? "会员登录" : route === "register" ? "注册普通会员" : "找回密码";
-    const help = route === "register" ? "验证邮箱并设置密码后，即可免费登录。" : route === "reset" ? "输入你的注册邮箱。" : "使用注册邮箱和密码登录。";
-    content = `<section class="member-panel public-access"><h1>${title}</h1><p>${help}</p>
-      ${accessForm(route)}<p class="member-message" role="status" id="member-message"></p></section>`;
   } else if (route === "upgrade") {
     content = `<section class="member-panel public-access"><h1>申请高级会员</h1>
       <p>请联系管理员，提供你的 ÉLAN 注册邮箱。管理员授权后即可查看完整品牌档案、美妆和线稿工作台。</p>
       <p><strong>微信 LDSH557788</strong></p>
-      <div class="member-actions">${account ? '<a class="primary" href="/?refresh=1">刷新权限</a>' : '<a class="primary" href="#register">先注册普通会员</a>'}</div></section>`;
+      <div class="member-actions">${account ? '<a class="primary" href="/?refresh=1">刷新权限</a>' : '<a class="primary" href="#login">会员登录</a>'}</div></section>`;
   } else {
     content = `<article class="cover-story public-cover" aria-labelledby="public-cover-title">
       <div class="public-cover-art" aria-hidden="true"><span></span><span></span></div>
       <div class="cover-copy"><p class="eyebrow">ÉLAN</p>
       <h1 id="public-cover-title">从秀场<br>读设计</h1>
       <p class="cover-intro">品牌档案、美妆观察与每日趋势长文。</p>
-      <a class="primary cover-action" href="${account ? "#trends" : "#register"}">${account ? "查看流行趋势" : "免费注册"}</a></div></article>`;
+      <a class="primary cover-action" href="${account ? "#trends" : "#login"}">${account ? "查看流行趋势" : "会员登录"}</a></div></article>`;
   }
   root.innerHTML = `<header class="topbar">
-    <div class="masthead-tools">${account ? `<a class="subscribe-link" href="${account.premium ? "/" : "#upgrade"}">${account.premium ? "高级会员" : "普通会员"}</a>${account.admin ? '<a class="subscribe-link" href="/?panel=admin">会员管理</a>' : ""}<button id="account-logout" class="subscribe-link" type="button">退出</button>` : '<a class="subscribe-link" href="#login">登录</a><a class="subscribe-link" href="#register">注册</a>'}<a class="subscribe-link" href="#subscribe">免费订阅</a></div>
+    <div class="masthead-tools"><div class="masthead-account">${account ?
+      `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
+      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe">免费订阅</a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
     <main id="public-content">${content}</main>
@@ -273,9 +332,6 @@ function entry() {
       <p class="member-message" id="public-subscribe-status" role="status"></p></form>
     </section></div>
     <footer class="site-footer"><a class="footer-wordmark" href="#home">ÉLAN</a><nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#login">会员登录</a></nav></footer>`;
-  if (document.getElementById("access-form")) bindAccess(route);
-  const exit = document.getElementById("account-logout");
-  if (exit) exit.onclick = () => void logout();
   const form = document.getElementById("public-subscribe-form");
   form.onsubmit = async event => {
     event.preventDefault();
@@ -291,8 +347,14 @@ function entry() {
     finally { button.disabled = false; }
   };
   if (readTrends) void showTrendArticles(document.getElementById("public-content"));
+  if (communityPage && account) {
+    const target = document.getElementById("public-content");
+    target.replaceChildren();
+    void communityPage[1](target);
+  }
   if (route === "subscribe") document.getElementById("subscribe").scrollIntoView();
   else window.scrollTo(0, 0);
+  if (access) showAccess(current);
 }
 function confirmLink(action, id, token) {
   const unsubscribe = action === "unsubscribe";
@@ -330,13 +392,13 @@ function startSession(token) {
   session = token;
   sessionStorage.setItem(storageKey, token);
 }
-async function loadMember({welcome = false} = {}) {
+async function loadMember() {
   panel("会员中心", "正在读取会员权限…", "");
   try {
     const profile = await request({ memberAction: "profile" });
     account = profile;
     if (profile.admin && new URLSearchParams(location.search).get("panel") === "admin") await adminPanel(profile);
-    else if (profile.premium && !welcome && !["trends","register","reset","upgrade","login","subscribe"].includes(publicRoute())) await openArchive(profile);
+    else if (profile.premium && (publicRoute()==="home" || lockedSections.has(publicRoute()))) await openArchive(profile);
     else entry();
   } catch (error) {
     if ([401,403].includes(error.status)) {
@@ -363,6 +425,7 @@ async function openArchive(profile) {
     email: profile.email,
     session,
     request,
+    favorite(kind,id) { return favoriteControl(request,kind,id); },
     photo(url) {
       if (!/^https:\/\//i.test(url) || url.startsWith(api + "?")) return url;
       return api + "?" + new URLSearchParams({ picture: "1", src: url });
@@ -390,6 +453,7 @@ async function adminPanel(profile) {
   panel("会员管理", "只有管理员可授予或撤销高级会员资格。", `
     <div class="member-actions">
       <a class="member-secondary" href="/">查看档案</a>
+      <a class="member-secondary" href="/?section=account#profile">个人中心</a>
       <button class="member-secondary" id="exit-admin" type="button">退出</button>
     </div>
     <form id="approve-form">
@@ -399,7 +463,8 @@ async function adminPanel(profile) {
     </form>
     <label for="member-state">按状态查看</label>
     <select id="member-state"><option value="standard">普通会员</option><option value="approved">高级会员</option></select>
-    <ul id="members" class="member-list"></ul>`);
+    <ul id="members" class="member-list"></ul>
+    <section id="certification-review" class="community-admin"></section>`);
   document.getElementById("exit-admin").onclick = () => void logout();
   const state = document.getElementById("member-state");
   const list = document.getElementById("members");
@@ -441,7 +506,8 @@ async function adminPanel(profile) {
     await refresh();
     message("权限已开通。");
   });
-  await refresh();
+  void renderReviewQueue(document.getElementById("certification-review"),request);
+  await refresh().catch(error => message(error.message));
 }
 const setup = setPasswordPattern.exec(location.hash);
 const newsletter = /^#newsletter\/(confirm|unsubscribe)\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/.exec(location.hash);

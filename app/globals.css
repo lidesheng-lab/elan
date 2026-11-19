@@ -311,6 +311,18 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(21px,3vw,
 .trend-notes{margin-bottom:40px}
 
 .member-panel input + label{margin-top:14px}
+.access-dialog{width:min(460px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);margin:auto;padding:clamp(24px,5vw,38px);background:var(--paper);color:var(--ink);border:1px solid var(--line);border-top:2px solid var(--wine);overflow:auto}
+.access-dialog::backdrop{background:rgba(29,25,26,.43)}
+.access-dialog h1{padding-inline-end:68px}
+.access-dialog h1:focus{outline:none}
+.access-dialog form>.primary{width:100%;margin-top:16px}
+.access-close{position:absolute;top:8px;right:8px;min-width:62px;height:44px;font-size:.84rem;color:var(--quiet)}
+.access-close span{font-size:1.25rem;vertical-align:-.1em}
+.access-close:hover{color:var(--wine)}
+.access-actions{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 14px;padding-top:13px;border-top:1px solid var(--line);font-size:.875rem}
+.access-actions .text-action{color:var(--wine)}
+.access-dialog .member-message:empty{display:none}
+body:has(.access-dialog[open]){overflow:hidden}
 .masthead-tools button.subscribe-link{background:none;font:inherit;cursor:pointer}
 .tier-preview{max-width:780px;margin:0 auto 30px;padding:25px 0;border-bottom:1px solid var(--line)}
 .tier-preview h2,.tier-lock-copy h2{font:500 clamp(1.55rem,4vw,2.7rem)/1.18 var(--serif);margin:8px 0 14px}
@@ -322,3 +334,55 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(21px,3vw,
 .tier-lock-copy{position:relative;background:rgba(249,247,243,.94);max-width:calc(100% - 14px);padding:24px clamp(14px,4vw,42px)}
 .tier-lock-copy p{margin-bottom:14px}
 .tier-lock-copy .text-action{margin-inline-start:12px}
+
+.masthead-account,.community-actions,.community-author{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}
+.topbar nav{gap:clamp(12px,3.35vw,53px)}
+.community-page{max-width:1120px}
+.community-panel{background:var(--paper);border:1px solid var(--line);padding:clamp(17px,3.2vw,32px)}
+.community-panel h2,.community-admin h2{font:500 clamp(1.44rem,3.4vw,2.25rem)/1.2 var(--serif);margin:5px 0 11px}
+.community-meta{font-size:.85rem;color:var(--quiet);line-height:1.6;overflow-wrap:anywhere}
+.community-copy{line-height:1.72;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0 14px}
+.community-status{font-size:.84rem;color:var(--wine);line-height:1.6;margin-top:8px}
+.community-status:empty{display:none}
+.community-account-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.community-profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.community-certifications{grid-column:1/-1}
+.community-form{display:grid;row-gap:12px;margin:15px 0 0}
+.community-form label{display:grid;gap:6px;font-size:.88rem;font-weight:600}
+.community-form :is(input:not([type="checkbox"]),select,textarea),.community-review textarea{width:100%;min-width:0;min-height:42px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 11px;font:inherit}
+.community-form textarea,.community-review textarea{resize:vertical}
+.community-form label:has([type="checkbox"]){display:flex;align-items:center}
+.community-form [type="checkbox"]{width:auto;min-height:0;margin:0 2px}
+.community-form button[type="submit"]{justify-self:start}
+.community-avatar{width:42px;height:42px;flex:none;border-radius:50%;object-fit:cover;border:1px solid var(--line)}
+.avatar-initial{display:grid;place-items:center;background:var(--warm);color:var(--wine);font:500 1.35rem/1 var(--serif)}
+.community-account-head .community-avatar{width:58px;height:58px}
+.community-badge{display:inline-flex;width:fit-content;align-items:center;border:1px solid #a77a31;padding:3px 8px;color:#634219;background:#f6e9c9;font-size:.74rem;font-weight:700;white-space:nowrap}
+.community-badge.judge{border-radius:100px;background:#f9ebaf;border-color:#8d6520;color:#583711}
+.community-shelf-label{font-size:.9rem;margin:15px 0 7px}
+.community-favorite{display:flex;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding:10px 0}
+.community-favorite>.text-action{flex:none}
+.community-cert{border-top:1px solid var(--line);padding:13px 0 5px;margin-top:10px}
+.community-cert summary,.community-composer summary{cursor:pointer;font-weight:700}
+.community-cert p{margin:9px 0}
+.community-contest-list,.community-post-list,.community-review-list{display:grid;gap:14px;margin:14px 0}
+.community-contest-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+.community-thread{border-top:1px solid var(--line);margin-top:14px;padding-top:10px}
+.community-actions [aria-pressed="true"]{color:var(--wine);border-color:var(--wine)}
+.community-replies{margin-top:12px}
+.community-comment{border-top:1px solid var(--line);padding-top:9px;margin-top:10px}
+.community-comment-list{margin-top:12px}
+.square-image,.community-proof img{margin:10px 0;max-height:610px;object-fit:contain}
+.community-admin{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.community-review textarea{margin-top:10px}
+.community-review .community-actions{margin-top:10px}
+.favorite-control{display:flex;align-items:center;gap:8px;margin:10px 0}
+.favorite-control button[aria-pressed="true"]{border-color:var(--wine);color:var(--wine)}
+@media(max-width:690px){
+  .topbar nav{justify-content:flex-start;gap:17px;overflow-x:auto;scrollbar-width:thin}
+  .topbar nav a{flex:none}
+  .community-profile-grid,.community-contest-list{grid-template-columns:minmax(0,1fr)}
+  .masthead-tools{gap:6px}
+  .masthead-account{gap:6px}
+  .masthead-account .subscribe-link{padding-inline:9px}
+}

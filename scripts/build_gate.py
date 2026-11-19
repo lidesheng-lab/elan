@@ -13,6 +13,7 @@ if OUT.exists():
 OUT.mkdir()
 shutil.copyfile(ROOT / "member-shell.html", OUT / "index.html")
 shutil.copyfile(ROOT / "member-entry.js", OUT / "member-entry.js")
+shutil.copyfile(ROOT / "community.js", OUT / "community.js")
 shutil.copyfile(ROOT / "public" / "favicon.svg", OUT / "favicon.svg")
 shutil.copytree(ROOT / "public" / "fonts", OUT / "fonts")
 css = (ROOT / "app" / "globals.css").read_text(encoding="utf-8")

@@ -223,77 +223,91 @@ function publicRoute() {
     route === "upgrade" ? route : "home";
 }
 function articleLink(slug) { return "#trends/" + slug; }
-function trendStory(post,featured) {
-  const story=element("article",null,"trend-story"+(featured?" trend-story-featured":""));
-  const open=element("a",null,"trend-story-link");
-  open.href=articleLink(post.slug);
+function trendStory(post, variant="") {
+  const featured = variant === "featured";
+  const story = element("article",null,"trend-story"+(variant ? " trend-story-"+variant : ""));
+  const open = element("a",null,"trend-story-link");
+  open.href = articleLink(post.slug);
   open.setAttribute("aria-labelledby","story-"+post.slug);
-  const frame=element("div",null,"trend-story-photo");
-  function graphic() {
-    frame.classList.add("trend-graphic", "trend-graphic-" + post.category);
-    frame.setAttribute("aria-hidden", "true");
-  }
-  if(post.cover) {
-    const img=element("img");
-    img.src=post.cover.url;
-    img.alt=post.cover.alt;
-    img.title=post.cover.credit+" · "+post.cover.license;
+  if (post.cover) {
+    const frame = element("figure",null,"trend-story-photo");
+    const img = element("img");
     img.decoding="async";
-    if(featured) img.fetchPriority="high";
+    if (featured) img.fetchPriority="high";
     else img.loading="lazy";
-    img.addEventListener("error",()=>{img.remove();graphic();},{once:true});
+    img.alt=post.cover.alt;
+    if (post.cover.credit) img.title=post.cover.credit+" · "+post.cover.license;
+    img.addEventListener("error",()=>{frame.remove();story.classList.add("trend-story-no-photo");},{once:true});
+    img.src=post.cover.url;
     frame.append(img);
-  } else graphic();
-  const copy=element("div",null,"trend-story-copy");
-  const category=categories.find(([key])=>key===post.category)?.[1];
-  const heading=element("h2",post.title);
+    if (post.cover.kind==="illustration") frame.append(element("figcaption","AI 示意","trend-cover-credit"));
+    open.append(frame);
+  } else story.classList.add("trend-story-no-photo");
+  const copy = element("div",null,"trend-story-copy");
+  const category = categories.find(([key])=>key===post.category)?.[1];
+  const heading = element(variant ? "h3" : "h2",post.title,"trend-story-title");
   heading.id="story-"+post.slug;
-  const time=element("time",post.date);
+  const time = element("time",post.date);
   time.dateTime=post.date;
-  const season=element("p",null,"trend-story-meta");
+  const season = element("p",null,"trend-story-meta");
   season.append(post.season," · ",time);
-  copy.append(element("p",category,"eyebrow"),heading,season);
-  open.append(frame,copy);
+  copy.append(element("p",category,"eyebrow"),heading);
+  if ((featured || variant==="listing") && post.description) {
+    copy.append(element("p",post.description,"trend-story-deck"));
+  }
+  copy.append(season);
+  open.append(copy);
   story.append(open);
   return story;
 }
 
+function trendFigure(photo, images, index) {
+  const figure = element("figure",null,"trend-figure");
+  const img = element("img");
+  img.alt = photo.alt;
+  img.decoding = "async";
+  img.referrerPolicy = "no-referrer";
+  if (index === 0) img.fetchPriority = "high";
+  else img.loading = "lazy";
+  img.src = photo.url;
+  const caption = element("figcaption");
+  if (photo.kind === "illustration") caption.append(element("strong","AI 示意")," · ");
+  caption.append(photo.caption);
+  figure.append(photoTrigger(img, images, index), caption);
+  return figure;
+}
+
 function renderTrendArticle(output, post) {
   const article = element("article", null, "trend-feature");
-  const back = element("a", "← 全部趋势文章", "text-action");
+  const back = element("a", "← 全部趋势文章", "reader-back");
   back.href = "#trends";
+  const masthead = element("header",null,"trend-article-head");
   const date = element("time", post.date);
   date.dateTime = post.date;
   const meta = element("p", null, "eyebrow");
-  meta.append(date, " · " + post.season + " · " + categories.find(([key]) => key === post.category)[1]);
-  article.append(back, meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
+  meta.append(categories.find(([key]) => key === post.category)?.[1] || "流行趋势", " · " + post.season + " · ", date);
+  masthead.append(meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
   const actions = element("div", null, "community-actions");
   actions.append(favoriteControl(request,"trend",post.slug,Boolean(account)),
     shareControl(post.title,articleLink(post.slug),Boolean(account)));
-  article.append(actions);
-  const photos = element("div", null, "trend-feature-photos");
-  for (const [index, photo] of post.images.entries()) {
-    const figure = element("figure");
-    const img = element("img");
-    img.src = photo.url;
-    img.alt = photo.alt;
-    img.decoding = "async";
-    img.loading = "lazy";
-    img.referrerPolicy = "no-referrer";
-    const caption = element("figcaption", photo.caption);
-    figure.append(photoTrigger(img, post.images, index), caption);
-    photos.append(figure);
-  }
-  if (photos.childElementCount) article.append(photos);
-  for (const section of post.sections) {
+  masthead.append(actions);
+  article.append(back, masthead);
+  const [cover,...inline] = post.images;
+  if (cover) article.append(trendFigure(cover,post.images,0));
+  const body = element("div",null,"trend-article-body");
+  post.sections.forEach((section,index)=>{
     const part = element("section");
     part.append(element("h2", section.heading), ...section.paragraphs.map(copy => element("p", copy)));
-    article.append(part);
-  }
+    body.append(part);
+    if (inline[index]) body.append(trendFigure(inline[index],post.images,index+1));
+  });
+  inline.slice(post.sections.length).forEach((photo,index)=>body.append(trendFigure(photo,post.images,post.sections.length+index+1)));
+  article.append(body);
   const sources = element("footer", null, "trend-feature-sources");
   sources.append(element("h2", "秀场与资料来源"));
   for (const source of post.sources) addSource(sources, source);
   for (const photo of post.images) {
+    if (photo.kind==="illustration") continue;
     const credit = element("p", photo.credit + " · ");
     addSource(credit, {title:"照片原页", url:photo.sourceUrl});
     credit.append(" · ");
@@ -307,12 +321,51 @@ function renderTrendArticle(output, post) {
   output.replaceChildren(article);
   void mountTrendDiscussion(discussion,request,post.slug,Boolean(account));
 }
+
+function renderTrendEdition(output, posts, filtered) {
+  if (!posts.length) {
+    output.replaceChildren(element("p","没有符合筛选条件的文章。","notice"));
+    return;
+  }
+  const [lead,...tail] = posts;
+  const storyList = element("div",null,"trend-story-list");
+  const remainder = filtered ? posts : tail.slice(2);
+  storyList.replaceChildren(...remainder.map(post=>trendStory(post,"listing")));
+  if (filtered) {
+    output.replaceChildren(storyList);
+    return;
+  }
+  const edition = element("div",null,"trend-edition");
+  const headline = element("section",null,"trend-edition-lead");
+  headline.setAttribute("aria-labelledby","trend-lead");
+  const label=element("h2","主稿","trend-column-heading");
+  label.id="trend-lead";
+  headline.append(label,trendStory(lead,"featured"));
+  edition.append(headline);
+  if (tail.length) {
+    const dispatches=element("section",null,"trend-edition-briefs");
+    const title=element("h2","编辑精选","trend-column-heading");
+    title.id="trend-picks";
+    dispatches.setAttribute("aria-labelledby",title.id);
+    dispatches.append(title,...tail.slice(0,2).map(post=>trendStory(post,"brief")));
+    edition.append(dispatches);
+  }
+  output.replaceChildren(edition);
+  if (remainder.length) {
+    const index=element("section",null,"trend-edition-index");
+    const title=element("h2","更多趋势文章","trend-column-heading");
+    title.id="trend-list-title";
+    index.setAttribute("aria-labelledby",title.id);
+    index.append(title,storyList);
+    output.append(index);
+  }
+}
 async function showTrendArticles(target) {
   const output = target.querySelector(".trend-articles");
   const slug = sectionDetail();
   try {
     if (slug) {
-      const post = await feed("./trend-detail/" + slug + ".json", 5000);
+      const post = await feed("./trend-detail/" + slug + ".json?view=current", 5000);
       if (target.isConnected) renderTrendArticle(output, post);
       return;
     }
@@ -327,9 +380,7 @@ async function showTrendArticles(target) {
         (!categoryChoice.value || post.category === categoryChoice.value));
       const filtered=Boolean(dateChoice.value || categoryChoice.value);
       reset.hidden=!filtered;
-      output.classList.add("trend-grid");
-      output.replaceChildren(...shown.map((post,index)=>trendStory(post,index===0 && !filtered)));
-      if (!shown.length) output.append(element("p", "没有符合筛选条件的文章。", "notice"));
+      renderTrendEdition(output,shown,filtered);
     }
     dateChoice.onchange = categoryChoice.onchange = paint;
     reset.onclick=()=>{dateChoice.value=categoryChoice.value="";paint();categoryChoice.focus();};
@@ -409,7 +460,7 @@ async function showHomeRunways(target) {
   if (!target.isConnected) return;
   const picks = posts.filter(post=>post.slug!==cover?.slug).slice(0,3);
   const grid = target.querySelector(".home-runway-grid");
-  grid.replaceChildren(...picks.map(post=>trendStory(post,false)));
+  grid.replaceChildren(...picks.map(post=>trendStory(post)));
   target.querySelector(".home-runways").hidden=!picks.length;
 }
 function entry() {

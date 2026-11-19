@@ -22,6 +22,7 @@ type Section = typeof sections[number][0];
 const pageSize=12;
 const galleryPageSize=12;
 const materialFilters=["全部","雕塑支撑","垂坠","镂空透层","解构剪裁","西装条纹","低饱和"];
+const collectionYear=(season:string)=>season.match(/\b20\d{2}\b/)?.[0] ?? "";
 const trendOptions = [
   ["color","色彩趋势"],["fabric","面料趋势"],["silhouette","廓形趋势"]
 ] as const;
@@ -92,6 +93,7 @@ export default function Studio({features}:{features:Study[]}) {
   const [status,setStatus]=useState<"loading"|"ready"|"offline">("loading");
   const [finding,setFinding]=useState("");
   const [brandFilter,setBrandFilter]=useState("全部");
+  const [brandYear,setBrandYear]=useState("");
   const [brandLimit,setBrandLimit]=useState(pageSize);
   const [trendCategory,setTrendCategory]=useState<TrendCategory>("color");
   const [season,setSeason]=useState("全部");
@@ -184,8 +186,11 @@ export default function Studio({features}:{features:Study[]}) {
   }
 
   const query=normalizeSearch(finding.trim());
+  const latestYear=Math.max(new Date().getFullYear(),...archive.studies.map(study=>Number(collectionYear(study.season))));
+  const brandYears=Array.from({length:latestYear-2009},(_,index)=>String(latestYear-index));
   const matching=archive.studies.filter(study=>
     (brandFilter==="全部" || study.tags.includes(brandFilter)) &&
+    (!brandYear || collectionYear(study.season)===brandYear) &&
     normalizeSearch([study.designer,study.season,study.title,...study.tags,study.fabric,study.color,study.silhouette].join(" ")).includes(query)
   );
   const categoryTrends=archive.trends.filter(item=>categoryOf(item)===trendCategory);
@@ -199,20 +204,26 @@ export default function Studio({features}:{features:Study[]}) {
         <a className="subscribe-link" href="#subscribe">免费订阅</a>
       </div>
       <a className="wordmark" href="#home" aria-label={publicationName+" 首页"} onClick={event=>{event.preventDefault();navigate("home");}}>{publicationName}</a>
-      <nav aria-label="主导航">{sections.map(([key,label])=><a href={"#"+key} key={key} aria-current={section===key?"page":undefined} onClick={event=>{event.preventDefault();navigate(key);}}>{label}</a>)}</nav>
+      <nav aria-label="主导航">{sections.map(([key,label])=> key==="trends" ?
+        <a href="/?editorial=1#trends" key={key}>{label}</a> :
+        <a href={"#"+key} key={key} aria-current={section===key?"page":undefined} onClick={event=>{event.preventDefault();navigate(key);}}>{label}</a>)}</nav>
     </header>
 
     <main id={section}>
     {section==="home" && <Editorial features={features} onOpen={openDetails} onSave={setSaveTarget}/>}
     {section==="designers" && <>
-      <SectionTitle title="品牌索引" description="按品牌或面料技法查找系列，点开档案查看秀场图。"/>
+      <SectionTitle title="品牌索引" description="从 2010 年起按系列年份、品牌和面料技法查找。"/>
       <label className="search"><span aria-hidden="true">⌕</span><input type="search" value={finding} onChange={event=>{setFinding(event.target.value);setBrandLimit(pageSize);}} placeholder="搜索品牌、面料或技法" aria-label="搜索品牌档案"/></label>
+      <label className="brand-year">系列年份 <select value={brandYear} onChange={event=>{setBrandYear(event.target.value);setBrandLimit(pageSize);}}>
+        <option value="">全部年份</option>
+        {brandYears.map(year=><option key={year} value={year}>{year}</option>)}
+      </select></label>
       <div className="pills" aria-label="面料技法">{materialFilters.map(item=><button key={item} aria-pressed={brandFilter===item} onClick={()=>{setBrandFilter(item);setBrandLimit(pageSize);}}>{item}</button>)}</div>
-      <div className="results-count" role="status">{status==="loading" ? "正在读取品牌档案…" : `显示 ${Math.min(brandLimit,matching.length)} / ${matching.length} 个品牌`}</div>
+      <div className="results-count" role="status">{status==="loading" ? "正在读取品牌档案…" : `显示 ${Math.min(brandLimit,matching.length)} / ${matching.length} 个系列`}</div>
       {status==="offline" && <p className="notice">最新档案暂时无法加载，当前显示首批品牌。</p>}
       <div className="card-grid brand-grid">{matching.slice(0,brandLimit).map(study=><StudyCard key={study.slug} study={study} onOpen={()=>openDetails(study)} onSave={setSaveTarget}/>)}</div>
-      {status!=="loading" && !matching.length && <p className="notice">没有找到对应研究。</p>}
-      {matching.length>brandLimit && <div className="more-row"><button className="text-action" onClick={()=>setBrandLimit(limit=>limit+pageSize)}>显示更多品牌 <Arrow/></button></div>}
+      {status!=="loading" && !matching.length && <p className="notice">{brandYear && !finding && brandFilter==="全部" ? `${brandYear} 年的秀场档案尚未收录。` : "没有找到符合筛选条件的系列。"}</p>}
+      {matching.length>brandLimit && <div className="more-row"><button className="text-action" onClick={()=>setBrandLimit(limit=>limit+pageSize)}>显示更多系列 <Arrow/></button></div>}
     </>}
 
     {section==="beauty" && <>
@@ -233,6 +244,7 @@ export default function Studio({features}:{features:Study[]}) {
 
     {section==="trends" && <>
       <SectionTitle title="流行趋势"/>
+      <p><a className="text-action" href="/?editorial=1#trends">阅读趋势文章 <Arrow/></a></p>
       <div className="pills trend-categories" aria-label="趋势分类">{trendOptions.map(([id,label])=><button key={id} aria-pressed={trendCategory===id} onClick={()=>{setTrendCategory(id);setSeason("全部");}}>{label}</button>)}</div>
       {trendSeasons.length>2 && <div className="pills" aria-label="趋势季节">{trendSeasons.map(item=><button key={item} aria-pressed={season===item} onClick={()=>setSeason(item)}>{item}</button>)}</div>}
       <div className="trend-list">{shownTrends.map(item=><TrendCard item={item} key={item.id}/>)}</div>

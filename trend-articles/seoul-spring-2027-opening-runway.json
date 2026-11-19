@@ -1,0 +1,57 @@
+{
+  "slug": "seoul-spring-2027-opening-runway",
+  "date": "2026-11-19",
+  "season": "2027 春夏 · 已发表秀场",
+  "category": "silhouette",
+  "title": "首尔 2027 春夏，从全身比例读秀场",
+  "lead": "看一套秀场造型，先看肩、腰和鞋之间的距离，再看款式细节。以首尔时装周开幕日的现场照片为起点，试着把一眼能记住的比例变成纸样上的落点。",
+  "sections": [
+    {
+      "heading": "用三条横线读一套造型",
+      "paragraphs": [
+        "首尔 2027 春夏时装周于 2026 年 9 月 1 日至 6 日举行，秀场设于东大门设计广场等场地。本文两张图记录了 9 月 1 日的东大门现场，图源未注明品牌与 Look 编号，因此只用于比较画面中的全身关系。",
+        "临摹时先画肩点、视觉腰线和最显眼的下摆。如果腰头藏在衣服里，视线可能会把露肤、换色或面料拼接处误读为腰线。这条视觉腰线比纸样上的真实腰位更能解释腿部显长或显短。最后才补鞋，把鞋面与下装之间的空隙也算进比例。"
+      ]
+    },
+    {
+      "heading": "把量感集中在一个区域",
+      "paragraphs": [
+        "小样从原线稿出发，只在肩、胯或下摆中挑一个部位调量。肩宽扩大时固定袖窿底和袖口，观察新增体积能否留在肩侧。需要下装更长时，先试缩短上装下缘，再考虑改裤长。这样可以辨认究竟哪条线影响了全身比例。",
+        "第二轮保持纸样不动，只替换横向量感最大的那片布。试一块有支撑的平纹布，再试一块较垂的斜纹布。同一片纸样在两种布上会形成不同的最宽点。用走动视频看量感是否留在计划中的位置，也看肘部或膝部有没有被牵扯。"
+      ]
+    },
+    {
+      "heading": "让站立和走动都成立",
+      "paragraphs": [
+        "用固定相机高度拍正面、侧面和一步行走。把三张缩到同样的小尺寸，如果局部工艺看不清时比例依然清楚，才值得继续做细节。若下摆一走就盖住鞋面，在下摆开量、布重或鞋面高度中选一项修改，保留其余参数。",
+        "这是一组秀场图的读图练习。照片能说明造型如何被看见，面料成分和整个季节的趋势强弱仍需更多系列与公开资料核对。"
+      ]
+    }
+  ],
+  "images": [
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Seoul_Fashion_Week_2027_SS_05.jpg/960px-Seoul_Fashion_Week_2027_SS_05.jpg",
+      "alt": "2027 春夏首尔时装周开幕日，一位模特走在东大门设计广场的秀场上",
+      "caption": "首尔时装周开幕日，东大门设计广场 · 2026 年 9 月 1 日",
+      "credit": "朴大镇（Park Dae-jin） / 韩国文化体育观光部 · 原幅缩放",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Seoul_Fashion_Week_2027_SS_05.jpg",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Seoul_Fashion_Week_2027_SS_07.jpg/960px-Seoul_Fashion_Week_2027_SS_07.jpg",
+      "alt": "首尔时装周开幕日现场的全身秀场照片",
+      "caption": "同场活动的另一张现场记录",
+      "credit": "朴大镇（Park Dae-jin） / 韩国文化体育观光部 · 原幅缩放",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Seoul_Fashion_Week_2027_SS_07.jpg",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "首尔市政府 · 2027 春夏首尔时装周举办信息",
+      "url": "https://english.seoul.go.kr/seoul-fashion-week-to-connect-ddp-and-lotte-world-tower-turning-seoul-landmarks-into-runways/"
+    }
+  ]
+}

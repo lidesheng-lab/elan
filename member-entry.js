@@ -91,7 +91,92 @@ function bindAccess() {
 
 function publicRoute() {
   const route = location.hash.slice(1);
+  if (/^trends\/[a-z0-9-]+$/.test(route)) return "trends";
   return sections.some(([key]) => key === route) || route === "login" || route === "subscribe" ? route : "home";
+}
+function articleLink(slug) { return "#trends/" + slug; }
+function renderTrendArticle(output, post) {
+  const article = element("article", null, "trend-feature");
+  const back = element("a", "← 全部趋势文章", "text-action");
+  back.href = "#trends";
+  const date = element("time", post.date);
+  date.dateTime = post.date;
+  const meta = element("p", null, "eyebrow");
+  meta.append(date, " · " + post.season + " · " + categories.find(([key]) => key === post.category)[1]);
+  article.append(back, meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
+  const photos = element("div", null, "trend-feature-photos");
+  for (const photo of post.images) {
+    const figure = element("figure");
+    const img = element("img");
+    img.src = photo.url;
+    img.alt = photo.alt;
+    img.decoding = "async";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    const caption = element("figcaption", photo.caption);
+    figure.append(img, caption);
+    photos.append(figure);
+  }
+  article.append(photos);
+  for (const section of post.sections) {
+    const part = element("section");
+    part.append(element("h2", section.heading), ...section.paragraphs.map(copy => element("p", copy)));
+    article.append(part);
+  }
+  const sources = element("footer", null, "trend-feature-sources");
+  sources.append(element("h2", "秀场与资料来源"));
+  for (const source of post.sources) addSource(sources, source);
+  for (const photo of post.images) {
+    const credit = element("p", photo.credit + " · ");
+    addSource(credit, {title:"照片原页", url:photo.sourceUrl});
+    credit.append(" · ");
+    addSource(credit, {title:photo.license, url:photo.licenseUrl});
+    sources.append(credit);
+  }
+  article.append(sources);
+  output.replaceChildren(article);
+}
+async function showTrendArticles(target) {
+  const output = target.querySelector(".trend-articles");
+  const slug = location.hash.startsWith("#trends/") ? location.hash.slice(8) : "";
+  try {
+    const posts = await feed("./trend-articles.json");
+    if (!target.isConnected) return;
+    if (slug) {
+      const post = posts.find(item => item.slug === slug);
+      if (!post) throw new Error("Article unavailable");
+      renderTrendArticle(output, post);
+      return;
+    }
+    const dateChoice = target.querySelector("#trend-date");
+    const categoryChoice = target.querySelector("#trend-article-category");
+    for (const date of [...new Set(posts.map(post => post.date))]) dateChoice.add(new Option(date, date));
+    function paint() {
+      const shown = posts.filter(post => (!dateChoice.value || post.date === dateChoice.value) &&
+        (!categoryChoice.value || post.category === categoryChoice.value));
+      output.replaceChildren();
+      for (const post of shown) {
+        const story = element("article", null, "trend-story");
+        const title = element("a", post.title);
+        title.href = articleLink(post.slug);
+        const heading = element("h2");
+        heading.append(title);
+        story.append(element("p", post.date + " · " + post.season, "eyebrow"), heading, element("p", post.lead));
+        output.append(story);
+      }
+      if (!shown.length) output.append(element("p", "没有符合筛选条件的文章。", "notice"));
+    }
+    dateChoice.onchange = categoryChoice.onchange = paint;
+    paint();
+  } catch {
+    if (!target.isConnected) return;
+    output.replaceChildren(element("p", "趋势文章暂时无法显示。", "notice"));
+    if (slug) {
+      const back = element("a", "返回全部趋势文章", "text-action");
+      back.href = "#trends";
+      output.append(back);
+    }
+  }
 }
 function feed(path) {
   if (!feeds.has(path)) {
@@ -186,13 +271,21 @@ function entry() {
   surface = "public";
   const route = publicRoute();
   const navigation = sections.map(([key, label]) =>
-    `<a href="#${key}" aria-current="${(route === "subscribe" ? "home" : route) === key ? "page" : "false"}"${lockedSections.has(key) ? ' aria-label="' + label + '，会员专享"' : ""}>${label}${lockedSections.has(key) ? '<span class="public-lock" aria-hidden="true"></span>' : ""}</a>`).join("");
+    `<a href="${session && lockedSections.has(key) ? "/" : ""}#${key}" aria-current="${(route === "subscribe" ? "home" : route) === key ? "page" : "false"}"${!session && lockedSections.has(key) ? ' aria-label="' + label + '，会员专享"' : ""}>${label}${!session && lockedSections.has(key) ? '<span class="public-lock" aria-hidden="true"></span>' : ""}</a>`).join("");
   let content;
   if (route === "trends") {
-    content = `<div class="section-title"><h1>流行趋势</h1><p>按色彩、面料和廓形查看每季观察。</p></div>
+    const detail = location.hash.startsWith("#trends/");
+    content = `${detail ? "" : `<div class="section-title"><h1>流行趋势</h1><p>每日秀场观察，按日期和主题选读。</p></div>
+      <div class="trend-article-filters">
+        <label for="trend-date">发布日期 <select id="trend-date"><option value="">全部日期</option></select></label>
+        <label for="trend-article-category">主题 <select id="trend-article-category"><option value="">全部主题</option>
+          ${categories.map(([key,title]) => `<option value="${key}">${title}</option>`).join("")}</select></label>
+      </div>`}
+      <section class="trend-articles" aria-label="趋势文章"><p class="notice" role="status">正在读取文章…</p></section>
+      ${detail ? "" : `<details class="trend-notes"><summary>趋势速览</summary>
       <div class="pills trend-categories" aria-label="趋势分类">${categories.map(([key, title]) =>
         `<button type="button" data-category="${key}" aria-pressed="${key === "color"}">${title}</button>`).join("")}</div>
-      <div class="trend-list"><p class="notice" role="status">正在读取趋势…</p></div>`;
+      <div class="trend-list"><p class="notice" role="status">正在读取趋势…</p></div></details>`}`;
   } else if (lockedSections.has(route) || route === "login") {
     const title = route === "login" ? "会员登录" : sections.find(([key]) => key === route)[1];
     content = `<section class="member-panel public-access">
@@ -208,7 +301,7 @@ function entry() {
       <section class="public-news" id="public-news" hidden></section>`;
   }
   root.innerHTML = `<header class="topbar">
-    <div class="masthead-tools"><a class="subscribe-link" href="#login">会员登录</a><a class="subscribe-link" href="#subscribe">免费订阅</a></div>
+    <div class="masthead-tools">${session ? '<a class="subscribe-link" href="/">返回会员档案</a>' : '<a class="subscribe-link" href="#login">会员登录</a>'}<a class="subscribe-link" href="#subscribe">免费订阅</a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
     <main id="public-content">${content}</main>
@@ -235,7 +328,12 @@ function entry() {
     } catch (error) { status.textContent = error.message; }
     finally { button.disabled = false; }
   };
-  if (route === "trends") void showTrends(document.getElementById("public-content"));
+  if (route === "trends") {
+    const target = document.getElementById("public-content");
+    void showTrendArticles(target);
+    const notes = target.querySelector(".trend-notes");
+    if (notes) notes.addEventListener("toggle", () => { if (notes.open) void showTrends(target); }, {once:true});
+  }
   else if (document.getElementById("public-news")) void showHeadlines(document.getElementById("public-news"));
   if (route === "subscribe") document.getElementById("subscribe").scrollIntoView();
   else window.scrollTo(0, 0);
@@ -396,5 +494,5 @@ const newsletter = /^#newsletter\/(confirm|unsubscribe)\/([a-f0-9]{64})\/([A-Za-
 window.addEventListener("hashchange", () => { if (surface === "public") entry(); });
 if (login) confirmLink("exchange", login[1], login[2]);
 else if (newsletter) confirmLink(newsletter[1], newsletter[2], newsletter[3]);
-else if (session) void loadMember();
+else if (session && new URLSearchParams(location.search).get("editorial") !== "1") void loadMember();
 else entry();

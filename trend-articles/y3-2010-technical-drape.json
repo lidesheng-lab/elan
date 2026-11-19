@@ -1,0 +1,52 @@
+{
+  "slug": "y3-2010-technical-drape",
+  "date": "2026-11-19",
+  "season": "2010 秋冬回顾 × 2027 春夏秀场",
+  "category": "fabric",
+  "title": "从 Y-3 到 Prada，机能面料怎样做出垂坠",
+  "lead": "运动感常从拉链、面料和行动时的变化被读出来。Y-3 2010 秋冬与 Prada 2027 春夏提供了两个不同的起点，一场从针织与开合入手，另一场从机能面料的褶形入手。",
+  "sections": [
+    {
+      "heading": "Y-3 2010 秋冬｜让开合改变衣身",
+      "paragraphs": [
+        "Yohji Yamamoto 在 Y-3 2010 秋冬把运动语汇放进不对称裁剪和改变比例的长短关系里。Vogue 的现场报道举了几件结构容易读清的衣服，包括带拉链的针织裙、低裆连体装，以及用拉链开合的挺括棉衬衫。拉链能把软面料的自由变形集中到有限的区域，也让开合状态各有轮廓。",
+        "对自己的线稿，可在有分割线的位置测试一个可开合的长口。先在拉链缝份贴窄条稳定衬，再抽掉试样的模特看衣片是否起波。如果衣襟挂空时仍有波纹，优先检查拉链与底布的伸缩差，再调纸样。"
+      ]
+    },
+    {
+      "heading": "Prada 2027 春夏｜让较硬的薄面料展开",
+      "paragraphs": [
+        "Prada 的系列说明列出哑面涂层织物和 Re-Nylon 在褶裥上的运用，也提及棉料经处理后呈现接近皮革或麂皮的表面。值得比较的地方在于软和硬可以同时存在于一块轻薄材料上。褶根需要停得住，而褶峰和摆边需要随着腿的移动展开。",
+        "试做时用同一段裙片分别做浅褶与深褶，把固定线留在相同位置。各拍站立和一步行走，再把样布挂一晚看折痕是否松开。涂层织物先测熨烫容许温度，再决定热定褶或缉线定褶。"
+      ]
+    },
+    {
+      "heading": "回到线稿｜把面料的任务标在结构线上",
+      "paragraphs": [
+        "肩颈、门襟和腰头各自写明要保持哪条线，腿侧和摆边标出活动时要展开的区域。如果两处都需要大动作，先试做面料面积更大的一处。颜色可以先用煤黑与灰黑区分定形层与活动层，在相同布光下检查哑光和微光是否仍可辨认。",
+        "这两组系列可以作为面料与结构的对照。下方分别链接 2010 年的秀场报道和 2027 春夏的品牌原始资料。"
+      ]
+    }
+  ],
+  "images": [
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Y-3_Fall-Winter_2010_226.jpg/960px-Y-3_Fall-Winter_2010_226.jpg",
+      "alt": "Y-3 2010 秋冬纽约时装周的秀场现场",
+      "caption": "Y-3 2010 秋冬 · 纽约秀场原照",
+      "credit": "Masaki-H · 原幅缩放",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Y-3_Fall-Winter_2010_226.jpg",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Vogue Runway · Y-3 2010 秋冬秀场与图集",
+      "url": "https://www.vogue.com/fashion-shows/fall-2010-ready-to-wear/y-3"
+    },
+    {
+      "title": "Prada Group · Prada 2027 春夏女装系列说明",
+      "url": "https://www.pradagroup.com/en/news-media/press-releases-documents/2026/26-09-22-prada-ss-2027-womenswear-show.html"
+    }
+  ]
+}

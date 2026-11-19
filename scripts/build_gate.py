@@ -49,3 +49,47 @@ if len(headlines) > 4 or any(not isinstance(item[k], str) or not item[k].strip()
 (OUT / "public-trends.json").write_text(json.dumps([public_trend(item) for item in trends], ensure_ascii=False), encoding="utf-8")
 (OUT / "weekly-editorial.json").write_text(json.dumps({"week": edition["week"], "headlines": headlines,
     "trends": [public_trend(item) for item in edition.get("trends", [])]}, ensure_ascii=False), encoding="utf-8")
+
+def article_photo(row):
+    url = urlparse(row["url"])
+    license_url = urlparse(row["licenseUrl"])
+    photo_page = urlparse(row["sourceUrl"])
+    if (url.scheme != "https" or url.netloc not in {"upload.wikimedia.org", "thumb.wikimedia.org"}
+            or not re.search(r"\.(?:jpg|jpeg|png|webp)$", url.path, re.I)
+            or photo_page.scheme != "https" or photo_page.netloc != "commons.wikimedia.org"
+            or not photo_page.path.startswith("/wiki/File:") or not row["credit"]
+            or license_url.scheme != "https" or license_url.netloc != "creativecommons.org"
+            or not re.fullmatch(r"/(?:licenses/by(?:-sa)?/(?:2\.0|2\.5|3\.0|4\.0)|publicdomain/(?:zero|mark)/1\.0)/",
+                                 license_url.path)):
+        raise ValueError("Article images require verified Wikimedia media and an open license")
+    return {key: row[key] for key in ("url", "alt", "caption", "credit", "sourceUrl", "license", "licenseUrl")}
+
+def trend_article(row):
+    if (not re.fullmatch(r"[a-z0-9-]{1,100}", row["slug"])
+            or row["category"] not in {"color", "fabric", "silhouette"}
+            or not row["title"] or not row["lead"] or not row["season"]
+            or len(row["sections"]) < 2 or not row["images"] or not row["sources"]):
+        raise ValueError("Trend articles need a unique slug, theme, copy, images and sources")
+    date.fromisoformat(row["date"])
+    sections = [{"heading": section["heading"], "paragraphs": section["paragraphs"]} for section in row["sections"]]
+    return {key: row[key] for key in ("slug", "title", "lead", "date", "season", "category")} | {
+        "sections": sections, "images": [article_photo(photo) for photo in row["images"]],
+        "sources": [source(item) for item in row["sources"]],
+    }
+
+articles = [trend_article(json.loads(path.read_text(encoding="utf-8")))
+            for path in sorted((ROOT / "trend-articles").glob("*.json"))]
+if len({item["slug"] for item in articles}) != len(articles):
+    raise ValueError("Duplicate trend article slugs")
+articles.sort(key=lambda row: row["date"], reverse=True)
+(OUT / "trend-articles.json").write_text(json.dumps(articles, ensure_ascii=False), encoding="utf-8")
+
+history = json.loads((ROOT / "history-feed.json").read_text(encoding="utf-8"))
+ids = set()
+for row in history:
+    if (set(row) != {"id", "nonce", "tag", "key", "body"}
+            or not re.fullmatch(r"[0-9a-f]{64}", row["id"]) or row["id"] in ids
+            or any(not re.fullmatch(r"[A-Za-z0-9_-]+", row[field]) for field in ("nonce", "tag", "key", "body"))):
+        raise ValueError("The historical feed must only contain encrypted entries")
+    ids.add(row["id"])
+(OUT / "history-feed.json").write_text(json.dumps(history, separators=(",", ":")), encoding="utf-8")

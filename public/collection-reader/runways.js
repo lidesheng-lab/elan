@@ -1,3 +1,4 @@
+import { shareControl } from "/community.js";
 const base = "/collection-reader/";
 const element = (tag, text, className) => {
   const el = document.createElement(tag);
@@ -121,7 +122,9 @@ function showDetail(target, show, favorite) {
   const meta = element("p",show.season,"eyebrow");
   target.replaceChildren(back,heading,meta);
   const actions=element("div",null,"show-filters");
-  actions.append(favorite(show.slug),link(show.source,"查看图片来源","text-action"));
+  const share = shareControl(show.brand + " · " + show.season + " | ÉLAN", "/#designers/" + show.slug);
+  share.querySelector("button").textContent = "转发";
+  actions.append(favorite(show.slug), share);
   if (show.download) {
     const count = show.download.count;
     const label = count === show.images.length ? "一键下载秀场" : "下载已收录造型";
@@ -140,11 +143,15 @@ function showDetail(target, show, favorite) {
   const next=element("button","下一套","member-secondary");
   const original=link("#","打开原图","text-action");
   original.target="_blank";original.rel="noopener noreferrer";
-  const controls=element("div",null,"show-filters");
-  const caption=element("span");
-  controls.append(close,prev,caption,next,original);
+  const tools = element("div", null, "runway-view-tools");
+  tools.append(close, original);
+  const controls = element("div", null, "runway-view-nav");
+  const caption = element("span");
+  caption.setAttribute("aria-live", "polite");
+  controls.append(prev, caption, next);
   const large=picture(show.cover,show.brand,false);
-  viewer.append(controls,large);
+  large.className = "runway-view-image";
+  viewer.append(tools, large, controls);
   target.append(viewer);
   let active=0;
   function select(index) {
@@ -162,6 +169,23 @@ function showDetail(target, show, favorite) {
     prev.disabled=index===0;
     next.disabled=index===show.images.length-1;
   }
+  let startTouch = null;
+  large.addEventListener("touchstart", event => {
+    const finger = event.touches[0];
+    startTouch = event.touches.length === 1 ? { x: finger.clientX, y: finger.clientY } : null;
+  }, { passive: true });
+  large.addEventListener("touchcancel", () => { startTouch = null; });
+  large.addEventListener("touchend", event => {
+    const start = startTouch;
+    startTouch = null;
+    if (!start || event.touches.length || (window.visualViewport?.scale || 1) > 1.05) return;
+    const finger = event.changedTouches[0];
+    const dx = finger.clientX - start.x;
+    const dy = finger.clientY - start.y;
+    if (Math.abs(dx) < 45 || Math.abs(dx) < 1.5 * Math.abs(dy)) return;
+    const index = active + (dx < 0 ? 1 : -1);
+    if (index >= 0 && index < show.images.length) select(index);
+  }, { passive: true });
   close.onclick=()=>viewer.close();
   prev.onclick=()=>select(active-1);
   next.onclick=()=>select(active+1);

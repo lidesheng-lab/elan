@@ -389,7 +389,7 @@
   "loro-piana": {
     "url": "https://www.youtube.com/watch?v=mGmdJb8DHyU",
     "embed": "https://www.youtube-nocookie.com/embed/mGmdJb8DHyU",
-    "label": "系列发布现场"
+    "label": "品牌发布会短片（1 分 01 秒）"
   },
   "luar-spring-2027": {
     "url": "https://www.youtube.com/watch?v=A8zXnlKwAjI",
@@ -430,16 +430,18 @@
   },
   "feng-chen-wang": {
     "url": "https://www.youtube.com/watch?v=AOslkynM9Qk",
-    "embed": "https://www.youtube-nocookie.com/embed/AOslkynM9Qk"
+    "embed": "https://www.youtube-nocookie.com/embed/AOslkynM9Qk",
+    "label": "官方秀场录像"
   },
   "shushu-tong": {
     "url": "https://www.youtube.com/watch?v=TaY_OgoMB1E",
-    "embed": "https://www.youtube-nocookie.com/embed/TaY_OgoMB1E"
+    "embed": "https://www.youtube-nocookie.com/embed/TaY_OgoMB1E",
+    "label": "设计师发布的秀场录像"
   },
   "huishan-zhang": {
     "url": "https://www.youtube.com/watch?v=Oek6vpAssv4",
     "embed": "https://www.youtube-nocookie.com/embed/Oek6vpAssv4",
-    "label": "系列影像"
+    "label": "品牌系列短片（33 秒）"
   },
   "y-3-fall-2010": {
     "url": "https://www.youtube.com/watch?v=30g5lP2joxo",
@@ -481,5 +483,25 @@
   },
   "marc-jacobs-spring-2027": {
     "url": "https://www.marcjacobsdigital.com/#runway-video-copy-2"
+  },
+  "marine-serre": {
+    "url": "https://www.youtube.com/watch?v=DFEVcUWhzrk",
+    "embed": "https://www.youtube-nocookie.com/embed/DFEVcUWhzrk",
+    "label": "官方系列短片《The Grace of Time》"
+  },
+  "sacai-fall-2026": {
+    "url": "https://www.youtube.com/watch?v=soixF0Ceta8",
+    "embed": "https://www.youtube-nocookie.com/embed/soixF0Ceta8",
+    "label": "系列影像 · DailyGlam"
+  },
+  "tove": {
+    "url": "https://www.youtube.com/watch?v=h7OcD2dczWk",
+    "embed": "https://www.youtube-nocookie.com/embed/h7OcD2dczWk",
+    "label": "系列影像 · OBO."
+  },
+  "natasha-zinko-fall-2024": {
+    "url": "https://www.youtube.com/watch?v=GW3MpsNtxp0",
+    "embed": "https://www.youtube-nocookie.com/embed/GW3MpsNtxp0",
+    "label": "系列影像 · Fashion Business Voices"
   }
 }

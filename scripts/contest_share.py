@@ -1,110 +1,102 @@
-"""Render public competition links that can be previewed without JavaScript."""
+"""Build public, crawlable cards for ÉLAN editorial sharing."""
 from html import escape
-from shutil import copyfile
+from shutil import copytree
+import json
+import re
+import subprocess
 
-
-SITE_URL = "https://elan.lidesheng.art"
+SITE = "https://elan.lidesheng.art"
 LABELS = {"recruit": "赛事征稿", "award": "获奖公示"}
+TOPICS = {"color": "色彩趋势", "fabric": "面料趋势", "silhouette": "廓形趋势"}
+
+
+def poster(path, title, label, date):
+    from PIL import Image, ImageDraw, ImageFont
+    family = subprocess.check_output(["fc-match", "-f", "%{file}", "serif:lang=zh-cn"], text=True)
+    image = Image.new("RGB", (640, 640), "#f7f3ea")
+    pen = ImageDraw.Draw(image)
+    def font(size):
+        return ImageFont.truetype(family, size)
+    pen.rectangle((0, 0, 640, 14), fill="#681c35")
+    pen.text((40, 33), "ÉLAN", font=font(68), fill="#2a1c22")
+    pen.line((40, 144, 600, 144), fill="#a69991", width=2)
+    pen.text((40, 163), label, font=font(28), fill="#782944")
+    for size in range(53, 11, -2):
+        face = font(size)
+        lines = [""]
+        for token in re.findall(r"[A-Za-z0-9]+|.", title):
+            if lines[-1] and pen.textlength(lines[-1]+token,font=face)>550:
+                lines.append("")
+            lines[-1] += token if lines[-1] else token.lstrip()
+        if len(lines)*(size+15)<=303 and all(pen.textlength(line,font=face)<=554 for line in lines):
+            break
+    pen.multiline_text((40, 223), "\n".join(line.rstrip() for line in lines),
+                       font=face, spacing=11, fill="#231c20")
+    pen.line((40, 558, 600, 558), fill="#a69991", width=2)
+    pen.text((40, 576), date, font=font(26), fill="#782944")
+    image.save(path, format="JPEG", quality=88, optimize=True)
+
+
+def page(out, section, slug, title, label, summary, image, css, credit=""):
+    path = out / section / slug
+    path.mkdir(parents=True, exist_ok=True)
+    url = f"{SITE}/{section}/{slug}/"
+    e = lambda s: escape(s, quote=True)
+    payload = json.dumps(dict(title=title, desc=summary, link=url, imgUrl=image),ensure_ascii=False).replace("<", r"\u003c")
+    name = "赛事" if section == "contests" else "文章"
+    path.joinpath("index.html").write_text(f'''<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{e(title)}｜ÉLAN</title><link rel="canonical" href="{url}"><meta name="description" content="{e(summary)}">
+<meta property="og:type" content="article"><meta property="og:site_name" content="ÉLAN">
+<meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(summary)}">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{e(image)}"><meta property="og:image:secure_url" content="{e(image)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:image" content="{e(image)}">
+<meta itemprop="name" content="{e(title)}"><meta itemprop="image" content="{e(image)}"><link rel="image_src" href="{e(image)}">
+<link rel="stylesheet" href="/{e(css)}"><style>main{{max-width:760px;margin:5vh auto;padding:0 20px 6vh}}img{{display:block;width:min(100%,360px);height:auto}}h1{{font-size:clamp(2rem,6vw,4rem);line-height:1.15}}p{{line-height:1.65}}nav{{display:flex;gap:1.3rem;flex-wrap:wrap}}</style></head>
+<body><main><a href="/">ÉLAN</a><p>{e(label)}</p><h1>{e(title)}</h1>
+<img src="{e(image)}" alt="{e(title)}" fetchpriority="high">{credit}<p>{e(summary)}</p>
+<nav><a class="primary" href="/#{section}/{slug}">查看{name}全文</a>
+<a href="{e(image)}" {'download' if section=='contests' else ''}>打开分享封面</a></nav>
+<p id="wxhint" hidden>点右上角「···」分享到朋友圈，也可长按封面保存图片。</p></main>
+<script type="application/json" id="share-data">{payload}</script>
+<script>
+if (/MicroMessenger/i.test(navigator.userAgent)) {{
+  document.getElementById("wxhint").hidden=false;
+  const sdk=document.createElement("script");
+  sdk.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";
+  sdk.onload=async()=>{{
+    try {{
+      const endpoint="https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/wechat-share";
+      const res=await fetch(endpoint+"?url="+encodeURIComponent(location.href.split("#")[0]));
+      if(!res.ok)return;
+      const config=await res.json(), data=JSON.parse(document.getElementById("share-data").textContent);
+      wx.ready(()=>{{wx.updateTimelineShareData(data);wx.updateAppMessageShareData(data);}});
+      wx.config({{...config,debug:false,jsApiList:["updateTimelineShareData","updateAppMessageShareData"]}});
+    }} catch {{ /* The visible cover can also be shared as an image. */ }}
+  }};
+  document.head.append(sdk);
+}}
+</script></body></html>''', encoding="utf-8")
 
 
 def contest_share_pages(out, public_dir, contests, stylesheet):
-    covers = out / "share"
-    covers.mkdir(exist_ok=True)
-    for kind in LABELS:
-        name = f"contest-{kind}.jpg"
-        copyfile(public_dir / "share" / name, covers / name)
-
-    for contest in contests:
-        path = out / "contests" / contest["id"]
+    copytree(public_dir / "share", out / "share", dirs_exist_ok=True)
+    for item in contests:
+        slug = item["id"]
+        label = LABELS[item["kind"]]
+        date = ("截稿  " + item["deadline"]) if item["kind"] == "recruit" else ("获奖公布  " + item["date"])
+        path = out / "contests" / slug
         path.mkdir(parents=True, exist_ok=True)
-        path.joinpath("index.html").write_text(
-            contest_share_html(contest, stylesheet), encoding="utf-8"
-        )
+        title = item["title"]
+        if re.fullmatch(r"World of WearableArt 20[0-9]{2}", title):
+            title = "新西兰世界可穿戴艺术大赛 · " + title
+        poster(path / "cover.jpg", title, label, date)
+        page(out, "contests", slug, title, label, item["summary"],
+             f"{SITE}/contests/{slug}/cover.jpg", stylesheet)
 
 
-def contest_share_html(contest, stylesheet):
-    slug = contest["id"]
-    kind = contest["kind"]
-    title = escape(contest["title"])
-    summary = escape(contest["summary"])
-    organizer = escape(contest["organizer"])
-    category = escape(contest["category"])
-    label = LABELS[kind]
-    date_label = "截稿日期" if kind == "recruit" else "结果日期"
-    date = escape(contest.get("deadline") or contest["date"])
-    url = f"{SITE_URL}/contests/{slug}/"
-    detail = f"/#contests/{slug}"
-    image = f"{SITE_URL}/share/contest-{kind}.jpg"
-    image_alt = f"ÉLAN 服装设计大赛 · {label}"
-    return f"""<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title}｜ÉLAN</title>
-  <meta name="description" content="{summary}">
-  <link rel="canonical" href="{url}">
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ÉLAN">
-  <meta property="og:title" content="{title}">
-  <meta property="og:description" content="{summary}">
-  <meta property="og:url" content="{url}">
-  <meta property="og:image" content="{image}">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="600">
-  <meta property="og:image:height" content="600">
-  <meta property="og:image:alt" content="{image_alt}">
-  <meta itemprop="name" content="{title}">
-  <meta itemprop="description" content="{summary}">
-  <meta itemprop="image" content="{image}">
-  <link rel="image_src" href="{image}">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{title}">
-  <meta name="twitter:description" content="{summary}">
-  <meta name="twitter:image" content="{image}">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/{escape(stylesheet)}">
-  <style>
-    .share-masthead{{max-width:1120px;margin:0 auto;padding:16px 0;border-bottom:1px solid var(--line)}}
-    .share-masthead a{{font:400 clamp(2.6rem,6vw,4rem)/1 var(--serif);color:var(--ink);text-decoration:none}}
-    .share-layout{{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);align-items:start;
-      gap:clamp(20px,6vw,72px);padding-top:clamp(18px,4vw,38px)}}
-    .share-layout p{{line-height:1.65;overflow-wrap:anywhere}}
-    .share-cover{{display:block;width:100%;max-width:330px;height:auto;justify-self:end}}
-    .share-actions{{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:22px}}
-    @media(max-width:640px){{
-      .share-layout{{grid-template-columns:minmax(0,1fr);gap:24px}}
-      .share-cover{{justify-self:start;width:min(100%,240px)}}
-    }}
-  </style>
-</head>
-<body>
-  <header class="share-masthead"><a href="/" aria-label="ÉLAN 首页">ÉLAN</a></header>
-  <main class="community-page contest-page">
-    <a class="reader-back" href="/#contests">← 服装设计大赛</a>
-    <article class="contest-feature">
-      <header class="contest-feature-header">
-        <p class="eyebrow">{label} · {category}</p>
-        <h1>{title}</h1>
-      </header>
-      <div class="share-layout">
-        <div>
-          <p class="contest-feature-lead">{summary}</p>
-          <p class="community-meta">{organizer} · {date_label} {date}</p>
-          <div class="share-actions">
-            <a class="primary" href="{detail}">查看赛事详情</a>
-            <a class="text-action" href="/share/contest-{kind}.jpg" download>保存分享封面</a>
-          </div>
-          <p class="community-meta" id="wechat-share-hint" hidden>点右上角「···」，选择分享到朋友圈。</p>
-        </div>
-        <img class="share-cover" src="{image}" alt="{image_alt}" width="600" height="600">
-      </div>
-    </article>
-  </main>
-  <script>
-    if (/MicroMessenger/i.test(navigator.userAgent))
-      document.getElementById("wechat-share-hint").hidden = false;
-  </script>
-</body>
-</html>
-"""
+def trend_share_page(out, article, stylesheet):
+    photo = article["images"][0]
+    credit = '<small>' + escape(photo["credit"]) + ' · <a href="' + escape(photo["licenseUrl"],quote=True) + '">' + escape(photo["license"]) + '</a> · <a href="' + escape(photo["sourceUrl"],quote=True) + '">原图</a></small>'
+    page(out, "trends", article["slug"], article["title"], TOPICS[article["category"]] + " · " + article["season"],
+         article["lead"], photo["url"], stylesheet, credit)

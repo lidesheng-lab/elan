@@ -86,16 +86,45 @@ function bindForm(id, operation) {
     finally { button.disabled = false; }
   });
 }
-async function displaySubscriberCount(label) {
+const subscriptionBase = { display: 779, confirmed: 4 };
+let lastConfirmedCount = null;
+let lastCountCheck = 0;
+let countRequestPending = false;
+
+function paintSubscriberCount(live) {
+  if (lastConfirmedCount === null) return;
+  const count = subscriptionBase.display + lastConfirmedCount - subscriptionBase.confirmed;
+  const badge = document.querySelector("[data-header-count]");
+  if (badge) {
+    badge.textContent = "订阅计数 " + count.toLocaleString("zh-CN");
+    badge.dataset.live = String(live);
+    badge.hidden = false;
+  }
+  const detail = document.querySelector("[data-subscriber-count]");
+  if (detail) {
+    detail.textContent = "订阅计数 " + count.toLocaleString("zh-CN") + " · 起始展示值 779，按有效订阅净增更新。当前已确认 " + lastConfirmedCount.toLocaleString("zh-CN") + " 人。";
+    detail.hidden = false;
+  }
+}
+
+async function refreshSubscriberCount() {
+  if (document.hidden || !document.querySelector("[data-header-count], [data-subscriber-count]")) return;
+  paintSubscriberCount(Date.now() - lastCountCheck < 30000);
+  if (countRequestPending || Date.now() - lastCountCheck < 15000) return;
+  countRequestPending = true;
   try {
-    const response = await fetch(api + "?view=subscriber-count", {signal: AbortSignal.timeout(8000)});
+    const response = await fetch(api + "?view=subscriber-count", {cache:"no-store", signal:AbortSignal.timeout(8000)});
     if (!response.ok) return;
     const {confirmedCount} = await response.json();
-    if (!label.isConnected || !Number.isSafeInteger(confirmedCount) || confirmedCount < 0) return;
-    label.textContent = "已有 " + confirmedCount.toLocaleString("zh-CN") + " 人订阅 ÉLAN";
-    label.hidden = false;
-  } catch { /* Subscription remains available while the count is unavailable. */ }
+    if (!Number.isSafeInteger(confirmedCount) || confirmedCount < 0) return;
+    lastConfirmedCount = confirmedCount;
+    lastCountCheck = Date.now();
+    paintSubscriberCount(true);
+  } catch { /* The subscription form works independently of its count. */ }
+  finally { countRequestPending = false; }
 }
+setInterval(refreshSubscriberCount, 15000);
+document.addEventListener("visibilitychange", refreshSubscriberCount);
 
 function accessForm(mode) {
   if (mode === "subscribe") return `
@@ -148,7 +177,7 @@ function showAccess(mode, trigger = document.activeElement) {
   const address = dialog.querySelector("#member-email");
   address.value = subscribing ? account?.email || "" : email;
   address.readOnly = subscribing && Boolean(account?.premium);
-  if (subscribing) void displaySubscriberCount(dialog.querySelector("[data-subscriber-count]"));
+  if (subscribing) void refreshSubscriberCount();
   bindAccess(mode);
   if (!dialog.open) dialog.showModal();
   dialog.querySelector("#access-title").focus({preventScroll:true});
@@ -618,13 +647,14 @@ function entry() {
     <header class="topbar public-masthead${activeSection==="home"?"":" topbar-compact"}">
     <div class="masthead-tools"><div class="masthead-account">${account ?
       `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin===true ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
-      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe" aria-haspopup="dialog">免费订阅</a></div>
+      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link subscription-live" href="#subscribe" aria-haspopup="dialog" title="查看订阅计数与统计说明"><span>免费订阅</span><small data-header-count hidden></small></a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
     <main id="public-content" class="page-${route}" tabindex="-1">${content}</main>
     <footer class="site-footer public-footer"><a class="footer-wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#contests">服装设计大赛</a><a href="#square">设计广场</a>
     <a href="${account?"#profile":"#login"}">${account?"个人中心":"会员登录"}</a></nav></footer>`;
+  void refreshSubscriberCount();
   root.querySelector(".skip-main").onclick=event=>{
     event.preventDefault();
     const main=document.getElementById("public-content");

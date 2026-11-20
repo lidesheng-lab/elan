@@ -24,7 +24,11 @@ function picture(src, alt, lazy = true) {
   img.src = src;
   return img;
 }
-let listState = {search:"", year:"", limit:24};
+function runwaySeason(label) {
+  const match = label.match(/(20\d{2})(?:\/(?:20)?\d{2})?\s*(春夏|秋冬)/);
+  return match ? match[1] + " " + match[2] : "";
+}
+let listState = {search:"", year:"current", limit:24};
 function showIndex(target, shows) {
   const heading = element("h1","品牌索引");
   const search = element("input");
@@ -34,17 +38,21 @@ function showIndex(target, shows) {
   search.value = listState.search;
   const year = element("select");
   year.setAttribute("aria-label","系列年份");
+  const seasons = [...new Set(shows.map(show => runwaySeason(show.season)).filter(Boolean))];
+  const rank = season => Number(season.slice(0, 4)) * 2 + Number(season.endsWith("秋冬"));
+  const latest = seasons.sort((a,b) => rank(b) - rank(a))[0];
+  if (latest) year.add(new Option("当季 · " + latest, "current"));
   year.add(new Option("全部年份",""));
   const years = shows.map(show => show.season.match(/20\d{2}/)?.[0]).filter(Boolean);
   for (const value of [...new Set(years)].sort().reverse()) year.add(new Option(value,value));
-  year.value = listState.year;
+  year.value = !latest && listState.year === "current" ? "" : listState.year;
   const toolbar = element("div",null,"show-filters");
   toolbar.append(search,year);
   const grid = element("div",null,"show-cards");
   const more = element("button","显示更多系列","member-secondary");
   function draw() {
     const query = search.value.trim().normalize("NFKD").toLowerCase();
-    const rows = shows.filter(item => (!year.value || item.season.includes(year.value)) &&
+    const rows = shows.filter(item => (year.value === "current" ? runwaySeason(item.season) === latest : !year.value || item.season.includes(year.value)) &&
       (item.brand + " " + item.season + " " +item.slug).normalize("NFKD").toLowerCase().includes(query));
     grid.replaceChildren();
     for (const item of rows.slice(0,listState.limit)) {

@@ -122,7 +122,7 @@ function showDetail(target, show, favorite) {
   const meta = element("p",show.season,"eyebrow");
   target.replaceChildren(back,heading,meta);
   const actions=element("div",null,"show-filters");
-  const share = shareControl(show.brand + " · " + show.season + " | ÉLAN", "/designers/" + show.slug + "/");
+  const share = shareControl(show.brand + " · " + show.season + " | ÉLAN", "/designers/" + show.slug + "/", {runway:true});
   share.querySelector("button").textContent = "转发";
   actions.append(favorite(show.slug), share);
   if (show.download) {

@@ -94,6 +94,7 @@ copyLink.addEventListener("click", async () => {{
 if (/MicroMessenger/i.test(navigator.userAgent)) {{
   const wxHint = document.getElementById("wxhint");
   wxHint.hidden=false;
+  const data=JSON.parse(document.getElementById("share-data").textContent);
   const sdk=document.createElement("script");
   sdk.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";
   sdk.onload=async()=>{{
@@ -101,9 +102,10 @@ if (/MicroMessenger/i.test(navigator.userAgent)) {{
       const endpoint="https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/wechat-share";
       const res=await fetch(endpoint+"?url="+encodeURIComponent(location.href.split("#")[0]));
       if(!res.ok)return;
-      const config=await res.json(), data=JSON.parse(document.getElementById("share-data").textContent);
+      const config=await res.json();
       wx.ready(()=>{{
         wx.updateTimelineShareData({{...data, success:()=>{{
+          document.documentElement.dataset.timelineReady = "true";
           wxHint.textContent = "发朋友圈：点微信右上角「···」→「分享到朋友圈」→「发表」。";
         }}}});
         wx.updateAppMessageShareData(data);

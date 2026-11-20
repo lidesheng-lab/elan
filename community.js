@@ -165,7 +165,7 @@ export function publicDetailHref(section, slug) {
   return `/${section}/${slug}/?v=${sharePageVersion}`;
 }
 
-export function shareControl(title,href,{openSharePage=false}={}) {
+export function shareControl(title,href,{openSharePage=false,runway=false}={}) {
   const wrapper=node("div",null,"favorite-control");
   const control=button("分享");
   const message=status();
@@ -173,6 +173,25 @@ export function shareControl(title,href,{openSharePage=false}={}) {
   interact(control,message,async()=>{
     const destination=new URL(href,location.origin);
     const url=destination.href;
+    if (runway && /MicroMessenger/i.test(navigator.userAgent)) {
+      if (document.documentElement.dataset.timelineReady === "true") {
+        message.textContent = "点微信右上角「···」，选择「分享到朋友圈」。";
+        return;
+      }
+      const text = title + "\n" + url;
+      try {
+        await navigator.clipboard.writeText(text);
+        message.textContent = "已复制秀场标题和链接，可粘贴到朋友圈。";
+      } catch {
+        const field = node("textarea");
+        field.readOnly = true;
+        field.value = text;
+        field.setAttribute("aria-label", "秀场标题和链接");
+        message.replaceChildren(field);
+        field.select();
+      }
+      return;
+    }
     if(typeof navigator.share==="function") {
       const wechatHint = openSharePage && /MicroMessenger/i.test(navigator.userAgent)
         ? "若未发到朋友圈，请点微信右上角「···」→「在浏览器打开」，再点「分享」。" : "";

@@ -40,7 +40,7 @@ exports.main = async event => {
     if(typeof input!=="string" || input.length>4096) return reply(400,{});
     const url=new URL(input);
     if(url.origin!==site || url.username || url.password || url.hash ||
-       !/^\/(contests|trends)\/[a-z0-9-]{1,100}\/$/.test(url.pathname)) return reply(400,{});
+       !/^\/(contests|trends|designers)\/[a-z0-9-]{1,100}\/$/.test(url.pathname)) return reply(400,{});
     if(!process.env.WECHAT_APP_ID || !process.env.WECHAT_APP_SECRET) return reply(503,{code:"CONFIG_MISSING"});
     if(Date.now()>=expires) {
       pending ||= loadTicket().finally(()=>{pending=null;});

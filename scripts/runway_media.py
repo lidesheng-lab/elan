@@ -18,6 +18,9 @@ def publish_runway_media(root, out, catalog, galleries):
     details.mkdir()
     with gzip.open(root / "runway-supplement.json.gz", "rt", encoding="utf-8") as handle:
         supplements = json.load(handle)
+    for path in sorted((root / "data" / "runway-galleries").glob("*.json.gz")):
+        with gzip.open(path, "rt", encoding="utf-8") as stream:
+            supplements.update(json.load(stream))
     films = json.loads((root / "runway-films.json").read_text())
     additions = json.loads((root / "runway-study-additions.json").read_text())
     index = []
@@ -45,6 +48,8 @@ def publish_runway_media(root, out, catalog, galleries):
         source = gallery.get("sourceUrl") or next((p["sourceUrl"] for p in raw if p.get("sourceUrl")), study["sources"][0]["url"])
         data = {**item, "images": images, "film": films.get(slug), "source": source,
                 "credit": gallery.get("credit") or next((p["credit"] for p in raw if p.get("credit")), "")}
+        if external and not images:
+            raise ValueError(f"Missing images for linked collection {slug}")
         if external:
             data["externalCollection"] = external
             data["summary"] = study["summary"]

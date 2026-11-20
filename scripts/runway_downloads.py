@@ -37,7 +37,7 @@ def fetch_picture(look):
 def package(path, executor):
     show = json.loads(path.read_text())
     looks = show["images"]
-    if not looks:
+    if not looks or show.get("externalCollection"):
         return
     slug = show["slug"]
     signature = hashlib.sha256(json.dumps([looks, show["credit"], show["source"]], sort_keys=True).encode()).hexdigest()[:16]

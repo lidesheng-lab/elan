@@ -1,3 +1,4 @@
+import { attachDownload } from "./download.js";
 import { shareControl } from "/community.js";
 const base = "/collection-reader/";
 const element = (tag, text, className) => {
@@ -131,27 +132,13 @@ function showDetail(target, show, favorite) {
     const download = link(show.download.url, label + "（ZIP · " + count + " 张）", "member-secondary");
     download.download = show.slug + ".zip";
     actions.append(download);
+  } else if (show.externalCollection && show.images.length) {
+    attachDownload(actions, show);
   }
   target.append(actions);
-  if (show.externalCollection) {
-    const source = show.externalCollection;
-    target.append(element("p", show.summary));
-    const gallery = link(source.url, source.count ? "查看系列图集（" + source.count + " 张）" : "查看系列原文", "text-action");
-    gallery.target = "_blank";
-    gallery.rel = "noopener noreferrer";
-    if (show.cover) {
-      const preview = element("figure", null, "show-looks");
-      const coverLink = link(source.url, null);
-      coverLink.target = "_blank";
-      coverLink.rel = "noopener noreferrer";
-      coverLink.append(picture(show.cover, show.brand + " 系列预览", false));
-      preview.append(coverLink);
-      target.append(preview);
-    }
-    target.append(gallery);
-  }
+  if (show.summary) target.append(element("p", show.summary));
   if (!show.images.length) {
-    if (show.externalCollection) appendStudy(target, show.notes);
+    appendStudy(target, show.notes);
     return;
   }
   target.append(element("h2","秀场造型"));
@@ -188,6 +175,16 @@ function showDetail(target, show, favorite) {
     original.href=look.url;
     prev.disabled=index===0;
     next.disabled=index===show.images.length-1;
+  }
+  function openLook(index) {
+    select(index);
+    viewer.showModal();
+  }
+  if (show.externalCollection) {
+    const open = element("button", "查看系列图集（" + show.images.length + " 张）", "text-action");
+    open.type = "button";
+    open.onclick = () => openLook(0);
+    actions.append(open);
   }
   let startTouch = null;
   large.addEventListener("touchstart", event => {
@@ -227,7 +224,7 @@ function showDetail(target, show, favorite) {
       if(i===0 && show.cover)img.src=show.cover;
       a.onclick=event=>{
         if(event.metaKey || event.ctrlKey || event.shiftKey || typeof viewer.showModal!=="function")return;
-        event.preventDefault();select(i);viewer.showModal();
+        event.preventDefault();openLook(i);
       };
       a.append(img);figure.append(a,element("figcaption",label));grid.append(figure);
     }

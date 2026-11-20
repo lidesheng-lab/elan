@@ -440,6 +440,7 @@ write_json(OUT / "brand-preview.json", brand_preview)
 
 
 entry_js = (OUT / "member-entry.js").read_text(encoding="utf-8")
+entry_js = entry_js.replace('"/collection-reader/runways.js"', '"/' + versioned("collection-reader/runways.js") + '"')
 for module in ("community.js", "photo-viewer.js"):
     entry_js = entry_js.replace(f'"./{module}"', f'"./{fingerprinted(module)}"')
 entry_js = entry_js.replace("trend-articles.json?view=current", versioned("trend-articles.json"))

@@ -297,6 +297,11 @@ function renderTrendArticle(output, post) {
   post.sections.forEach((section,index)=>{
     const part = element("section");
     part.append(element("h2", section.heading), ...section.paragraphs.map(copy => element("p", copy)));
+    if (section.references?.length) {
+      const references = element("div", null, "trend-section-references");
+      for (const reference of section.references) addSource(references, reference);
+      part.append(references);
+    }
     body.append(part);
     if (inline[index]) body.append(trendFigure(inline[index],post.images,index+1));
   });

@@ -15,20 +15,32 @@ function secureUrl(value, host) {
   const url = new URL(value);
   return url.protocol === "https:" && !url.username && !url.password && (!host || host.test(url.hostname));
 }
+const validSource = source => text(source.title) && secureUrl(source.url);
+function validPhotoOrigin(image) {
+  if (!secureUrl(image.url) || !secureUrl(image.sourceUrl)) return false;
+  const file = new URL(image.url);
+  const original = new URL(image.sourceUrl);
+  if (/^(upload|thumb)\.wikimedia\.org$/.test(file.host)) {
+    return original.host === "commons.wikimedia.org" && original.pathname.startsWith("/wiki/File:");
+  }
+  const flickrId = /^\/photos\/[\w.@-]+\/(\d+)\/?$/.exec(original.pathname)?.[1];
+  return file.host === "live.staticflickr.com" && original.host === "www.flickr.com" &&
+    Boolean(flickrId) && file.pathname.split("/").at(-1).startsWith(flickrId + "_");
+}
 for (const post of entries) {
   const { slug, date, season, category, title, lead, sections, images, sources } = post;
   if (!/^[a-z0-9-]{1,100}$/.test(slug) || !/^20\d\d-\d\d-\d\d$/.test(date) ||
       !["color","fabric","silhouette"].includes(category) || ![season,title,lead].every(text) ||
       !Array.isArray(sections) || sections.length < 2 ||
       !sections.every(section => text(section.heading) && Array.isArray(section.paragraphs) &&
-        section.paragraphs.length && section.paragraphs.every(text)) ||
+        section.paragraphs.length && section.paragraphs.every(text) &&
+        (section.references === undefined || (Array.isArray(section.references) && section.references.every(validSource)))) ||
       !Array.isArray(images) || !images.length || !Array.isArray(sources) || !sources.length ||
-      !sources.every(source => text(source.title) && secureUrl(source.url))) {
+      !sources.every(validSource)) {
     throw new Error("Invalid trend article " + slug);
   }
   for (const image of images) {
-    if (!secureUrl(image.url, /^(upload|thumb)\.wikimedia\.org$/) ||
-        !secureUrl(image.sourceUrl, /^commons\.wikimedia\.org$/) || !new URL(image.sourceUrl).pathname.startsWith("/wiki/File:") ||
+    if (!validPhotoOrigin(image) ||
         !secureUrl(image.licenseUrl, /^creativecommons\.org$/) ||
         !/^\/(?:licenses\/by(?:-sa)?\/(?:2\.0|2\.5|3\.0|4\.0)|publicdomain\/(?:zero|mark)\/1\.0)\/$/.test(new URL(image.licenseUrl).pathname) ||
         ![image.alt,image.caption,image.credit,image.license].every(text)) throw new Error("Invalid trend image " + slug);

@@ -343,6 +343,7 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(23px,3.4v
 .trend-article-body>.trend-figure,.trend-article-body>section+section,.trend-article-body>.trend-figure+section{margin-top:clamp(24px,3.4vw,42px)}
 .trend-feature h2{font:500 clamp(1.42rem,2.6vw,1.95rem)/1.33 var(--serif);margin-bottom:13px}
 .trend-article-body section p{line-height:1.87;margin:0 0 13px}
+.trend-section-references{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 18px;margin-top:11px}
 .trend-feature-sources{border-top:1px solid var(--line);padding-top:21px}
 .trend-feature-sources>a{display:flex;width:fit-content;margin-bottom:8px}
 .trend-feature-sources p{font-size:.83rem;line-height:1.65;color:var(--quiet);margin-top:10px}

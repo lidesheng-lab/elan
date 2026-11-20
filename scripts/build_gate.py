@@ -116,12 +116,18 @@ def editorial_slug(row, namespace):
         raise ValueError("Invalid public editorial slug")
     return slug
 
+def verified_photo_origin(image, original):
+    if image.netloc in {"thumb.wikimedia.org", "upload.wikimedia.org"}:
+        return original.netloc == "commons.wikimedia.org" and original.path.startswith("/wiki/File:")
+    photo = re.fullmatch(r"/photos/[\w.@-]+/(\d+)/?", original.path, flags=re.ASCII)
+    return (image.netloc == "live.staticflickr.com" and original.netloc == "www.flickr.com"
+            and photo and image.path.rsplit("/", 1)[-1].startswith(photo[1] + "_"))
+
 def cover_image(value):
     cover = texts(value, sorted(cover_fields))
     image, original, license_url = (urlparse(cover[key]) for key in ("url", "sourceUrl", "licenseUrl"))
     if (any(url.scheme != "https" or url.username or url.password for url in (image, original, license_url))
-            or image.netloc not in {"thumb.wikimedia.org", "upload.wikimedia.org"}
-            or original.netloc != "commons.wikimedia.org" or not original.path.startswith("/wiki/File:")
+            or not verified_photo_origin(image, original)
             or license_url.netloc != "creativecommons.org"
             or not re.fullmatch(r"/(?:licenses/by(?:-sa)?/(?:2\.0|2\.5|3\.0|4\.0)|publicdomain/(?:zero|mark)/1\.0)/", license_url.path)):
         raise ValueError("Invalid trend cover source or license")
@@ -149,7 +155,10 @@ def trend_entry(data, metadata):
         paragraphs = section["paragraphs"]
         if not isinstance(paragraphs, list) or not paragraphs or any(not isinstance(p, str) or not p.strip() for p in paragraphs):
             raise ValueError("Invalid public trend section")
-        entry["sections"].append({**texts(section, ("heading",)), "paragraphs": paragraphs})
+        part = {**texts(section, ("heading",)), "paragraphs": paragraphs}
+        if section.get("references"):
+            part["references"] = [source(reference) for reference in section["references"]]
+        entry["sections"].append(part)
     entry["images"] = [{**cover_image(row), **texts(row, ("caption",))} for row in data["images"] if current_photo(row)]
     entry["sources"] = [source(row) for row in data["sources"]]
     return entry

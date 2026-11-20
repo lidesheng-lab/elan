@@ -133,7 +133,27 @@ function showDetail(target, show, favorite) {
     actions.append(download);
   }
   target.append(actions);
-  if (!show.images.length) return;
+  if (show.externalCollection) {
+    const source = show.externalCollection;
+    target.append(element("p", show.summary));
+    const gallery = link(source.url, source.count ? "查看系列图集（" + source.count + " 张）" : "查看系列原文", "text-action");
+    gallery.target = "_blank";
+    gallery.rel = "noopener noreferrer";
+    if (show.cover) {
+      const preview = element("figure", null, "show-looks");
+      const coverLink = link(source.url, null);
+      coverLink.target = "_blank";
+      coverLink.rel = "noopener noreferrer";
+      coverLink.append(picture(show.cover, show.brand + " 系列预览", false));
+      preview.append(coverLink);
+      target.append(preview);
+    }
+    target.append(gallery);
+  }
+  if (!show.images.length) {
+    if (show.externalCollection) appendStudy(target, show.notes);
+    return;
+  }
   target.append(element("h2","秀场造型"));
   const grid=element("div",null,"show-looks");
   const viewer = element("dialog",null,"runway-lightbox");

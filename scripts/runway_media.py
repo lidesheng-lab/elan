@@ -33,15 +33,21 @@ def publish_runway_media(root, out, catalog, galleries):
             if not url.startswith("https://") or not re.search(r"\.(jpe?g|png|webp|avif)(?:[?#]|$)", url, re.I):
                 continue
             images.append({key: picture[key] for key in ("url", "thumbnailUrl", "number") if picture.get(key)})
-        if not images and not films.get(slug):
+        external = study.get("externalCollection")
+        if not images and not films.get(slug) and not external:
             continue
         local_cover = directory / "covers" / (slug + ".webp")
         cover = "/collection-reader/covers/" + local_cover.name if local_cover.exists() else (images[0].get("thumbnailUrl") or images[0]["url"] if images else "")
+        if not cover and external:
+            cover = external.get("cover", "")
         item = {"slug": slug, "brand": study["designer"].split(" · ")[0], "season": study["season"], "cover": cover}
         index.append(item)
         source = gallery.get("sourceUrl") or next((p["sourceUrl"] for p in raw if p.get("sourceUrl")), study["sources"][0]["url"])
         data = {**item, "images": images, "film": films.get(slug), "source": source,
                 "credit": gallery.get("credit") or next((p["credit"] for p in raw if p.get("credit")), "")}
+        if external:
+            data["externalCollection"] = external
+            data["summary"] = study["summary"]
         notes = {key: study.get(key) for key in ("fabric", "color", "silhouette", "palette", "techniques", "sources")}
         data["notes"] = {**notes, **additions.get(slug, {})}
         (details / (slug + ".json")).write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))

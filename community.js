@@ -313,6 +313,13 @@ export async function renderProfile(target,request,logout) {
   try { await load(); } catch(error) { message.textContent=error.message; }
 }
 
+let guestCapability;
+async function enableGuestWriting(request, placeholder, form) {
+  guestCapability ??= request({memberAction:"guestCommunityCapabilities"})
+    .then(result => result.writing === true).catch(() => false);
+  if (await guestCapability && placeholder.isConnected) placeholder.replaceWith(form);
+}
+
 function thread(request,target,state,signedIn) {
   const wrapper=node("div",null,"community-thread");
   const bar=node("div",null,"community-actions");
@@ -334,7 +341,7 @@ function thread(request,target,state,signedIn) {
   const list=node("div",null,"community-comment-list");
   const more=button("查看更多评论","text-action");
   more.hidden=true;
-  if(signedIn) {
+  {
     const form=node("form",null,"community-form community-comment-form");
     const field=formControl(form,"写评论",{name:"text",multiline:true,rows:2,required:true,limit:600});
     submitButton(form,"发布评论");
@@ -345,8 +352,13 @@ function thread(request,target,state,signedIn) {
       commentId=crypto.randomUUID();
       await fill();
     },"submit");
-    replies.append(form);
-  } else replies.append(link("登录后评论","#login","member-secondary"));
+    if (signedIn) replies.append(form);
+    else {
+      const login = link("登录后评论", "#login", "member-secondary");
+      replies.append(login);
+      void enableGuestWriting(request, login, form);
+    }
+  }
   replies.append(list,more);
   let next=null;
   async function fill(offset=0) {
@@ -551,7 +563,12 @@ export async function renderSquare(target,request,signedIn,selected) {
   const message=status();
   more.hidden=true;
   if(selected) target.append(link("← 返回设计广场","#square"));
-  else target.append(signedIn ? composer : link("登录后发布作品","#login","member-secondary"));
+  else if (signedIn) target.append(composer);
+  else {
+    const login = link("登录后发布作品", "#login", "member-secondary");
+    target.append(login);
+    void enableGuestWriting(request, login, composer);
+  }
   target.append(list,more,message);
   let offset=0;
   async function load(reset=false) {

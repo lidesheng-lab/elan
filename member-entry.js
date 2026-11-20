@@ -35,7 +35,7 @@ const detailRoute = root.dataset.detailRoute || "";
 const detailTitle = document.title;
 const currentRoute = () => location.hash.slice(1).split("?")[0] || detailRoute;
 const sectionDetail = () => currentRoute().split("/")[1] || "";
-const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike"]);
+const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike","communityPost","communityComment","communityPostRemove"]);
 let visitorId;
 let contestCatalog;
 

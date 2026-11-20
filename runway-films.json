@@ -415,20 +415,43 @@
     "url": "https://www.youtube.com/watch?v=BZPtl8UiJws",
     "embed": "https://www.youtube-nocookie.com/embed/BZPtl8UiJws"
   },
+  "valentino": {
+    "url": "https://www.youtube.com/watch?v=SfaJl7yztbA",
+    "embed": "https://www.youtube-nocookie.com/embed/SfaJl7yztbA"
+  },
+  "gucci": {
+    "url": "https://www.youtube.com/watch?v=NcTX4gXjdxA",
+    "embed": "https://www.youtube-nocookie.com/embed/NcTX4gXjdxA",
+    "label": "系列短片 · The Tiger"
+  },
+  "dolce-gabbana": {
+    "url": "https://www.youtube.com/watch?v=tJocnyenLEY",
+    "embed": "https://www.youtube-nocookie.com/embed/tJocnyenLEY"
+  },
+  "feng-chen-wang": {
+    "url": "https://www.youtube.com/watch?v=AOslkynM9Qk",
+    "embed": "https://www.youtube-nocookie.com/embed/AOslkynM9Qk"
+  },
+  "shushu-tong": {
+    "url": "https://www.youtube.com/watch?v=TaY_OgoMB1E",
+    "embed": "https://www.youtube-nocookie.com/embed/TaY_OgoMB1E"
+  },
+  "huishan-zhang": {
+    "url": "https://www.youtube.com/watch?v=Oek6vpAssv4",
+    "embed": "https://www.youtube-nocookie.com/embed/Oek6vpAssv4",
+    "label": "系列影像"
+  },
   "y-3-fall-2010": {
     "url": "https://www.youtube.com/watch?v=30g5lP2joxo",
     "embed": "https://www.youtube-nocookie.com/embed/30g5lP2joxo"
   },
   "balenciaga-spring-2017": {
-    "url": "https://www.vogue.com/video/watch/balenciaga-spring-2017-ready-to-wear"
+    "url": "https://www.vogue.com/video/watch/balenciaga-spring-2017-ready-to-wear",
+    "label": "秀场与设计师访谈"
   },
   "dilara-findikoglu": {
     "url": "https://www.youtube.com/watch?v=rQYKHXVOCpQ",
     "embed": "https://www.youtube-nocookie.com/embed/rQYKHXVOCpQ"
-  },
-  "dolce-gabbana": {
-    "url": "https://www.youtube.com/watch?v=tJocnyenLEY",
-    "embed": "https://www.youtube-nocookie.com/embed/tJocnyenLEY"
   },
   "duran-lantink-fall-2025": {
     "url": "https://www.youtube.com/watch?v=yX7IFbrnxEg",
@@ -436,38 +459,27 @@
   },
   "eckhaus-latta-fall-2026": {
     "url": "https://www.youtube.com/watch?v=DnxCBl55O7s",
-    "embed": "https://www.youtube-nocookie.com/embed/DnxCBl55O7s"
-  },
-  "feng-chen-wang": {
-    "url": "https://www.youtube.com/watch?v=AOslkynM9Qk",
-    "embed": "https://www.youtube-nocookie.com/embed/AOslkynM9Qk"
+    "embed": "https://www.youtube-nocookie.com/embed/DnxCBl55O7s",
+    "label": "秀场现场精选"
   },
   "helmut-lang-fall-2024": {
     "url": "https://www.youtube.com/watch?v=pmnWhPXDFjo",
     "embed": "https://www.youtube-nocookie.com/embed/pmnWhPXDFjo"
   },
+  "emilia-wickstead": {
+    "url": "https://www.youtube.com/watch?v=0oRNIDPD3Tc",
+    "embed": "https://www.youtube-nocookie.com/embed/0oRNIDPD3Tc",
+    "label": "秀场现场片段"
+  },
   "nensi-dojaka": {
     "url": "https://www.youtube.com/watch?v=VRC717DPv40",
     "embed": "https://www.youtube-nocookie.com/embed/VRC717DPv40"
-  },
-  "valentino": {
-    "url": "https://www.youtube.com/watch?v=SfaJl7yztbA",
-    "embed": "https://www.youtube-nocookie.com/embed/SfaJl7yztbA"
   },
   "wales-bonner": {
     "url": "https://www.youtube.com/watch?v=kHL1-_d2lWo",
     "embed": "https://www.youtube-nocookie.com/embed/kHL1-_d2lWo"
   },
-  "shushu-tong": {
-    "url": "https://www.youtube.com/watch?v=TaY_OgoMB1E",
-    "embed": "https://www.youtube-nocookie.com/embed/TaY_OgoMB1E"
-  },
   "marc-jacobs-spring-2027": {
     "url": "https://www.marcjacobsdigital.com/#runway-video-copy-2"
-  },
-  "gucci": {
-    "url": "https://www.youtube.com/watch?v=NcTX4gXjdxA",
-    "embed": "https://www.youtube-nocookie.com/embed/NcTX4gXjdxA",
-    "label": "系列短片 · The Tiger"
   }
 }

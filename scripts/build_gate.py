@@ -17,7 +17,10 @@ if OUT.exists():
 OUT.mkdir()
 
 shutil.copyfile(ROOT / "member-entry.js", OUT / "member-entry.js")
-shutil.copyfile(ROOT / "community.js", OUT / "community.js")
+share_page_version = sha256((ROOT / "scripts" / "contest_share.py").read_bytes()).hexdigest()[:10]
+community_js = (ROOT / "community.js").read_text(encoding="utf-8")
+community_js = community_js.replace('sharePageVersion="current"', f'sharePageVersion="{share_page_version}"')
+(OUT / "community.js").write_text(community_js, encoding="utf-8")
 shutil.copyfile(ROOT / "photo-viewer.js", OUT / "photo-viewer.js")
 shutil.copyfile(ROOT / "public" / "favicon.svg", OUT / "favicon.svg")
 shutil.copytree(ROOT / "public" / "fonts", OUT / "fonts")

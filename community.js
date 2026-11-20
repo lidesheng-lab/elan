@@ -2,6 +2,7 @@ const labels={designer:"赛霸设计师",judge:"大赛评委"};
 const dateFormat=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"short",day:"numeric",timeZone:"Asia/Shanghai"});
 const dateKey=new Intl.DateTimeFormat("sv-SE",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:"Asia/Shanghai"});
 const categories=["作品分享","参赛心得","评审观察"];
+const sharePageVersion="current";
 
 function node(tag,text,className) {
   const result=document.createElement(tag);
@@ -149,7 +150,9 @@ export function shareControl(title,href,{openSharePage=false}={}) {
   const message=status();
   wrapper.append(control,message);
   interact(control,message,async()=>{
-    const url=new URL(href,location.origin).href;
+    const destination=new URL(href,location.origin);
+    if(openSharePage) destination.searchParams.set("v",sharePageVersion);
+    const url=destination.href;
     if(typeof navigator.share==="function") {
       try { await navigator.share({title,url}); return; }
       catch(error) { if(error.name==="AbortError") return; }

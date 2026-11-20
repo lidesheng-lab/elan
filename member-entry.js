@@ -318,21 +318,29 @@ function runwayComparison(looks) {
   return group;
 }
 
-function runwayPalette(colors) {
-  const section = element("section", null, "trend-article-body");
-  section.append(element("h2","秀场配色"));
-  const grid = element("div");
-  grid.style.cssText = "display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px";
-  for (const color of colors) {
-    const card = element("div");
-    const chip = element("div");
-    chip.style.cssText = "height:64px;border:1px solid rgba(0,0,0,.12);background-color:" + color.hex;
-    const link = element("a", color.tcx + " TCX · " + color.name);
-    link.href = "https://www.pantone.com/color-finder/" + color.tcx + "-tcx";
-    card.append(chip,element("strong",color.label),element("div",color.brand + " · " + color.hex),link);
-    grid.append(card);
+function runwayPalette(colors, study) {
+  const section = element("section", null, "trend-article-body trend-color-study");
+  section.append(element("h2", "秀场配色"));
+  if (study) {
+    const image = element("img", null, "trend-color-image");
+    image.src = study;
+    image.alt = colors.map(color => color.name).join("、") + "配色意象";
+    image.loading = "lazy";
+    section.append(image);
   }
-  section.append(grid, element("small","色块取自秀场照片；潘通 FHI 色号为近似参考。打样时请在标准光源下用实体棉布色卡比对。"));
+  const legend = element("div", null, "trend-color-legend");
+  legend.setAttribute("aria-label", "潘通参考色号");
+  for (const color of colors) {
+    const link = element("a");
+    link.href = "https://www.pantone.com/color-finder/" + color.tcx + "-tcx";
+    link.title = color.name;
+    const chip = element("span", null, "trend-color-chip");
+    chip.style.backgroundColor = color.hex;
+    chip.setAttribute("aria-hidden", "true");
+    link.append(chip, "PANTONE " + color.tcx + " TCX");
+    legend.append(link);
+  }
+  section.append(legend);
   return section;
 }
 
@@ -350,16 +358,7 @@ function renderTrendArticle(output, post) {
   const [cover,...inline] = post.images;
   if (cover) article.append(trendFigure(cover,post.images,0));
   const palette = post.palette;
-  if (palette?.length) article.append(runwayPalette(palette));
-  if (post.colourStudy) {
-    const study = element("figure", null, "trend-figure");
-    const image = element("img");
-    image.src = post.colourStudy;
-    image.alt = "ÉLAN 编辑部制作的面料配色构成";
-    image.loading = "lazy";
-    study.append(image, element("figcaption", "面料配色 · ÉLAN"));
-    article.append(study);
-  }
+  if (palette?.length) article.append(runwayPalette(palette, post.colourStudy));
   const body = element("div",null,"trend-article-body");
   post.sections.forEach((section,index)=>{
     const part = element("section");

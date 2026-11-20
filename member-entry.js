@@ -86,7 +86,7 @@ function bindForm(id, operation) {
     finally { button.disabled = false; }
   });
 }
-let latestSubscriptionTotal = 780;
+let latestSubscriptionTotal = null;
 let lastTotalAttempt = -Infinity;
 let lastTotalSuccess = -Infinity;
 let totalPending = false;
@@ -94,7 +94,9 @@ let totalPending = false;
 function paintSubscriptionTotal() {
   const label = document.querySelector("[data-subscription-total]");
   if (!label) return;
-  label.textContent = latestSubscriptionTotal.toLocaleString("zh-CN") + " 人已订阅";
+  if (latestSubscriptionTotal !== null) {
+    label.textContent = latestSubscriptionTotal.toLocaleString("zh-CN") + " 人已订阅";
+  }
   label.dataset.live = String(performance.now() - lastTotalSuccess < 30000);
 }
 
@@ -116,6 +118,10 @@ async function updateSubscriptionTotal() {
   } finally {
     totalPending = false;
     paintSubscriptionTotal();
+    if (latestSubscriptionTotal === null) {
+      const label = document.querySelector("[data-subscription-total]");
+      if (label) label.textContent = "等待同步";
+    }
   }
 }
 setInterval(updateSubscriptionTotal, 15000);
@@ -639,7 +645,7 @@ function entry() {
     <header class="topbar public-masthead${activeSection==="home"?"":" topbar-compact"}">
     <div class="masthead-tools"><div class="masthead-account">${account ?
       `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin===true ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
-      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link subscription-live" href="#subscribe" aria-haspopup="dialog"><span>免费订阅</span><small data-subscription-total>780 人已订阅</small></a></div>
+      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link subscription-live" href="#subscribe" aria-haspopup="dialog"><span>免费订阅</span><small data-subscription-total>同步中…</small></a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
     <main id="public-content" class="page-${route}" tabindex="-1">${content}</main>

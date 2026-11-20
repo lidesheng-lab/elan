@@ -53,14 +53,16 @@ def page(out, section, slug, title, label, summary, image, css, reader_url, cred
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{e(title)}"><meta name="twitter:image" content="{e(image)}">
 <meta itemprop="name" content="{e(title)}"><meta itemprop="image" content="{e(image)}"><link rel="image_src" href="{e(image)}">
 <link rel="stylesheet" href="/{e(css)}"><style>main{{max-width:760px;margin:5vh auto;padding:0 20px 6vh}}img{{display:block;width:min(100%,360px);height:auto}}h1{{font-size:clamp(2rem,6vw,4rem);line-height:1.15}}p{{line-height:1.65}}nav{{display:flex;gap:1.3rem;flex-wrap:wrap}}</style></head>
-<body><main><a href="/">ÉLAN</a><p>{e(label)}</p><h1>{e(title)}</h1>
+<body><main><a href="/">ÉLAN</a>
+<p id="wxhint" hidden>发朋友圈：点微信右上角「···」→「分享到朋友圈」→「发表」。</p>
+<p>{e(label)}</p><h1>{e(title)}</h1>
 <img src="{e(image)}" alt="{e(title)}" fetchpriority="high">{credit}<p>{e(summary)}</p>
 <nav><a class="primary" href="{e(reader_url)}#{section}/{slug}">查看{name}全文</a>
 <button type="button" class="member-secondary" id="copy-link" hidden>复制分享链接</button>
 <a href="{e(image)}" {'download' if section=='contests' else ''}>打开分享封面</a></nav>
 <input type="url" id="share-link" aria-label="分享链接" value="{url}" readonly hidden>
 <p id="share-status" role="status"></p>
-<p id="wxhint" hidden>点右上角「···」转发给朋友或分享到朋友圈。</p></main>
+</main>
 <script type="application/json" id="share-data">{payload}</script>
 <script>
 const copyLink = document.getElementById("copy-link");

@@ -86,6 +86,17 @@ function bindForm(id, operation) {
     finally { button.disabled = false; }
   });
 }
+async function displaySubscriberCount(label) {
+  try {
+    const response = await fetch(api + "?view=subscriber-count", {signal: AbortSignal.timeout(8000)});
+    if (!response.ok) return;
+    const {confirmedCount} = await response.json();
+    if (!label.isConnected || !Number.isSafeInteger(confirmedCount) || confirmedCount < 0) return;
+    label.textContent = "已有 " + confirmedCount.toLocaleString("zh-CN") + " 人订阅 ÉLAN";
+    label.hidden = false;
+  } catch { /* Subscription remains available while the count is unavailable. */ }
+}
+
 function accessForm(mode) {
   if (mode === "subscribe") return `
     <form id="access-form">
@@ -131,11 +142,13 @@ function showAccess(mode, trigger = document.activeElement) {
   const subscribing = mode === "subscribe";
   dialog.innerHTML = `<button class="access-close" type="button" aria-label="${subscribing ? "关闭订阅窗口" : "关闭会员窗口"}"><span aria-hidden="true">×</span> 关闭</button>
     <h1 id="access-title" tabindex="-1" autofocus>${title}</h1><p>${help}</p>
+    ${subscribing ? '<p data-subscriber-count hidden aria-live="polite"></p>' : ""}
     ${accessForm(mode)}<p class="member-message" role="status" id="access-message"></p>`;
   dialog.querySelector(".access-close").onclick = () => dialog.close();
   const address = dialog.querySelector("#member-email");
   address.value = subscribing ? account?.email || "" : email;
   address.readOnly = subscribing && Boolean(account?.premium);
+  if (subscribing) void displaySubscriberCount(dialog.querySelector("[data-subscriber-count]"));
   bindAccess(mode);
   if (!dialog.open) dialog.showModal();
   dialog.querySelector("#access-title").focus({preventScroll:true});

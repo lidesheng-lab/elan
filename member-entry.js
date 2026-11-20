@@ -286,7 +286,7 @@ function registerParisLook(brand, label, look, file, credit, paragraph) {
   const gallery = "https://www.fhcm.paris/en/collection/" + brand + "-womenswear-fallwinter-2026-2027";
   const key = "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/" + brand + "/slideshow/collection#" + look;
   parisLookExcerpts.set(key, {
-    gallery, credit, paragraph, label: label + " · 2026 秋冬女装 · Look " + look,
+    gallery, credit, paragraph, provider: " / 巴黎时装周 FHCM", label: label + " · 2026 秋冬女装 · Look " + look,
     url: "https://www.fhcm.paris/sites/default/files/styles/lkt/public/" + file
   });
 }
@@ -297,7 +297,7 @@ registerParisLook("yohji-yamamoto", "Yohji Yamamoto", 2, "lme/240013b233c7b1f547
 function runwayComparison(looks) {
   const group = element("div");
   group.style.display = "grid";
-  group.style.gridTemplateColumns = "repeat(" + looks.length + ", minmax(0, 1fr))";
+  group.style.gridTemplateColumns = "repeat(" + Math.min(2, looks.length) + ", minmax(0, 1fr))";
   group.style.gap = "12px";
   group.style.maxWidth = looks.length === 1 ? "290px" : "590px";
   for (const look of looks) {
@@ -311,7 +311,7 @@ function runwayComparison(looks) {
     img.src = look.url;
     const caption = element("figcaption");
     caption.append(look.label, element("br"));
-    addSource(caption, {title: look.credit + " / 巴黎时装周 FHCM", url: look.gallery});
+    addSource(caption, {title: look.credit + (look.provider || ""), url: look.gallery});
     figure.append(img, caption);
     group.append(figure);
   }
@@ -336,13 +336,13 @@ function renderTrendArticle(output, post) {
     const part = element("section");
     part.append(element("h2", section.heading));
     const referencesInSection = section.references || [];
-    const looks = referencesInSection.map(ref => parisLookExcerpts.get(ref.url)).filter(Boolean);
+    const looks = [...(section.looks || []), ...referencesInSection.map(ref => parisLookExcerpts.get(ref.url)).filter(Boolean)];
     section.paragraphs.forEach((copy, index) => {
       part.append(element("p", copy));
       const nearby = looks.filter(look => Math.min(look.paragraph, section.paragraphs.length - 1) === index);
       if (nearby.length) part.append(runwayComparison(nearby));
     });
-    const remaining = referencesInSection.filter(ref => !parisLookExcerpts.has(ref.url));
+    const remaining = referencesInSection.filter(ref => !looks.some(look => look.gallery === ref.url) && !parisLookExcerpts.has(ref.url));
     if (remaining.length) {
       const references = element("div", null, "trend-section-references");
       for (const reference of remaining) addSource(references, reference);

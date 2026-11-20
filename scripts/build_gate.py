@@ -158,6 +158,16 @@ def trend_entry(data, metadata):
         part = {**texts(section, ("heading",)), "paragraphs": paragraphs}
         if section.get("references"):
             part["references"] = [source(reference) for reference in section["references"]]
+        if section.get("looks"):
+            part["looks"] = []
+            for look in section["looks"]:
+                item = texts(look, ("url", "label", "gallery", "credit"))
+                source({"title": item["label"], "url": item["gallery"]})
+                photo = urlparse(item["url"])
+                paragraph = look["paragraph"]
+                if photo.scheme != "https" or photo.username or photo.password or type(paragraph) is not int or not 0 <= paragraph < len(paragraphs):
+                    raise ValueError("Invalid inline runway photograph")
+                part["looks"].append({**item, "paragraph": paragraph})
         entry["sections"].append(part)
     entry["images"] = [{**cover_image(row), **texts(row, ("caption",))} for row in data["images"] if current_photo(row)]
     entry["sources"] = [source(row) for row in data["sources"]]

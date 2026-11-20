@@ -16,8 +16,9 @@ function contestPage(item) {
 function trendPage({ lead, sections, images, sources }) {
   return {
     lead,
-    sections: sections.map(({ heading, paragraphs, references }) => ({
+    sections: sections.map(({ heading, paragraphs, references, looks }) => ({
       heading, paragraphs,
+      ...(looks?.length && { looks: looks.map(({url, gallery, label, credit, paragraph}) => ({url, gallery, label, credit, paragraph})) }),
       ...(references?.length && { references: references.map(source) }),
     })),
     images: images.map(({ url, alt, caption, credit, license, licenseUrl, sourceUrl }) =>

@@ -34,6 +34,9 @@ for (const post of entries) {
       !Array.isArray(sections) || sections.length < 2 ||
       !sections.every(section => text(section.heading) && Array.isArray(section.paragraphs) &&
         section.paragraphs.length && section.paragraphs.every(text) &&
+        (section.looks === undefined || (Array.isArray(section.looks) && section.looks.every(photo =>
+          secureUrl(photo.url) && secureUrl(photo.gallery) && text(photo.label) && text(photo.credit) &&
+          Number.isInteger(photo.paragraph) && photo.paragraph >= 0 && photo.paragraph < section.paragraphs.length))) &&
         (section.references === undefined || (Array.isArray(section.references) && section.references.every(validSource)))) ||
       !Array.isArray(images) || !images.length || !Array.isArray(sources) || !sources.length ||
       !sources.every(validSource)) {

@@ -13,7 +13,7 @@ function link(href, label, cls) {
   return a;
 }
 async function read(path) {
-  const response = await fetch(base + path);
+  const response = await fetch(base + path + "?v=RUNWAY_DATA_VERSION");
   if (!response.ok) throw Error("读取失败");
   return response.json();
 }

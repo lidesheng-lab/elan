@@ -440,6 +440,11 @@ write_json(OUT / "brand-preview.json", brand_preview)
 
 
 entry_js = (OUT / "member-entry.js").read_text(encoding="utf-8")
+runway_script = reader_dir / "runways.js"
+runway_version = sha256((reader_dir / "catalog.json").read_bytes() + (ROOT / "runway-films.json").read_bytes())
+for media_file in sorted((ROOT / "data" / "runway-galleries").glob("*.json.gz")):
+    runway_version.update(media_file.read_bytes())
+runway_script.write_text(runway_script.read_text().replace("RUNWAY_DATA_VERSION", runway_version.hexdigest()[:12]))
 entry_js = entry_js.replace('"/collection-reader/runways.js"', '"/' + versioned("collection-reader/runways.js") + '"')
 for module in ("community.js", "photo-viewer.js"):
     entry_js = entry_js.replace(f'"./{module}"', f'"./{fingerprinted(module)}"')

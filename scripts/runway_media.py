@@ -19,6 +19,7 @@ def publish_runway_media(root, out, catalog, galleries):
     with gzip.open(root / "runway-supplement.json.gz", "rt", encoding="utf-8") as handle:
         supplements = json.load(handle)
     films = json.loads((root / "runway-films.json").read_text())
+    additions = json.loads((root / "runway-study-additions.json").read_text())
     index = []
     for study in catalog["studies"]:
         slug = study["slug"]
@@ -41,5 +42,7 @@ def publish_runway_media(root, out, catalog, galleries):
         source = gallery.get("sourceUrl") or next((p["sourceUrl"] for p in raw if p.get("sourceUrl")), study["sources"][0]["url"])
         data = {**item, "images": images, "film": films.get(slug), "source": source,
                 "credit": gallery.get("credit") or next((p["credit"] for p in raw if p.get("credit")), "")}
+        notes = {key: study.get(key) for key in ("fabric", "color", "silhouette", "palette", "techniques", "sources")}
+        data["notes"] = {**notes, **additions.get(slug, {})}
         (details / (slug + ".json")).write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
     (directory / "shows.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")))

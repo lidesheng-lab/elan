@@ -64,6 +64,49 @@ function showIndex(target, shows) {
   more.onclick = () => {listState.limit += 24; draw();};
   target.replaceChildren(heading,toolbar,grid,more); draw();
 }
+function appendStudy(target, notes) {
+  if (!notes) return;
+  const section = element("section", null, "runway-study");
+  const columns = element("div", null, "runway-study-columns");
+  for (const [key, title] of [["fabric","面料搭配"], ["color","色彩"], ["silhouette","造型"]]) {
+    if (!notes[key]) continue;
+    const block = element("section");
+    block.append(element("h3", title), element("p", notes[key]));
+    if (key === "color") {
+      const colors = notes.palette?.length ? notes.palette : notes.trialPalette;
+      if (colors?.length) {
+        if (!notes.palette?.length) block.append(element("small", "打样参考配色"));
+        const palette = element("ul", null, "runway-chips");
+        for (const color of colors) {
+          const chip = element("li");
+          const swatch = element("i");
+          swatch.style.backgroundColor = color.hex;
+          chip.append(swatch, document.createTextNode(color.name));
+          palette.append(chip);
+        }
+        block.append(palette);
+      }
+    }
+    columns.append(block);
+  }
+  section.append(columns);
+  if (notes.techniques?.length) {
+    const steps = element("ol");
+    for (const step of notes.techniques) steps.append(element("li", step));
+    section.append(element("h3","打样方法"), steps);
+  }
+  if (notes.sources?.length) {
+    const sources = element("div",null,"runway-sources");
+    for (const source of notes.sources) {
+      const a = link(source.url, source.title || source.url, "text-action");
+      a.target = "_blank"; a.rel = "noopener noreferrer";
+      sources.append(a);
+    }
+    section.append(element("h3","资料来源"), sources);
+  }
+  target.append(section);
+}
+
 function showDetail(target, show, favorite) {
   const back = link("/#designers","← 品牌索引","reader-back");
   const heading = element("h1",show.brand);
@@ -135,12 +178,19 @@ function showDetail(target, show, favorite) {
   target.append(grid,more);
   if(show.credit) target.append(element("p",show.credit,"community-meta"));
   batch();
+  appendStudy(target, show.notes);
   if (show.film) {
     const video = element("section",null,"show-film");
     video.append(element("h2",show.film.label || "秀场视频"));
     if (show.film.embed) {
       const frame=element("iframe");
-      frame.loading="lazy"; frame.src=show.film.embed; frame.title=show.brand+" · "+show.season+" 秀场视频";
+      const playerUrl = new URL(show.film.embed);
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      if (["www.youtube.com", "www.youtube-nocookie.com"].includes(playerUrl.hostname)) {
+        playerUrl.searchParams.set("origin", location.origin);
+        playerUrl.searchParams.set("playsinline", "1");
+      }
+      frame.loading="lazy"; frame.src=playerUrl.href; frame.title=show.brand+" · "+show.season+" 秀场视频";
       frame.allow="fullscreen; picture-in-picture";frame.allowFullscreen=true;
       video.append(frame);
     }

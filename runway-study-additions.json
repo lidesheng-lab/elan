@@ -1,0 +1,410 @@
+{
+  "undercover-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "烟灰",
+        "hex": "#777675"
+      },
+      {
+        "name": "褪灰",
+        "hex": "#B6B1A9"
+      }
+    ]
+  },
+  "yohji-yamamoto-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "墨黑",
+        "hex": "#242324"
+      },
+      {
+        "name": "绳白",
+        "hex": "#EAE6DC"
+      }
+    ]
+  },
+  "noir-kei-ninomiya-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "煤黑",
+        "hex": "#29272B"
+      },
+      {
+        "name": "雾粉",
+        "hex": "#C79BAA"
+      }
+    ]
+  },
+  "junya-watanabe-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "亮黑",
+        "hex": "#242426"
+      },
+      {
+        "name": "银灰",
+        "hex": "#B1B3B6"
+      }
+    ]
+  },
+  "comme-des-garcons-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "靛蓝",
+        "hex": "#344661"
+      },
+      {
+        "name": "朱红",
+        "hex": "#BE3938"
+      }
+    ]
+  },
+  "im-men-spring-2027-menswear": {
+    "trialPalette": [
+      {
+        "name": "蓝晒靛",
+        "hex": "#214D85"
+      },
+      {
+        "name": "竹影蓝",
+        "hex": "#8CA7B3"
+      }
+    ]
+  },
+  "issey-miyake-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "蓝紫",
+        "hex": "#7166BE"
+      },
+      {
+        "name": "橙黄",
+        "hex": "#ECA33E"
+      }
+    ]
+  },
+  "burberry-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "苔绿",
+        "hex": "#626852"
+      },
+      {
+        "name": "暖沙",
+        "hex": "#B7A58D"
+      }
+    ],
+    "techniques": [
+      "同一段侧缝分别接合挺布和软布，穿上后开合外套，记录内层起拱的位置。"
+    ]
+  },
+  "christian-dior-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "灰粉",
+        "hex": "#CBB6B6"
+      },
+      {
+        "name": "雾粉",
+        "hex": "#EBDDD8"
+      }
+    ],
+    "techniques": [
+      "在半身白坯上用疏缝固定肩颈支撑，逐步松开裙身外缘，比较站立与转身时的间距。"
+    ]
+  },
+  "saint-laurent-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "浅金",
+        "hex": "#D1B87D"
+      },
+      {
+        "name": "琥珀",
+        "hex": "#AB682D"
+      },
+      {
+        "name": "干邑",
+        "hex": "#824722"
+      }
+    ],
+    "techniques": [
+      "裁出等长的薄纱和皱面围巾，别在同一外套领口，以侧光和行走测试比较落点。"
+    ]
+  },
+  "prada-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "石墨",
+        "hex": "#474950"
+      },
+      {
+        "name": "褶影",
+        "hex": "#303138"
+      }
+    ],
+    "techniques": [
+      "在两块试布上标出相同的褶距，按各自耐温条件压褶，悬挂后测量褶距的变化。"
+    ]
+  },
+  "miu-miu-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "灰褐",
+        "hex": "#84746A"
+      },
+      {
+        "name": "麂皮棕",
+        "hex": "#907B67"
+      }
+    ],
+    "techniques": [
+      "在同一袖口分别接入磨砂试布与针织罗纹，比较屈肘后边缘的翻卷。"
+    ]
+  },
+  "sacai-spring-2027": {
+    "trialPalette": [
+      {
+        "name": "墨黑",
+        "hex": "#29282D"
+      },
+      {
+        "name": "烟灰",
+        "hex": "#7E7981"
+      }
+    ],
+    "techniques": [
+      "在同一开衩上轮换流苏和薄纱，走动录像观察活动边是否被硬挺外层压住。"
+    ]
+  },
+  "loewe-spring-2023": {
+    "trialPalette": [
+      {
+        "name": "石灰",
+        "hex": "#D7D1C8"
+      },
+      {
+        "name": "钴蓝",
+        "hex": "#2556B4"
+      }
+    ],
+    "techniques": [
+      "先做可拆装饰的纸样，别在白坯上做抬臂与转身测试，再裁正式材料。"
+    ]
+  },
+  "prada-spring-2022": {
+    "trialPalette": [
+      {
+        "name": "陶红",
+        "hex": "#A96255"
+      },
+      {
+        "name": "砖红",
+        "hex": "#975247"
+      }
+    ],
+    "techniques": [
+      "用疏缝把附片固定在腰线上，逐次改变自由端长度，比较行走时的拖曳量。"
+    ]
+  },
+  "prada-spring-2021": {
+    "trialPalette": [
+      {
+        "name": "墨黑",
+        "hex": "#28282C"
+      },
+      {
+        "name": "米白",
+        "hex": "#E9E3D8"
+      }
+    ],
+    "techniques": [
+      "将印花纸样沿折线合起，对齐关键图案，再展开检查缝份吃掉的宽度。"
+    ]
+  },
+  "prada-spring-2020": {
+    "trialPalette": [
+      {
+        "name": "沙褐",
+        "hex": "#A99680"
+      },
+      {
+        "name": "浅米",
+        "hex": "#D7CBB9"
+      }
+    ],
+    "techniques": [
+      "用两种克重做相同的上装白坯，标记下缘，比较与裤腰的重叠长度。"
+    ]
+  },
+  "prada-spring-2019": {
+    "trialPalette": [
+      {
+        "name": "藏蓝",
+        "hex": "#29374C"
+      },
+      {
+        "name": "雾蓝",
+        "hex": "#8294A5"
+      }
+    ],
+    "techniques": [
+      "把裤脚临时折到三个高度，搭配同一双袜鞋拍正面照，选定露袜比例。"
+    ]
+  },
+  "maison-margiela-fall-2018": {
+    "trialPalette": [
+      {
+        "name": "银灰",
+        "hex": "#B1B3B5"
+      },
+      {
+        "name": "铅灰",
+        "hex": "#686D73"
+      }
+    ],
+    "techniques": [
+      "将三片不同挺度的盖片分别固定在同一肩位，抬臂检查肘部余量。"
+    ]
+  },
+  "balenciaga-spring-2017": {
+    "trialPalette": [
+      {
+        "name": "炭黑",
+        "hex": "#28262A"
+      },
+      {
+        "name": "玫红",
+        "hex": "#BA3872"
+      }
+    ],
+    "techniques": [
+      "先试贴腿弹力白坯，再独立安装肩部支撑，屈膝时检查腰部是否上移。"
+    ]
+  },
+  "prada-spring-2016": {
+    "trialPalette": [
+      {
+        "name": "冷灰",
+        "hex": "#91949C"
+      },
+      {
+        "name": "珍珠灰",
+        "hex": "#D0D1D5"
+      }
+    ],
+    "techniques": [
+      "在透明层固定线处加一条薄衬，悬挂检查两层下摆间距和衬条是否显影。"
+    ]
+  },
+  "prada-spring-2015": {
+    "trialPalette": [
+      {
+        "name": "苔绿",
+        "hex": "#757A60"
+      },
+      {
+        "name": "浅苔",
+        "hex": "#979D7C"
+      }
+    ],
+    "techniques": [
+      "用相同线距缝厚薄两种翻折样，压烫后比较明线两侧的起伏。"
+    ]
+  },
+  "prada-spring-2014": {
+    "trialPalette": [
+      {
+        "name": "朱红",
+        "hex": "#C44940"
+      },
+      {
+        "name": "靛青",
+        "hex": "#374968"
+      }
+    ],
+    "techniques": [
+      "将大图案复印到纸样，先对准胸前中心线，再跨拼缝检查图案错位。"
+    ]
+  },
+  "alexander-mcqueen-spring-2013": {
+    "trialPalette": [
+      {
+        "name": "蜂蜜金",
+        "hex": "#BB944F"
+      },
+      {
+        "name": "深褐",
+        "hex": "#60483A"
+      },
+      {
+        "name": "墨黑",
+        "hex": "#262425"
+      }
+    ],
+    "techniques": [
+      "网格和支撑层分开试做，用别针轮换两个腰围量，比较裙体展开的位置。"
+    ]
+  },
+  "prada-spring-2012": {
+    "trialPalette": [
+      {
+        "name": "淡薄荷",
+        "hex": "#BCD4C7"
+      },
+      {
+        "name": "樱红",
+        "hex": "#D9535B"
+      }
+    ],
+    "techniques": [
+      "裁两片连续纹样，先在腰线处对花，再试放裙褶并检查图案的接续。"
+    ]
+  },
+  "prada-spring-2011": {
+    "trialPalette": [
+      {
+        "name": "钴蓝",
+        "hex": "#2C56AC"
+      },
+      {
+        "name": "草绿",
+        "hex": "#449558"
+      },
+      {
+        "name": "橘红",
+        "hex": "#E16849"
+      }
+    ],
+    "techniques": [
+      "按成衣宽度排好条纹，在侧缝留对位记号，缝合后从正面检查水平线。"
+    ]
+  },
+  "alexander-mcqueen-spring-2010": {
+    "trialPalette": [
+      {
+        "name": "海蓝",
+        "hex": "#516D87"
+      },
+      {
+        "name": "深靛",
+        "hex": "#30394C"
+      }
+    ],
+    "techniques": [
+      "在肩、腰、胯分别试摆同一印花纸样，固定主要图案后再分割裁片。"
+    ]
+  },
+  "y-3-fall-2010": {
+    "trialPalette": [
+      {
+        "name": "煤黑",
+        "hex": "#232326"
+      },
+      {
+        "name": "炭灰",
+        "hex": "#505055"
+      }
+    ]
+  }
+}

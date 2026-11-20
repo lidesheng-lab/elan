@@ -226,11 +226,8 @@ for asset in ("site.css", "favicon.svg"):
 shell = shell.replace('./member-entry.js"', f'./{entry_module}"')
 (OUT / "index.html").write_text(shell, encoding="utf-8")
 
-# Open the full article with the same release as the share card, even in in-app browsers
-# that keep an earlier version of the bare homepage.
-reader_url = "/" + versioned("index.html")
 stylesheet = versioned("site.css")
 if public_contests:
-    contest_share_pages(OUT, ROOT / "public", public_contests, stylesheet, reader_url)
+    contest_share_pages(OUT, ROOT / "public", public_contests, stylesheet, entry_module, share_page_version)
 for article in public_articles:
-    trend_share_page(OUT, article, stylesheet, reader_url)
+    trend_share_page(OUT, article, stylesheet, entry_module, share_page_version)

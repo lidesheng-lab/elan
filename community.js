@@ -144,6 +144,10 @@ export function favoriteControl(request,kind,id,signedIn=true) {
   return wrapper;
 }
 
+export function publicDetailHref(section, slug) {
+  return `/${section}/${slug}/?v=${sharePageVersion}`;
+}
+
 export function shareControl(title,href,{openSharePage=false}={}) {
   const wrapper=node("div",null,"favorite-control");
   const control=button("分享");
@@ -151,14 +155,14 @@ export function shareControl(title,href,{openSharePage=false}={}) {
   wrapper.append(control,message);
   interact(control,message,async()=>{
     const destination=new URL(href,location.origin);
-    if(openSharePage) destination.searchParams.set("v",sharePageVersion);
     const url=destination.href;
     if(typeof navigator.share==="function") {
       try { await navigator.share({title,url}); return; }
       catch(error) { if(error.name==="AbortError") return; }
     }
     if(openSharePage) {
-      location.assign(url);
+      destination.searchParams.set("share","1");
+      location.assign(destination.href);
       return;
     }
     if(navigator.clipboard?.writeText) {
@@ -360,9 +364,6 @@ function contestStatus(item,today) {
 function contestListHref(kind) {
   return kind==="award" ? "#contests?tab=award" : "#contests";
 }
-function contestHref(id) {
-  return "#contests/"+id;
-}
 function contestDate(item) {
   const time=node("time",item.deadline || item.date);
   time.dateTime=item.deadline || item.date;
@@ -401,7 +402,7 @@ function renderContestDetail(target,request,item,signedIn,today) {
   }
   const tools=node("div",null,"community-actions contest-detail-actions");
   tools.append(favoriteControl(request,"contest",item.id,signedIn),
-    shareControl(item.title,`/contests/${item.id}/`,{openSharePage:true}));
+    shareControl(item.title,publicDetailHref("contests",item.id),{openSharePage:true}));
   const discussion=node("section",null,"contest-discussion");
   discussion.setAttribute("aria-label","赛事评论");
   copy.append(source,tools,discussion);
@@ -429,13 +430,15 @@ export async function renderContests(target,request,loadContests,signedIn,select
   message.textContent="正在读取赛事…";
   target.append(message);
   try {
-    const {items}=await loadContests();
+    const {items,canonical}=await loadContests();
     if(!target.isConnected) return;
     const today=dateKey.format(new Date());
     message.remove();
     if(selected) {
       const item=items.find(item=>item.id===selected);
-      if(item) renderContestDetail(target,request,item,signedIn,today);
+      if(item && canonical && location.pathname!==`/contests/${item.id}/`) {
+        location.replace(publicDetailHref("contests",item.id));
+      } else if(item) renderContestDetail(target,request,item,signedIn,today);
       else target.append(link("← 返回赛事目录","#contests","reader-back"),node("p","该赛事暂不可用。","notice"));
       return;
     }
@@ -475,7 +478,7 @@ export async function renderContests(target,request,loadContests,signedIn,select
       list.replaceChildren();
       for(const item of rows.slice(0,visible)) {
         const card=node("article",null,"contest-card");
-        const open=link("",contestHref(item.id),"contest-card-link");
+        const open=link("",canonical ? publicDetailHref("contests",item.id) : "#contests/"+item.id,"contest-card-link");
         open.setAttribute("aria-labelledby","contest-"+item.id);
         const heading=node("h2",item.title);
         heading.id="contest-"+item.id;

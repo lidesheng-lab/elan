@@ -1,5 +1,5 @@
 import { enableMemberPhotoZoom, photoTrigger } from "./photo-viewer.js";
-import { favoriteControl, shareControl, mountTrendDiscussion, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
+import { favoriteControl, publicDetailHref, shareControl, mountTrendDiscussion, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
 
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 const storageKey = "elan-member-session";
@@ -30,7 +30,9 @@ const accessCopy = {
 const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["silhouette", "廓形趋势"]];
 const feeds = new Map();
 const wantsAdmin = () => new URLSearchParams(location.search).get("panel")==="admin";
-const sectionDetail = () => location.hash.slice(1).split("?")[0].split("/")[1] || "";
+const detailRoute = root.dataset.detailRoute || "";
+const currentRoute = () => location.hash.slice(1).split("?")[0] || detailRoute;
+const sectionDetail = () => currentRoute().split("/")[1] || "";
 const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike"]);
 let visitorId;
 let contestCatalog;
@@ -152,7 +154,9 @@ function bindAccess(mode) {
       const result = await request({ memberAction: "passwordLogin", email, password: data.get("password") }, undefined, "");
       if (!form.isConnected) return;
       startSession(result.session);
-      history.replaceState(null, "", wantsAdmin() ? "/?panel=admin" : "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile"));
+      const afterLogin = detailRoute ? location.pathname + location.search
+        : "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile");
+      history.replaceState(null, "", wantsAdmin() ? "/?panel=admin" : afterLogin);
       await loadMember();
     } else {
       await request({ memberAction: mode, email }, undefined, "");
@@ -214,7 +218,7 @@ const sectionDescriptions = {
   studio: "从服装线稿出发，整理适合打样的面料、色彩和结构方向。",
 };
 function publicRoute() {
-  const route = location.hash.slice(1).split("?")[0];
+  const route = currentRoute();
   if (/^trends\/[a-z0-9-]+$/.test(route)) return "trends";
   if (/^designers\/[a-z0-9-]+$/.test(route)) return "designers";
   if (/^contests\/[a-z0-9-]{1,110}$/.test(route)) return "contests";
@@ -222,7 +226,7 @@ function publicRoute() {
   return sections.some(([key]) => key === route) || accessRoutes.has(route) || communityRoutes.has(route) ||
     route === "upgrade" ? route : "home";
 }
-function articleLink(slug) { return "#trends/" + slug; }
+function articleLink(slug) { return publicDetailHref("trends", slug); }
 function trendStory(post, variant="") {
   const featured = variant === "featured";
   const story = element("article",null,"trend-story"+(variant ? " trend-story-"+variant : ""));
@@ -288,7 +292,7 @@ function renderTrendArticle(output, post) {
   masthead.append(meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
   const actions = element("div", null, "community-actions");
   actions.append(favoriteControl(request,"trend",post.slug,Boolean(account)),
-    shareControl(post.title,`/trends/${post.slug}/`,{openSharePage:true}));
+    shareControl(post.title,articleLink(post.slug),{openSharePage:true}));
   masthead.append(actions);
   article.append(back, masthead);
   const [cover,...inline] = post.images;
@@ -364,7 +368,10 @@ async function showTrendArticles(target) {
   try {
     if (slug) {
       const post = await feed("./trend-detail/" + slug + ".json?view=current", 5000);
-      if (target.isConnected) renderTrendArticle(output, post);
+      if (target.isConnected) {
+        if (location.pathname !== `/trends/${slug}/`) location.replace(articleLink(slug));
+        else renderTrendArticle(output, post);
+      }
       return;
     }
     const posts = await feed("./trend-articles.json?view=current");
@@ -404,6 +411,7 @@ function feed(path, timeout = 12000) {
 }
 function readPublicContests() {
   contestCatalog ??= feed("./public-contests.json", 4000)
+    .then(data => ({...data, canonical:true}))
     .catch(() => request({ memberAction: "communityContests" }))
     .catch(error => { contestCatalog = undefined; throw error; });
   return contestCatalog;
@@ -727,6 +735,14 @@ root.addEventListener("click", event => {
   if (!trigger || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   event.preventDefault();
   showAccess("subscribe", trigger);
+});
+if (detailRoute) root.addEventListener("click", event => {
+  if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  if (!(event.target instanceof Element)) return;
+  const trigger = event.target.closest('a[href="#login"], a[href="#register"], a[href="#reset"]');
+  if (!trigger) return;
+  event.preventDefault();
+  showAccess(trigger.getAttribute("href").slice(1), trigger);
 });
 root.addEventListener("click", event => {
   if (surface !== "member" || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

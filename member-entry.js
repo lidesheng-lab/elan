@@ -86,6 +86,41 @@ function bindForm(id, operation) {
     finally { button.disabled = false; }
   });
 }
+let latestSubscriptionTotal = 780;
+let lastTotalAttempt = -Infinity;
+let lastTotalSuccess = -Infinity;
+let totalPending = false;
+
+function paintSubscriptionTotal() {
+  const label = document.querySelector("[data-subscription-total]");
+  if (!label) return;
+  label.textContent = latestSubscriptionTotal.toLocaleString("zh-CN") + " 人已订阅";
+  label.dataset.live = String(performance.now() - lastTotalSuccess < 30000);
+}
+
+async function updateSubscriptionTotal() {
+  if (document.hidden || !document.querySelector("[data-subscription-total]")) return;
+  paintSubscriptionTotal();
+  if (totalPending || performance.now() - lastTotalAttempt < 10000) return;
+  totalPending = true;
+  lastTotalAttempt = performance.now();
+  try {
+    const response = await fetch(api + "?view=subscriber-count", {cache:"no-store", signal:AbortSignal.timeout(8000)});
+    if (!response.ok) return;
+    const { subscriberTotal } = await response.json();
+    if (!Number.isSafeInteger(subscriberTotal) || subscriberTotal < 0) return;
+    latestSubscriptionTotal = subscriberTotal;
+    lastTotalSuccess = performance.now();
+  } catch {
+    // Preserve the last known total during network interruptions.
+  } finally {
+    totalPending = false;
+    paintSubscriptionTotal();
+  }
+}
+setInterval(updateSubscriptionTotal, 15000);
+document.addEventListener("visibilitychange", updateSubscriptionTotal);
+
 function accessForm(mode) {
   if (mode === "subscribe") return `
     <form id="access-form">
@@ -604,13 +639,14 @@ function entry() {
     <header class="topbar public-masthead${activeSection==="home"?"":" topbar-compact"}">
     <div class="masthead-tools"><div class="masthead-account">${account ?
       `<a class="subscribe-link" href="#profile">个人中心</a>${account.admin===true ? '<a class="text-action" href="/?panel=admin">会员管理</a>' : ""}` :
-      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link" href="#subscribe" aria-haspopup="dialog">免费订阅</a></div>
+      '<a class="subscribe-link" href="#login">登录</a>'}</div><a class="subscribe-link subscription-live" href="#subscribe" aria-haspopup="dialog"><span>免费订阅</span><small data-subscription-total>780 人已订阅</small></a></div>
     <a class="wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="主导航">${navigation}</nav></header>
     <main id="public-content" class="page-${route}" tabindex="-1">${content}</main>
     <footer class="site-footer public-footer"><a class="footer-wordmark" href="#home" aria-label="ÉLAN 首页">ÉLAN</a>
     <nav aria-label="页脚导航"><a href="#trends">流行趋势</a><a href="#contests">服装设计大赛</a><a href="#square">设计广场</a>
     <a href="${account?"#profile":"#login"}">${account?"个人中心":"会员登录"}</a></nav></footer>`;
+  void updateSubscriptionTotal();
   root.querySelector(".skip-main").onclick=event=>{
     event.preventDefault();
     const main=document.getElementById("public-content");

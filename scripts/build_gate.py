@@ -8,7 +8,7 @@ import shutil
 from urllib.parse import unquote, urlparse
 from zoneinfo import ZoneInfo
 
-from contest_share import contest_share_pages
+from contest_share import contest_share_pages, trend_share_page
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "dist"
@@ -162,6 +162,7 @@ for row in articles:
     write_json(details_dir / f"{slug}.json", article)
     post["description"] = article["lead"]
     post["cover"] = cover_image(article["images"][0])
+    trend_share_page(OUT, article, versioned("site.css"))
     catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")

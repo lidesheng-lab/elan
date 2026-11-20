@@ -1,0 +1,6 @@
+{
+  "name": "elan-wechat-share",
+  "private": true,
+  "type": "commonjs",
+  "main": "index.js"
+}

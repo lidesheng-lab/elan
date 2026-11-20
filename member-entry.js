@@ -280,6 +280,44 @@ function trendFigure(photo, images, index) {
   return figure;
 }
 
+// Editorial excerpts from the federation's numbered show galleries.
+const parisLookExcerpts = new Map();
+function registerParisLook(brand, label, look, file, credit, paragraph) {
+  const gallery = "https://www.fhcm.paris/en/collection/" + brand + "-womenswear-fallwinter-2026-2027";
+  const key = "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/" + brand + "/slideshow/collection#" + look;
+  parisLookExcerpts.set(key, {
+    gallery, credit, paragraph, label: label + " · 2026 秋冬女装 · Look " + look,
+    url: "https://www.fhcm.paris/sites/default/files/styles/lkt/public/" + file
+  });
+}
+registerParisLook("rick-owens", "Rick Owens", 1, "coll/gal/rick-owens_wfw26_look-1.jpg?itok=xYLeinBF", "OWENSCORP", 0);
+registerParisLook("rick-owens", "Rick Owens", 2, "coll/gal/rick-owens_wfw26_look-2.jpg?itok=uU2lpGS6", "OWENSCORP", 0);
+registerParisLook("yohji-yamamoto", "Yohji Yamamoto", 2, "lme/240013b233c7b1f54799490dec0710b241782ce5/UMB00050.jpg?itok=V1z75jZT", "Launchmetrics", 1);
+
+function runwayComparison(looks) {
+  const group = element("div");
+  group.style.display = "grid";
+  group.style.gridTemplateColumns = "repeat(" + looks.length + ", minmax(0, 1fr))";
+  group.style.gap = "12px";
+  group.style.maxWidth = looks.length === 1 ? "290px" : "590px";
+  for (const look of looks) {
+    const figure = element("figure", null, "trend-figure");
+    figure.style.margin = "0";
+    const img = element("img");
+    img.alt = look.label;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.referrerPolicy = "no-referrer";
+    img.src = look.url;
+    const caption = element("figcaption");
+    caption.append(look.label, element("br"));
+    addSource(caption, {title: look.credit + " / 巴黎时装周 FHCM", url: look.gallery});
+    figure.append(img, caption);
+    group.append(figure);
+  }
+  return group;
+}
+
 function renderTrendArticle(output, post) {
   const article = element("article", null, "trend-feature");
   const back = element("a", "← 全部趋势文章", "reader-back");
@@ -296,10 +334,18 @@ function renderTrendArticle(output, post) {
   const body = element("div",null,"trend-article-body");
   post.sections.forEach((section,index)=>{
     const part = element("section");
-    part.append(element("h2", section.heading), ...section.paragraphs.map(copy => element("p", copy)));
-    if (section.references?.length) {
+    part.append(element("h2", section.heading));
+    const referencesInSection = section.references || [];
+    const looks = referencesInSection.map(ref => parisLookExcerpts.get(ref.url)).filter(Boolean);
+    section.paragraphs.forEach((copy, index) => {
+      part.append(element("p", copy));
+      const nearby = looks.filter(look => Math.min(look.paragraph, section.paragraphs.length - 1) === index);
+      if (nearby.length) part.append(runwayComparison(nearby));
+    });
+    const remaining = referencesInSection.filter(ref => !parisLookExcerpts.has(ref.url));
+    if (remaining.length) {
       const references = element("div", null, "trend-section-references");
-      for (const reference of section.references) addSource(references, reference);
+      for (const reference of remaining) addSource(references, reference);
       part.append(references);
     }
     body.append(part);

@@ -196,7 +196,7 @@ export function shareControl(title,href,{openSharePage=false,runway=false}={}) {
       const wechatHint = openSharePage && /MicroMessenger/i.test(navigator.userAgent)
         ? "若未发到朋友圈，请点微信右上角「···」→「在浏览器打开」，再点「分享」。" : "";
       try {
-        await navigator.share({title,url});
+        await navigator.share(runway ? {title, text:title, url} : {title,url});
         message.textContent=wechatHint;
         return;
       } catch(error) {

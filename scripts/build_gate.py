@@ -2,6 +2,7 @@
 from pathlib import Path
 from datetime import date, datetime
 from hashlib import sha256
+import gzip
 import json
 import re
 import shutil
@@ -146,6 +147,13 @@ def contest_entry(row):
     entry["source"] = source(data["source"])
     entry["details"] = [texts(section, ("title", "text")) for section in data.get("details", [])]
     entry["references"] = [source(reference) for reference in data.get("references", [])]
+    award = contest_awards.get(entry["id"])
+    if award:
+        entry["details"][:0] = [{"title": "奖项设置", "text": award["awards"]},
+                                {"title": "赛事奖金", "text": award["prize"]}]
+        ref = source({"title": "奖项与奖金依据", "url": award["url"]})
+        if ref["url"] not in {r["url"] for r in [entry["source"], *entry["references"]]}:
+            entry["references"].append(ref)
     return entry
 
 historical_palettes = {
@@ -340,8 +348,36 @@ def trend_entry(data, metadata):
     entry["sources"] = [source(row) for row in data["sources"]]
     return entry
 
-encrypted_feed("history-feed.json")
+history_rows = encrypted_feed("history-feed.json", optional_metadata={"public"})
+reader_dir = OUT / "collection-reader"
+shutil.copytree(ROOT / "public" / "collection-reader", reader_dir)
+with gzip.open(ROOT / "collection-catalog.json.gz", "rt", encoding="utf-8") as stream:
+    collection = json.load(stream)
+catalog = collection["archive"]
+galleries = collection["galleries"]
+known = {study["slug"] for study in catalog["studies"]}
+for row in history_rows:
+    if "public" not in row:
+        continue
+    study = row["public"]["study"]
+    slug = study["slug"]
+    if not re.fullmatch(r"[a-z0-9-]{1,100}", slug) or sha256(slug.encode()).hexdigest() != row["id"]:
+        raise ValueError("Invalid collection slug")
+    if slug not in known:
+        catalog["studies"].append(study)
+        known.add(slug)
+    if row["public"].get("gallery"):
+        galleries[study["date"] + "-" + slug] = row["public"]["gallery"]
+catalog["studies"].sort(key=lambda study: study["date"], reverse=True)
+write_json(reader_dir / "catalog.json", catalog)
+(reader_dir / "galleries").mkdir()
+for key, gallery in galleries.items():
+    if not re.fullmatch(r"[a-z0-9-]{1,115}", key):
+        raise ValueError("Invalid gallery key")
+    write_json(reader_dir / "galleries" / (key + ".json"), gallery)
+shutil.copytree(ROOT / "public" / "collections", OUT / "collections")
 contests = encrypted_feed("contest-feed.json", {"slug"}, {"public"})
+contest_awards = json.loads((ROOT / "contest-awards.json").read_text(encoding="utf-8"))
 public_contests = []
 if contests and all("public" in row for row in contests):
     public_contests = [contest_entry(row) for row in contests]

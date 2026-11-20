@@ -126,7 +126,24 @@ async function upload(file,{side=1200,cap=200000,pdf=false}={}) {
 }
 
 export function favoriteControl(request,kind,id,signedIn=true) {
-  if(!signedIn) return link("登录后收藏","#login","member-secondary");
+  if (!signedIn) {
+    const key = "elan-favorite:" + kind + ":" + id;
+    const control = button("收藏", "member-secondary");
+    function show(saved) {
+      control.textContent = saved ? "已收藏 · 取消" : "收藏";
+      control.setAttribute("aria-pressed", String(saved));
+    }
+    try { show(localStorage.getItem(key) === "1"); } catch { show(false); }
+    control.title = "保存在此设备";
+    control.onclick = () => {
+      const saved = control.getAttribute("aria-pressed") !== "true";
+      try {
+        if (saved) localStorage.setItem(key, "1"); else localStorage.removeItem(key);
+        show(saved);
+      } catch { control.textContent = "此浏览器无法保存收藏"; }
+    };
+    return control;
+  }
   const wrapper=node("div",null,"favorite-control");
   const control=button("收藏","member-secondary");
   const message=status();
@@ -563,7 +580,7 @@ export async function renderSquare(target,request,signedIn,selected) {
         });
       }
       const actions=node("div",null,"community-actions");
-      actions.append(favoriteControl(request,"post",item.id,signedIn),signedIn ? shareControl(item.title,"/#square/"+item.id) : link("登录后分享","#login","member-secondary"));
+      actions.append(favoriteControl(request,"post",item.id,signedIn),shareControl(item.title,"/#square/"+item.id));
       card.append(actions,thread(request,"post:"+item.id,item.engagement,signedIn));
       if(item.canRemove) {
         const remove=button("移除帖子","text-action");

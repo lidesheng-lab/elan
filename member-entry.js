@@ -14,7 +14,8 @@ const sections = [
   ["home", "首页"], ["designers", "品牌索引"], ["beauty", "美妆"], ["trends", "流行趋势"],
   ["contests", "服装设计大赛"], ["square", "设计广场"], ["studio", "线稿工作台"],
 ];
-const lockedSections = new Set(["designers", "beauty", "studio"]);
+let unmountReader;
+const readerSections = new Set(["designers", "beauty", "studio"]);
 const communityRoutes = new Map([
   ["profile",["个人中心",target=>renderProfile(target,request,logout)]],
   ["contests",["服装设计大赛",target=>renderContests(target,request,readPublicContests,Boolean(account),sectionDetail())]],
@@ -598,12 +599,14 @@ function entry() {
     showAccess(current);
     return;
   }
+  unmountReader?.();
+  unmountReader = undefined;
   const route = access ? "home" : current;
   pageHash = access ? "#home" : location.hash;
   const activeSection = route;
   if (detailRoute) document.title = currentRoute() === detailRoute ? detailTitle : (sections.find(([key]) => key === route)?.[1] || "首页") + "｜ÉLAN";
   const navigation = sections.map(([key, label]) =>
-    `<a href="${account?.premium && lockedSections.has(key) ? "/" : ""}#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
+    `<a href="#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   let content;
   const readTrends = route === "trends";
   const communityPage = communityRoutes.get(route);
@@ -621,10 +624,8 @@ function entry() {
   } else if (communityPage) {
     content = readCommunity ? '<p class="notice" role="status">正在读取…</p>' :
       `<div class="section-title"><h1>${communityPage[0]}</h1></div>${lockedPreview("请先登录", "普通会员和高级会员均可使用。", '<a class="primary" href="#login">会员登录</a>')}`;
-  } else if (lockedSections.has(route)) {
-    const title = sections.find(([key]) => key === route)[1];
-    content = `<div class="section-title"><h1>${title}</h1><p>${sectionDescriptions[route]}</p></div>${preview(route)}
-      ${lockedPreview("高级会员专享", "获授权后可使用完整内容。", premiumActions())}`;
+  } else if (readerSections.has(route)) {
+    content = '<div class="public-collection-reader"><p role="status">正在打开栏目…</p></div>';
   } else if (route === "upgrade") {
     content = `<section class="member-panel public-access"><h1>申请高级会员</h1>
       <p>提交申请后，管理员将收到邮件。获得授权后即可查看完整品牌档案、美妆和线稿工作台。</p>
@@ -663,6 +664,8 @@ function entry() {
   };
   if (readTrends) void showTrendArticles(document.getElementById("public-content"));
   if (route === "home") void showHomeRunways(document.getElementById("public-content"));
+  const reader = root.querySelector(".public-collection-reader");
+  if (reader) void mountPublicCollection(reader);
   const brandPreview = root.querySelector(".archive-preview");
   if (brandPreview) void showBrandPreview(brandPreview);
   if (readCommunity) {
@@ -737,7 +740,7 @@ async function loadMember() {
       history.replaceState(null,"","/#profile");
       entry();
     }
-    else if (profile.premium && lockedSections.has(publicRoute())) await openArchive(profile);
+
     else entry();
   } catch (error) {
     if ([401,403].includes(error.status)) {
@@ -758,35 +761,27 @@ async function logout() {
     window.location.replace("/");
   }
 }
-async function openArchive(profile) {
-  const { script } = await request({ memberAction: "app" });
-  window.elanMember = {
-    email: profile.email,
-    session,
-    request,
-    favorite(kind,id) { return favoriteControl(request,kind,id); },
-    photo(url) {
-      if (!/^https:\/\//i.test(url) || url.startsWith(api + "?")) return url;
-      return api + "?" + new URLSearchParams({ picture: "1", src: url });
-    },
-  };
-  surface = "member";
-  root.replaceChildren();
-  const app = URL.createObjectURL(new Blob([script], { type: "text/javascript" }));
-  try { await import(app); } finally { URL.revokeObjectURL(app); }
-  enableMemberPhotoZoom(root);
-  const signout = document.createElement("button");
-  signout.type = "button";
-  signout.className = "member-exit";
-  signout.textContent = "退出";
-  signout.onclick = () => void logout();
-  root.after(signout);
-  if (profile.admin===true) {
-    const admin = document.createElement("a");
-    admin.className = "member-exit member-admin-link";
-    admin.href = "/?panel=admin";
-    admin.textContent = "会员管理";
-    signout.after(admin);
+async function mountPublicCollection(target) {
+  try {
+    const {mountReader} = await import("/collection-reader/reader.js");
+    if (!target.isConnected) return;
+    window.elanMember = {
+      photo: url => url,
+      favorite: (kind, id) => favoriteControl(request, kind, id, Boolean(account)),
+      async request({memberAction, key}, signal) {
+        let path = "/collection-reader/catalog.json";
+        if (memberAction === "gallery") {
+          if (!/^[a-z0-9-]{1,115}$/.test(key)) throw new Error("无效的系列");
+          path = "/collection-reader/galleries/" + key + ".json";
+        } else if (memberAction !== "archive") throw new Error("未知的栏目请求");
+        const response = await fetch(path, {signal});
+        if (!response.ok) throw new Error("系列资料暂时无法读取");
+        return response.json();
+      }
+    };
+    unmountReader = mountReader(target);
+  } catch {
+    if (target.isConnected) target.textContent = "栏目暂时无法加载，请刷新重试。";
   }
 }
 async function adminPanel(profile) {
@@ -881,7 +876,7 @@ if (detailRoute) root.addEventListener("click", event => {
   const link = event.target instanceof Element && event.target.closest('a[href^="#"]');
   if (!link || location.pathname === "/") return;
   const route = link.hash.slice(1);
-  if (!sections.some(([key]) => key === route) || (account?.premium && lockedSections.has(route))) return;
+  if (!sections.some(([key]) => key === route)) return;
   event.preventDefault();
   history.pushState(null, "", "/" + link.hash);
   entry();
@@ -903,11 +898,7 @@ root.addEventListener("click", event => {
 }, true);
 window.addEventListener("hashchange", () => {
   if (surface !== "public") return;
-  const route = publicRoute();
-  if (account?.premium && lockedSections.has(route)) {
-    if (location.search) history.replaceState(null, "", "/" + location.hash);
-    void loadMember();
-  } else entry();
+  entry();
 });
 if (setup) {
   history.replaceState(null, "", "/");

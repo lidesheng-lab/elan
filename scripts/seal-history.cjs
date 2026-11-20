@@ -23,7 +23,8 @@ for (const entry of entries) {
   const body = Buffer.concat([cipher.update(JSON.stringify(entry), "utf8"), cipher.final()]);
   const wrapped = publicEncrypt({key:encryptionKey, padding:constants.RSA_PKCS1_OAEP_PADDING, oaepHash:"sha256"}, secret);
   const encode = buffer => buffer.toString("base64url");
-  feed.push({id, nonce:encode(nonce), tag:encode(cipher.getAuthTag()), key:encode(wrapped), body:encode(body)});
+  feed.push({id, public:entry, nonce:encode(nonce), tag:encode(cipher.getAuthTag()), key:encode(wrapped), body:encode(body)});
   known.add(id);
 }
 writeFileSync(outputPath, JSON.stringify(feed) + "\n");
+

@@ -57,7 +57,7 @@ function showIndex(target, shows) {
       (item.brand + " " + item.season + " " +item.slug).normalize("NFKD").toLowerCase().includes(query));
     grid.replaceChildren();
     for (const item of rows.slice(0,listState.limit)) {
-      const card = link("/#designers/"+item.slug,null,"show-card");
+      const card = link("/designers/"+item.slug+"/",null,"show-card");
       if (item.cover) card.append(picture(item.cover,item.brand+" · "+item.season,grid.childElementCount>=6));
       card.append(element("strong",item.brand),element("span",item.season));
       grid.append(card);
@@ -122,7 +122,7 @@ function showDetail(target, show, favorite) {
   const meta = element("p",show.season,"eyebrow");
   target.replaceChildren(back,heading,meta);
   const actions=element("div",null,"show-filters");
-  const share = shareControl(show.brand + " · " + show.season + " | ÉLAN", "/#designers/" + show.slug);
+  const share = shareControl(show.brand + " · " + show.season + " | ÉLAN", "/designers/" + show.slug + "/");
   share.querySelector("button").textContent = "转发";
   actions.append(favorite(show.slug), share);
   if (show.download) {
@@ -267,6 +267,10 @@ export async function showRunways(target, slug, favorite) {
   try {
     const data=await read(slug ? "shows/"+encodeURIComponent(slug)+".json" : "shows.json");
     if(!target.isConnected)return;
+    if (slug && location.pathname === "/" && location.hash.startsWith("#designers/")) {
+      location.replace("/designers/" + encodeURIComponent(data.slug) + "/");
+      return;
+    }
     if(slug) showDetail(target,data,favorite);else showIndex(target,data);
   } catch {
     if(target.isConnected)target.replaceChildren(element("p","系列暂时无法读取。"),link("/#designers","返回品牌索引"));

@@ -43,7 +43,7 @@ def page(out, section, slug, title, label, summary, image, css, entry_module, sh
     url = f"{SITE}/{section}/{slug}/"
     e = lambda s: escape(s, quote=True)
     payload = json.dumps(dict(title=title, desc=summary, link=url, imgUrl=image),ensure_ascii=False).replace("<", r"\u003c")
-    name = "赛事" if section == "contests" else "文章"
+    name = {"contests": "赛事", "trends": "文章", "designers": "秀场"}[section]
     reader_url = f"/{section}/{slug}/?v={share_version}"
     detail_route = f"{section}/{slug}"
     path.joinpath("index.html").write_text(f'''<!doctype html>
@@ -137,3 +137,18 @@ def trend_share_page(out, article, stylesheet, entry_module, share_version):
     credit = '<small>' + escape(photo["credit"]) + ' · <a href="' + escape(photo["licenseUrl"],quote=True) + '">' + escape(photo["license"]) + '</a> · <a href="' + escape(photo["sourceUrl"],quote=True) + '">原图</a></small>'
     page(out, "trends", article["slug"], article["title"], TOPICS[article["category"]] + " · " + article["season"],
          article["lead"], photo["url"], stylesheet, entry_module, share_version, credit)
+
+
+def runway_share_pages(out, shows, css, entry_module, share_version):
+    from PIL import Image
+    for show in shows:
+        slug = show["slug"]
+        directory = out / "designers" / slug
+        directory.mkdir(parents=True, exist_ok=True)
+        image = show["cover"]
+        if image.startswith("/collection-reader/covers/"):
+            with Image.open(out / image.lstrip("/")) as cover:
+                cover.convert("RGB").save(directory / "cover.jpg", quality=88)
+            image = f"{SITE}/designers/{slug}/cover.jpg"
+        title = f'{show["brand"]} · {show["season"]}'
+        page(out, "designers", slug, title, "秀场", f'{title}系列造型与秀场资料。', image, css, entry_module, share_version)

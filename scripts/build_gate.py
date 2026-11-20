@@ -10,7 +10,7 @@ from urllib.parse import unquote, urlparse
 from zoneinfo import ZoneInfo
 
 from runway_media import publish_runway_media
-from contest_share import contest_share_pages, trend_share_page
+from contest_share import contest_share_pages, trend_share_page, runway_share_pages
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "dist"
@@ -458,3 +458,5 @@ if public_contests:
     contest_share_pages(OUT, ROOT / "public", public_contests, stylesheet, entry_module, share_page_version)
 for article in public_articles:
     trend_share_page(OUT, article, stylesheet, entry_module, share_page_version)
+
+runway_share_pages(OUT, json.loads((reader_dir / "shows.json").read_text()), stylesheet, entry_module, share_page_version)

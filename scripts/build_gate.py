@@ -311,6 +311,12 @@ def trend_entry(data, metadata):
         for color in entry["palette"]:
             if not re.fullmatch(r"#[0-9a-fA-F]{6}", color["hex"]) or not re.fullmatch(r"\d{2}-\d{4}", color["tcx"]):
                 raise ValueError("Invalid trend color reference")
+    study = ROOT / "public" / "colour-studies" / (metadata["slug"] + ".jpg")
+    if colors and study.is_file():
+        destination = OUT / "colour-studies" / study.name
+        destination.parent.mkdir(exist_ok=True)
+        shutil.copyfile(study, destination)
+        entry["colourStudy"] = "/colour-studies/" + study.name
     entry["sections"] = []
     for section in data["sections"]:
         paragraphs = section["paragraphs"]

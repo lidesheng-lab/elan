@@ -351,6 +351,15 @@ function renderTrendArticle(output, post) {
   if (cover) article.append(trendFigure(cover,post.images,0));
   const palette = post.palette;
   if (palette?.length) article.append(runwayPalette(palette));
+  if (post.colourStudy) {
+    const study = element("figure", null, "trend-figure");
+    const image = element("img");
+    image.src = post.colourStudy;
+    image.alt = "ÉLAN 编辑部制作的面料配色构成";
+    image.loading = "lazy";
+    study.append(image, element("figcaption", "面料配色 · ÉLAN"));
+    article.append(study);
+  }
   const body = element("div",null,"trend-article-body");
   post.sections.forEach((section,index)=>{
     const part = element("section");

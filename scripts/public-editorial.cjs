@@ -13,9 +13,10 @@ function contestPage(item) {
   };
 }
 
-function trendPage({ lead, sections, images, sources }) {
+function trendPage({ lead, sections, images, sources, palette }) {
   return {
     lead,
+    ...(palette?.length && { palette: palette.map(({label, brand, hex, tcx, name}) => ({label, brand, hex, tcx, name})) }),
     sections: sections.map(({ heading, paragraphs, references, looks }) => ({
       heading, paragraphs,
       ...(looks?.length && { looks: looks.map(({url, gallery, label, credit, paragraph}) => ({url, gallery, label, credit, paragraph})) }),

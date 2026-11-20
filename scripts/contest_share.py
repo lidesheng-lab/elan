@@ -57,7 +57,7 @@ def page(out, section, slug, title, label, summary, image, css, entry_module, sh
 <meta itemprop="name" content="{e(title)}"><meta itemprop="image" content="{e(image)}"><link rel="image_src" href="{e(image)}">
 <link rel="stylesheet" href="/{e(css)}"><style>.share-preview{{max-width:760px;margin:5vh auto;padding:0 20px 6vh}}.share-preview img{{display:block;width:min(100%,360px);height:auto}}.share-preview h1{{font-size:clamp(2rem,6vw,4rem);line-height:1.15}}.share-preview p{{line-height:1.65}}.share-preview nav{{display:flex;gap:1.3rem;flex-wrap:wrap}}</style></head>
 <body><div id="root" data-detail-route="{detail_route}"><main class="share-preview"><a href="/">ÉLAN</a>
-<p id="wxhint" hidden>发朋友圈：点微信右上角「···」→「分享到朋友圈」→「发表」。</p>
+<p id="wxhint" hidden>发朋友圈：点微信右上角「···」→「在浏览器打开」，再点「分享」。</p>
 <p>{e(label)}</p><h1>{e(title)}</h1>
 <img src="{e(image)}" alt="{e(title)}" fetchpriority="high">{credit}<p>{e(summary)}</p>
 <nav><a class="primary" id="open-reader" hidden href="{e(reader_url)}">查看{name}全文</a>
@@ -92,7 +92,8 @@ copyLink.addEventListener("click", async () => {{
   }}
 }});
 if (/MicroMessenger/i.test(navigator.userAgent)) {{
-  document.getElementById("wxhint").hidden=false;
+  const wxHint = document.getElementById("wxhint");
+  wxHint.hidden=false;
   const sdk=document.createElement("script");
   sdk.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";
   sdk.onload=async()=>{{
@@ -101,7 +102,12 @@ if (/MicroMessenger/i.test(navigator.userAgent)) {{
       const res=await fetch(endpoint+"?url="+encodeURIComponent(location.href.split("#")[0]));
       if(!res.ok)return;
       const config=await res.json(), data=JSON.parse(document.getElementById("share-data").textContent);
-      wx.ready(()=>{{wx.updateTimelineShareData(data);wx.updateAppMessageShareData(data);}});
+      wx.ready(()=>{{
+        wx.updateTimelineShareData({{...data, success:()=>{{
+          wxHint.textContent = "发朋友圈：点微信右上角「···」→「分享到朋友圈」→「发表」。";
+        }}}});
+        wx.updateAppMessageShareData(data);
+      }});
       wx.config({{...config,debug:false,jsApiList:["updateTimelineShareData","updateAppMessageShareData"]}});
     }} catch {{ /* The visible cover can also be shared as an image. */ }}
   }};

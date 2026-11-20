@@ -337,7 +337,6 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(23px,3.4v
 .trend-article-head{padding:clamp(17px,3.3vw,38px) 0 25px;border-top:1px solid var(--line)}
 .trend-feature h1{font:500 clamp(2.15rem,6vw,4.8rem)/1.13 var(--serif);max-width:18em;text-wrap:balance;margin:10px 0 17px}
 .trend-feature-lead{font-size:clamp(1rem,2.2vw,1.23rem);line-height:1.78;color:var(--quiet);max-width:48rem}
-.trend-article-head>.community-actions{margin-top:13px}
 .trend-figure img{width:100%;height:auto;max-height:670px;object-fit:contain}
 .trend-figure figcaption{font-size:.86rem;line-height:1.6;color:var(--quiet);padding:9px 0;border-bottom:1px solid var(--line)}
 .trend-article-body,.trend-feature-sources,.trend-feature>.trend-discussion{max-width:46rem;margin:clamp(27px,4.5vw,59px) auto 0}
@@ -348,6 +347,7 @@ main{max-width:var(--page);min-height:55vh;margin:0 auto;padding:clamp(23px,3.4v
 .trend-feature-sources>a{display:flex;width:fit-content;margin-bottom:8px}
 .trend-feature-sources p{font-size:.83rem;line-height:1.65;color:var(--quiet);margin-top:10px}
 .trend-feature-sources p a{display:inline}
+.trend-feature-sources>.community-actions{margin-top:16px}
 .trend-notes{margin-bottom:40px}
 
 .member-panel input + label{margin-top:14px}

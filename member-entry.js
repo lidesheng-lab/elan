@@ -290,10 +290,6 @@ function renderTrendArticle(output, post) {
   const meta = element("p", null, "eyebrow");
   meta.append(categories.find(([key]) => key === post.category)?.[1] || "流行趋势", " · " + post.season + " · ", date);
   masthead.append(meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
-  const actions = element("div", null, "community-actions");
-  actions.append(favoriteControl(request,"trend",post.slug,Boolean(account)),
-    shareControl(post.title,articleLink(post.slug),{openSharePage:true}));
-  masthead.append(actions);
   article.append(back, masthead);
   const [cover,...inline] = post.images;
   if (cover) article.append(trendFigure(cover,post.images,0));
@@ -316,6 +312,10 @@ function renderTrendArticle(output, post) {
     addSource(credit, {title:photo.license, url:photo.licenseUrl});
     sources.append(credit);
   }
+  const actions = element("div", null, "community-actions");
+  actions.append(favoriteControl(request,"trend",post.slug,Boolean(account)),
+    shareControl(post.title,articleLink(post.slug),{openSharePage:true}));
+  sources.append(actions);
   article.append(sources);
   const discussion = element("section", null, "trend-discussion");
   discussion.setAttribute("aria-label","文章评论");

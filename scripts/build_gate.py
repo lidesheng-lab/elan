@@ -23,6 +23,9 @@ community_js = community_js.replace('sharePageVersion="current"', f'sharePageVer
 (OUT / "community.js").write_text(community_js, encoding="utf-8")
 shutil.copyfile(ROOT / "photo-viewer.js", OUT / "photo-viewer.js")
 shutil.copyfile(ROOT / "public" / "favicon.svg", OUT / "favicon.svg")
+for verification_file in (ROOT / "public").glob("MP_verify_*.txt"):
+    if re.fullmatch(r"MP_verify_[A-Za-z0-9]+\.txt", verification_file.name) and verification_file.is_file():
+        shutil.copyfile(verification_file, OUT / verification_file.name)
 shutil.copytree(ROOT / "public" / "fonts", OUT / "fonts")
 css = (ROOT / "app" / "globals.css").read_text(encoding="utf-8")
 (OUT / "site.css").write_text(css.replace("../public/fonts/", "./fonts/"), encoding="utf-8")

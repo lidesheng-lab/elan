@@ -9,6 +9,7 @@ import shutil
 from urllib.parse import unquote, urlparse
 from zoneinfo import ZoneInfo
 
+from runway_media import publish_runway_media
 from contest_share import contest_share_pages, trend_share_page
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -375,6 +376,7 @@ for key, gallery in galleries.items():
     if not re.fullmatch(r"[a-z0-9-]{1,115}", key):
         raise ValueError("Invalid gallery key")
     write_json(reader_dir / "galleries" / (key + ".json"), gallery)
+publish_runway_media(ROOT, OUT, catalog, galleries)
 shutil.copytree(ROOT / "public" / "collections", OUT / "collections")
 contests = encrypted_feed("contest-feed.json", {"slug"}, {"public"})
 contest_awards = json.loads((ROOT / "contest-awards.json").read_text(encoding="utf-8"))

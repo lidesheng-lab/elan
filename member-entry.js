@@ -763,6 +763,12 @@ async function logout() {
 }
 async function mountPublicCollection(target) {
   try {
+    if (publicRoute() === "designers") {
+      const {showRunways} = await import("/collection-reader/runways.js");
+      if (target.isConnected) await showRunways(target, sectionDetail(),
+        slug => favoriteControl(request, "runway", slug, Boolean(account)));
+      return;
+    }
     const {mountReader} = await import("/collection-reader/reader.js");
     if (!target.isConnected) return;
     window.elanMember = {

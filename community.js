@@ -143,7 +143,7 @@ export function favoriteControl(request,kind,id,signedIn=true) {
   return wrapper;
 }
 
-export function shareControl(title,href,signedIn) {
+export function shareControl(title,href,signedIn,{openInWechat=false}={}) {
   if(!signedIn) return link("登录后分享","#login","member-secondary");
   const wrapper=node("div",null,"favorite-control");
   const control=button("分享");
@@ -151,6 +151,10 @@ export function shareControl(title,href,signedIn) {
   wrapper.append(control,message);
   interact(control,message,async()=>{
     const url=new URL(href,location.origin).href;
+    if(openInWechat && /MicroMessenger/i.test(navigator.userAgent)) {
+      location.assign(url);
+      return;
+    }
     if(navigator.share) {
       try { await navigator.share({title,url}); return; }
       catch(error) { if(error.name==="AbortError") return; }
@@ -395,7 +399,7 @@ function renderContestDetail(target,request,item,signedIn,today) {
   }
   const tools=node("div",null,"community-actions contest-detail-actions");
   tools.append(favoriteControl(request,"contest",item.id,signedIn),
-    shareControl(item.title,contestHref(item.id),signedIn));
+    shareControl(item.title,`/contests/${item.id}/`,signedIn,{openInWechat:true}));
   const discussion=node("section",null,"contest-discussion");
   discussion.setAttribute("aria-label","赛事评论");
   copy.append(source,tools,discussion);

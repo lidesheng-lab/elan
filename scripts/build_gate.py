@@ -8,6 +8,8 @@ import shutil
 from urllib.parse import unquote, urlparse
 from zoneinfo import ZoneInfo
 
+from contest_share import contest_share_pages
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "dist"
 if OUT.exists():
@@ -142,7 +144,9 @@ def trend_entry(data, metadata):
 encrypted_feed("history-feed.json")
 contests = encrypted_feed("contest-feed.json", {"slug"}, {"public"})
 if contests and all("public" in row for row in contests):
-    write_json(OUT / "public-contests.json", {"items": [contest_entry(row) for row in contests]})
+    public_contests = [contest_entry(row) for row in contests]
+    write_json(OUT / "public-contests.json", {"items": public_contests})
+    contest_share_pages(OUT, ROOT / "public", public_contests, versioned("site.css"))
 articles = encrypted_feed("trend-vault.json", article_fields, {"cover", "public"})
 details_dir = OUT / "trend-detail"
 details_dir.mkdir()
@@ -197,6 +201,7 @@ write_json(OUT / "brand-preview.json", brand_preview)
 
 
 entry_js = (OUT / "member-entry.js").read_text(encoding="utf-8")
+entry_js = entry_js.replace('"./community.js"', f'"./{versioned("community.js")}"')
 entry_js = entry_js.replace("trend-articles.json?view=current", versioned("trend-articles.json"))
 issue_version = sha256((OUT / "trend-vault.json").read_bytes() + (OUT / "trend-articles.json").read_bytes()).hexdigest()[:10]
 entry_js = entry_js.replace('slug + ".json?view=current"', 'slug + ".json?v=' + issue_version + '"')

@@ -153,11 +153,6 @@ export function shareControl(title,href,{openSharePage=false}={}) {
     const destination=new URL(href,location.origin);
     if(openSharePage) destination.searchParams.set("v",sharePageVersion);
     const url=destination.href;
-    // WeChat's own page menu shares the current URL to Moments.
-    if(openSharePage && /MicroMessenger/i.test(navigator.userAgent)) {
-      location.assign(url);
-      return;
-    }
     if(typeof navigator.share==="function") {
       try { await navigator.share({title,url}); return; }
       catch(error) { if(error.name==="AbortError") return; }

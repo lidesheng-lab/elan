@@ -624,10 +624,9 @@ body:has(.editorial-viewer[open]){overflow:hidden}
 .public-masthead .subscribe-link.subscription-live { flex-direction:column;justify-content:center;line-height:1.25;gap:3px;padding-block:4px }
 .subscription-live small {display:flex;align-items:center;gap:4px;font-size:.68rem;font-weight:500;white-space:nowrap}
 .subscription-live small[hidden] {display:none}
-.subscription-live small::before {content:"";display:block;width:6px;height:6px;border-radius:50%;background:#89908d}
-.subscription-live small[data-live="true"]::before {background:#248449;animation:subscription-pulse 2.6s ease-in-out infinite}
+.subscription-live small::before {content:"";display:block;width:6px;height:6px;border-radius:50%;background:#248449;animation:subscription-pulse 2.6s ease-in-out infinite}
 @keyframes subscription-pulse {50% {opacity:.45}}
-@media(prefers-reduced-motion:reduce){.subscription-live small[data-live="true"]::before{animation:none}}
+@media(prefers-reduced-motion:reduce){.subscription-live small::before{animation:none}}
 
 .trend-color-study .trend-color-image { display:block; width:100%; max-height:38rem; aspect-ratio:4/3; object-fit:cover; }
 .trend-color-study .trend-color-legend { display:flex; flex-wrap:wrap; gap:6px 20px; margin:10px 0 0; }

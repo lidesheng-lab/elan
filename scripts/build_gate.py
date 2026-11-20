@@ -148,8 +148,169 @@ def contest_entry(row):
     entry["references"] = [source(reference) for reference in data.get("references", [])]
     return entry
 
+historical_palettes = {
+  "ss27-white-shirt-colour-area": [
+    {
+      "label": "白衬衫",
+      "brand": "RE RHEE",
+      "hex": "#C2CDDD",
+      "tcx": "14-4112",
+      "name": "Skyway"
+    },
+    {
+      "label": "灰绿领饰",
+      "brand": "RE RHEE",
+      "hex": "#546661",
+      "tcx": "18-5611",
+      "name": "Dark Forest"
+    },
+    {
+      "label": "深灰长裤",
+      "brand": "RE RHEE",
+      "hex": "#667597",
+      "tcx": "17-4020",
+      "name": "Blue Shadow"
+    }
+  ],
+  "rerhee-ss27-sand-tailoring-white-break": [
+    {
+      "label": "沙色外套",
+      "brand": "RE RHEE",
+      "hex": "#BABBA8",
+      "tcx": "14-0000",
+      "name": "Silver Gray"
+    },
+    {
+      "label": "象牙色内搭",
+      "brand": "RE RHEE",
+      "hex": "#EFF6EF",
+      "tcx": "11-4201",
+      "name": "Cloud Dancer"
+    }
+  ],
+  "rerhee-ss27-wine-red-white-boot": [
+    {
+      "label": "酒红裙装",
+      "brand": "RE RHEE",
+      "hex": "#342129",
+      "tcx": "19-2118",
+      "name": "Winetasting"
+    },
+    {
+      "label": "浅色短靴",
+      "brand": "RE RHEE",
+      "hex": "#D7EAE5",
+      "tcx": "11-4201",
+      "name": "Cloud Dancer"
+    }
+  ],
+  "rerhee-ss27-sage-tailoring": [
+    {
+      "label": "灰绿西装",
+      "brand": "RE RHEE",
+      "hex": "#7D897F",
+      "tcx": "17-6009",
+      "name": "Laurel Wreath"
+    },
+    {
+      "label": "灰绿长裤",
+      "brand": "RE RHEE",
+      "hex": "#7C8A7E",
+      "tcx": "16-5808",
+      "name": "Iceberg Green"
+    }
+  ],
+  "fw26-tonal-black-surface-and-closures": [
+    {
+      "label": "黑色长裙",
+      "brand": "Rick Owens",
+      "hex": "#474745",
+      "tcx": "19-4205",
+      "name": "Phantom"
+    },
+    {
+      "label": "灰色褶片",
+      "brand": "Yohji Yamamoto",
+      "hex": "#7A8787",
+      "tcx": "16-5106",
+      "name": "Blue Surf"
+    }
+  ],
+  "ss27-brown-jackets-cool-pairings": [
+    {
+      "label": "棕色夹克",
+      "brand": "Brunello Cucinelli",
+      "hex": "#A66433",
+      "tcx": "18-1244",
+      "name": "Ginger Bread"
+    },
+    {
+      "label": "灰色长裤",
+      "brand": "Brunello Cucinelli",
+      "hex": "#5C5C65",
+      "tcx": "18-3910",
+      "name": "Folkstone Gray"
+    }
+  ],
+  "ss27-blue-shirt-jacket-contrast": [
+    {
+      "label": "浅蓝长裤",
+      "brand": "Lemaire",
+      "hex": "#CCDBE2",
+      "tcx": "14-4112",
+      "name": "Skyway"
+    },
+    {
+      "label": "海军蓝外套",
+      "brand": "Brunello Cucinelli",
+      "hex": "#252239",
+      "tcx": "19-4024",
+      "name": "Dress Blues"
+    }
+  ],
+  "ss27-silver-black-light-placement": [
+    {
+      "label": "银灰衣身",
+      "brand": "RE RHEE",
+      "hex": "#C5CBBE",
+      "tcx": "14-5002",
+      "name": "Silver"
+    },
+    {
+      "label": "银灰褶影",
+      "brand": "RE RHEE",
+      "hex": "#7B827B",
+      "tcx": "17-0510",
+      "name": "Silver Sage"
+    }
+  ],
+  "ss27-pink-burgundy-value": [
+    {
+      "label": "柔粉造型",
+      "brand": "PRONOUNCE",
+      "hex": "#A67170",
+      "tcx": "18-1612",
+      "name": "Rose Taupe"
+    },
+    {
+      "label": "酒红裙装",
+      "brand": "RE RHEE",
+      "hex": "#342129",
+      "tcx": "19-2118",
+      "name": "Winetasting"
+    }
+  ]
+}
+
+
 def trend_entry(data, metadata):
     entry = {**metadata, **texts(data, ("lead",))}
+    colors = data.get("palette") or historical_palettes.get(metadata["slug"], [])
+    if colors:
+        entry["palette"] = [texts(color, ("label", "brand", "hex", "tcx", "name")) for color in colors]
+        for color in entry["palette"]:
+            if not re.fullmatch(r"#[0-9a-fA-F]{6}", color["hex"]) or not re.fullmatch(r"\d{2}-\d{4}", color["tcx"]):
+                raise ValueError("Invalid trend color reference")
     entry["sections"] = []
     for section in data["sections"]:
         paragraphs = section["paragraphs"]

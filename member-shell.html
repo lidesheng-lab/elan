@@ -10,8 +10,13 @@
   <link rel="stylesheet" href="./site.css">
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root"><main class="member-entry"><h1>ÉLAN</h1><p role="status">正在打开栏目…</p><button type="button" onclick="location.reload()">重新加载</button></main></div>
   <noscript>请启用 JavaScript 后浏览 ÉLAN。</noscript>
-  <script type="module" src="./member-entry.js"></script>
+  <script type="module">
+    import("./member-entry.js").catch(() => import("/member-entry.js?retry=" + Date.now())).catch(() => {
+      const status = document.querySelector("#root [role=status]");
+      if (status) status.textContent = "栏目加载失败，请重新加载。";
+    });
+  </script>
 </body>
 </html>

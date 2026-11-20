@@ -31,6 +31,7 @@ const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["sil
 const feeds = new Map();
 const wantsAdmin = () => new URLSearchParams(location.search).get("panel")==="admin";
 const detailRoute = root.dataset.detailRoute || "";
+const detailTitle = document.title;
 const currentRoute = () => location.hash.slice(1).split("?")[0] || detailRoute;
 const sectionDetail = () => currentRoute().split("/")[1] || "";
 const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike"]);
@@ -600,6 +601,7 @@ function entry() {
   const route = access ? "home" : current;
   pageHash = access ? "#home" : location.hash;
   const activeSection = route;
+  if (detailRoute) document.title = currentRoute() === detailRoute ? detailTitle : (sections.find(([key]) => key === route)?.[1] || "首页") + "｜ÉLAN";
   const navigation = sections.map(([key, label]) =>
     `<a href="${account?.premium && lockedSections.has(key) ? "/" : ""}#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   let content;
@@ -872,6 +874,17 @@ root.addEventListener("click", event => {
   if (!trigger || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   event.preventDefault();
   showAccess("subscribe", trigger);
+});
+// Keep section navigation in the loaded reader when leaving a shared article.
+if (detailRoute) root.addEventListener("click", event => {
+  if (surface !== "public" || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = event.target instanceof Element && event.target.closest('a[href^="#"]');
+  if (!link || location.pathname === "/") return;
+  const route = link.hash.slice(1);
+  if (!sections.some(([key]) => key === route) || (account?.premium && lockedSections.has(route))) return;
+  event.preventDefault();
+  history.pushState(null, "", "/" + link.hash);
+  entry();
 });
 if (detailRoute) root.addEventListener("click", event => {
   if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

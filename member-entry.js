@@ -318,6 +318,178 @@ function runwayComparison(looks) {
   return group;
 }
 
+const editorialPalettes = {
+  "ss27-white-shirt-colour-area": [
+    {
+      "label": "白衬衫",
+      "brand": "RE RHEE",
+      "hex": "#C2CDDD",
+      "tcx": "14-4112",
+      "name": "Skyway"
+    },
+    {
+      "label": "灰绿领饰",
+      "brand": "RE RHEE",
+      "hex": "#546661",
+      "tcx": "18-5611",
+      "name": "Dark Forest"
+    },
+    {
+      "label": "深灰长裤",
+      "brand": "RE RHEE",
+      "hex": "#667597",
+      "tcx": "17-4020",
+      "name": "Blue Shadow"
+    }
+  ],
+  "rerhee-ss27-sand-tailoring-white-break": [
+    {
+      "label": "沙色外套",
+      "brand": "RE RHEE",
+      "hex": "#BABBA8",
+      "tcx": "14-0000",
+      "name": "Silver Gray"
+    },
+    {
+      "label": "象牙色内搭",
+      "brand": "RE RHEE",
+      "hex": "#EFF6EF",
+      "tcx": "11-4201",
+      "name": "Cloud Dancer"
+    }
+  ],
+  "rerhee-ss27-wine-red-white-boot": [
+    {
+      "label": "酒红裙装",
+      "brand": "RE RHEE",
+      "hex": "#342129",
+      "tcx": "19-2118",
+      "name": "Winetasting"
+    },
+    {
+      "label": "浅色短靴",
+      "brand": "RE RHEE",
+      "hex": "#D7EAE5",
+      "tcx": "11-4201",
+      "name": "Cloud Dancer"
+    }
+  ],
+  "rerhee-ss27-sage-tailoring": [
+    {
+      "label": "灰绿西装",
+      "brand": "RE RHEE",
+      "hex": "#7D897F",
+      "tcx": "17-6009",
+      "name": "Laurel Wreath"
+    },
+    {
+      "label": "灰绿长裤",
+      "brand": "RE RHEE",
+      "hex": "#7C8A7E",
+      "tcx": "16-5808",
+      "name": "Iceberg Green"
+    }
+  ],
+  "fw26-tonal-black-surface-and-closures": [
+    {
+      "label": "黑色长裙",
+      "brand": "Rick Owens",
+      "hex": "#474745",
+      "tcx": "19-4205",
+      "name": "Phantom"
+    },
+    {
+      "label": "灰色褶片",
+      "brand": "Yohji Yamamoto",
+      "hex": "#7A8787",
+      "tcx": "16-5106",
+      "name": "Blue Surf"
+    }
+  ],
+  "ss27-brown-jackets-cool-pairings": [
+    {
+      "label": "棕色夹克",
+      "brand": "Brunello Cucinelli",
+      "hex": "#A66433",
+      "tcx": "18-1244",
+      "name": "Ginger Bread"
+    },
+    {
+      "label": "灰色长裤",
+      "brand": "Brunello Cucinelli",
+      "hex": "#5C5C65",
+      "tcx": "18-3910",
+      "name": "Folkstone Gray"
+    }
+  ],
+  "ss27-blue-shirt-jacket-contrast": [
+    {
+      "label": "浅蓝长裤",
+      "brand": "Lemaire",
+      "hex": "#CCDBE2",
+      "tcx": "14-4112",
+      "name": "Skyway"
+    },
+    {
+      "label": "海军蓝外套",
+      "brand": "Brunello Cucinelli",
+      "hex": "#252239",
+      "tcx": "19-4024",
+      "name": "Dress Blues"
+    }
+  ],
+  "ss27-silver-black-light-placement": [
+    {
+      "label": "银灰衣身",
+      "brand": "RE RHEE",
+      "hex": "#C5CBBE",
+      "tcx": "14-5002",
+      "name": "Silver"
+    },
+    {
+      "label": "银灰褶影",
+      "brand": "RE RHEE",
+      "hex": "#7B827B",
+      "tcx": "17-0510",
+      "name": "Silver Sage"
+    }
+  ],
+  "ss27-pink-burgundy-value": [
+    {
+      "label": "柔粉造型",
+      "brand": "PRONOUNCE",
+      "hex": "#A67170",
+      "tcx": "18-1612",
+      "name": "Rose Taupe"
+    },
+    {
+      "label": "酒红裙装",
+      "brand": "RE RHEE",
+      "hex": "#342129",
+      "tcx": "19-2118",
+      "name": "Winetasting"
+    }
+  ]
+};
+
+function runwayPalette(colors) {
+  const section = element("section", null, "trend-article-body");
+  section.append(element("h2","秀场配色"));
+  const grid = element("div");
+  grid.style.cssText = "display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px";
+  for (const color of colors) {
+    const card = element("div");
+    const chip = element("div");
+    chip.style.cssText = "height:64px;border:1px solid rgba(0,0,0,.12);background-color:" + color.hex;
+    const link = element("a", color.tcx + " TCX · " + color.name);
+    link.href = "https://www.pantone.com/color-finder/" + color.tcx + "-tcx";
+    card.append(chip,element("strong",color.label),element("div",color.brand + " · " + color.hex),link);
+    grid.append(card);
+  }
+  section.append(grid, element("small","色块取自秀场照片；潘通 FHI 色号为近似参考。打样时请在标准光源下用实体棉布色卡比对。"));
+  return section;
+}
+
 function renderTrendArticle(output, post) {
   const article = element("article", null, "trend-feature");
   const back = element("a", "← 全部趋势文章", "reader-back");
@@ -331,6 +503,8 @@ function renderTrendArticle(output, post) {
   article.append(back, masthead);
   const [cover,...inline] = post.images;
   if (cover) article.append(trendFigure(cover,post.images,0));
+  const palette = post.palette || editorialPalettes[post.slug];
+  if (palette?.length) article.append(runwayPalette(palette));
   const body = element("div",null,"trend-article-body");
   post.sections.forEach((section,index)=>{
     const part = element("section");

@@ -28,6 +28,13 @@ css = (ROOT / "app" / "globals.css").read_text(encoding="utf-8")
 def versioned(name):
     return name + "?v=" + sha256((OUT / name).read_bytes()).hexdigest()[:10]
 
+def fingerprinted(name):
+    path = OUT / name
+    fingerprint = sha256(path.read_bytes()).hexdigest()[:10]
+    target = path.with_name(f"{path.stem}.{fingerprint}{path.suffix}")
+    shutil.copyfile(path, target)
+    return target.name
+
 today = datetime.now(ZoneInfo("Asia/Seoul")).date()
 minimum_season = (today.year - 1, 1) if today.month <= 2 else (today.year, int(today.month >= 9))
 season_pattern = re.compile(r"(20\d{2})(?:/(?:20)?\d{2})?\s*(春夏|秋冬)")
@@ -143,14 +150,15 @@ def trend_entry(data, metadata):
 
 encrypted_feed("history-feed.json")
 contests = encrypted_feed("contest-feed.json", {"slug"}, {"public"})
+public_contests = []
 if contests and all("public" in row for row in contests):
     public_contests = [contest_entry(row) for row in contests]
     write_json(OUT / "public-contests.json", {"items": public_contests})
-    contest_share_pages(OUT, ROOT / "public", public_contests, versioned("site.css"))
 articles = encrypted_feed("trend-vault.json", article_fields, {"cover", "public"})
 details_dir = OUT / "trend-detail"
 details_dir.mkdir()
 catalog = []
+public_articles = []
 for row in articles:
     slug = editorial_slug(row, "trend")
     if "public" not in row or not current_season(row["season"]):
@@ -162,7 +170,7 @@ for row in articles:
     write_json(details_dir / f"{slug}.json", article)
     post["description"] = article["lead"]
     post["cover"] = cover_image(article["images"][0])
-    trend_share_page(OUT, article, versioned("site.css"))
+    public_articles.append(article)
     catalog.append(post)
 if len({row["slug"] for row in catalog}) != len(catalog):
     raise ValueError("Duplicate article slug")
@@ -202,12 +210,24 @@ write_json(OUT / "brand-preview.json", brand_preview)
 
 
 entry_js = (OUT / "member-entry.js").read_text(encoding="utf-8")
-entry_js = entry_js.replace('"./community.js"', f'"./{versioned("community.js")}"')
+for module in ("community.js", "photo-viewer.js"):
+    entry_js = entry_js.replace(f'"./{module}"', f'"./{fingerprinted(module)}"')
 entry_js = entry_js.replace("trend-articles.json?view=current", versioned("trend-articles.json"))
 issue_version = sha256((OUT / "trend-vault.json").read_bytes() + (OUT / "trend-articles.json").read_bytes()).hexdigest()[:10]
 entry_js = entry_js.replace('slug + ".json?view=current"', 'slug + ".json?v=' + issue_version + '"')
 (OUT / "member-entry.js").write_text(entry_js, encoding="utf-8")
 shell = (ROOT / "member-shell.html").read_text(encoding="utf-8")
-for asset in ("site.css", "member-entry.js", "favicon.svg"):
+entry_module = fingerprinted("member-entry.js")
+for asset in ("site.css", "favicon.svg"):
     shell = shell.replace(f'./{asset}"', f'./{versioned(asset)}"')
+shell = shell.replace('./member-entry.js"', f'./{entry_module}"')
 (OUT / "index.html").write_text(shell, encoding="utf-8")
+
+# Open the full article with the same release as the share card, even in in-app browsers
+# that keep an earlier version of the bare homepage.
+reader_url = "/" + versioned("index.html")
+stylesheet = versioned("site.css")
+if public_contests:
+    contest_share_pages(OUT, ROOT / "public", public_contests, stylesheet, reader_url)
+for article in public_articles:
+    trend_share_page(OUT, article, stylesheet, reader_url)

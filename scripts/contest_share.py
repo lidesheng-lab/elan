@@ -37,7 +37,7 @@ def poster(path, title, label, date):
     image.save(path, format="JPEG", quality=88, optimize=True)
 
 
-def page(out, section, slug, title, label, summary, image, css, credit=""):
+def page(out, section, slug, title, label, summary, image, css, reader_url, credit=""):
     path = out / section / slug
     path.mkdir(parents=True, exist_ok=True)
     url = f"{SITE}/{section}/{slug}/"
@@ -55,11 +55,28 @@ def page(out, section, slug, title, label, summary, image, css, credit=""):
 <link rel="stylesheet" href="/{e(css)}"><style>main{{max-width:760px;margin:5vh auto;padding:0 20px 6vh}}img{{display:block;width:min(100%,360px);height:auto}}h1{{font-size:clamp(2rem,6vw,4rem);line-height:1.15}}p{{line-height:1.65}}nav{{display:flex;gap:1.3rem;flex-wrap:wrap}}</style></head>
 <body><main><a href="/">ÉLAN</a><p>{e(label)}</p><h1>{e(title)}</h1>
 <img src="{e(image)}" alt="{e(title)}" fetchpriority="high">{credit}<p>{e(summary)}</p>
-<nav><a class="primary" href="/#{section}/{slug}">查看{name}全文</a>
+<nav><a class="primary" href="{e(reader_url)}#{section}/{slug}">查看{name}全文</a>
+<button type="button" class="member-secondary" id="copy-link" hidden>复制分享链接</button>
 <a href="{e(image)}" {'download' if section=='contests' else ''}>打开分享封面</a></nav>
-<p id="wxhint" hidden>点右上角「···」分享到朋友圈，也可长按封面保存图片。</p></main>
+<input type="url" id="share-link" aria-label="分享链接" value="{url}" readonly hidden>
+<p id="share-status" role="status"></p>
+<p id="wxhint" hidden>点右上角「···」转发给朋友或分享到朋友圈。</p></main>
 <script type="application/json" id="share-data">{payload}</script>
 <script>
+const copyLink = document.getElementById("copy-link");
+copyLink.hidden = false;
+copyLink.addEventListener("click", async () => {{
+  const field = document.getElementById("share-link");
+  const status = document.getElementById("share-status");
+  try {{
+    await navigator.clipboard.writeText(field.value);
+    status.textContent = "链接已复制。";
+  }} catch {{
+    field.hidden = false;
+    field.select();
+    status.textContent = "请长按已选中的链接复制。";
+  }}
+}});
 if (/MicroMessenger/i.test(navigator.userAgent)) {{
   document.getElementById("wxhint").hidden=false;
   const sdk=document.createElement("script");
@@ -79,7 +96,7 @@ if (/MicroMessenger/i.test(navigator.userAgent)) {{
 </script></body></html>''', encoding="utf-8")
 
 
-def contest_share_pages(out, public_dir, contests, stylesheet):
+def contest_share_pages(out, public_dir, contests, stylesheet, reader_url):
     copytree(public_dir / "share", out / "share", dirs_exist_ok=True)
     for item in contests:
         slug = item["id"]
@@ -92,11 +109,11 @@ def contest_share_pages(out, public_dir, contests, stylesheet):
             title = "新西兰世界可穿戴艺术大赛 · " + title
         poster(path / "cover.jpg", title, label, date)
         page(out, "contests", slug, title, label, item["summary"],
-             f"{SITE}/contests/{slug}/cover.jpg", stylesheet)
+             f"{SITE}/contests/{slug}/cover.jpg", stylesheet, reader_url)
 
 
-def trend_share_page(out, article, stylesheet):
+def trend_share_page(out, article, stylesheet, reader_url):
     photo = article["images"][0]
     credit = '<small>' + escape(photo["credit"]) + ' · <a href="' + escape(photo["licenseUrl"],quote=True) + '">' + escape(photo["license"]) + '</a> · <a href="' + escape(photo["sourceUrl"],quote=True) + '">原图</a></small>'
     page(out, "trends", article["slug"], article["title"], TOPICS[article["category"]] + " · " + article["season"],
-         article["lead"], photo["url"], stylesheet, credit)
+         article["lead"], photo["url"], stylesheet, reader_url, credit)

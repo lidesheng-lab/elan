@@ -143,21 +143,20 @@ export function favoriteControl(request,kind,id,signedIn=true) {
   return wrapper;
 }
 
-export function shareControl(title,href,allowed,{openInWechat=false}={}) {
-  if(!allowed) return link("登录后分享","#login","member-secondary");
+export function shareControl(title,href,{openSharePage=false}={}) {
   const wrapper=node("div",null,"favorite-control");
   const control=button("分享");
   const message=status();
   wrapper.append(control,message);
   interact(control,message,async()=>{
     const url=new URL(href,location.origin).href;
-    if(openInWechat && /MicroMessenger/i.test(navigator.userAgent)) {
-      location.assign(url);
-      return;
-    }
-    if(navigator.share) {
+    if(typeof navigator.share==="function") {
       try { await navigator.share({title,url}); return; }
       catch(error) { if(error.name==="AbortError") return; }
+    }
+    if(openSharePage) {
+      location.assign(url);
+      return;
     }
     if(navigator.clipboard?.writeText) {
       try {
@@ -399,7 +398,7 @@ function renderContestDetail(target,request,item,signedIn,today) {
   }
   const tools=node("div",null,"community-actions contest-detail-actions");
   tools.append(favoriteControl(request,"contest",item.id,signedIn),
-    shareControl(item.title,`/contests/${item.id}/`,true,{openInWechat:true}));
+    shareControl(item.title,`/contests/${item.id}/`,{openSharePage:true}));
   const discussion=node("section",null,"contest-discussion");
   discussion.setAttribute("aria-label","赛事评论");
   copy.append(source,tools,discussion);
@@ -548,7 +547,7 @@ export async function renderSquare(target,request,signedIn,selected) {
         });
       }
       const actions=node("div",null,"community-actions");
-      actions.append(favoriteControl(request,"post",item.id,signedIn),shareControl(item.title,"/#square/"+item.id,signedIn));
+      actions.append(favoriteControl(request,"post",item.id,signedIn),signedIn ? shareControl(item.title,"/#square/"+item.id) : link("登录后分享","#login","member-secondary"));
       card.append(actions,thread(request,"post:"+item.id,item.engagement,signedIn));
       if(item.canRemove) {
         const remove=button("移除帖子","text-action");

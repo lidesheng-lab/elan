@@ -288,7 +288,7 @@ function renderTrendArticle(output, post) {
   masthead.append(meta, element("h1", post.title), element("p", post.lead, "trend-feature-lead"));
   const actions = element("div", null, "community-actions");
   actions.append(favoriteControl(request,"trend",post.slug,Boolean(account)),
-    shareControl(post.title,`/trends/${post.slug}/`,true,{openInWechat:true}));
+    shareControl(post.title,`/trends/${post.slug}/`,{openSharePage:true}));
   masthead.append(actions);
   article.append(back, masthead);
   const [cover,...inline] = post.images;

@@ -122,6 +122,13 @@ function showDetail(target, show, favorite) {
   target.replaceChildren(back,heading,meta);
   const actions=element("div",null,"show-filters");
   actions.append(favorite(show.slug),link(show.source,"查看图片来源","text-action"));
+  if (show.download) {
+    const count = show.download.count;
+    const label = count === show.images.length ? "一键下载秀场" : "下载已收录造型";
+    const download = link(show.download.url, label + "（ZIP · " + count + " 张）", "member-secondary");
+    download.download = show.slug + ".zip";
+    actions.append(download);
+  }
   target.append(actions);
   if (!show.images.length) return;
   target.append(element("h2","秀场造型"));

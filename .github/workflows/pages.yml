@@ -19,6 +19,13 @@ jobs:
       - name: Install share cover renderer
         run: sudo apt-get update -qq && sudo apt-get install -y python3-pil fonts-noto-cjk
       - run: /usr/bin/python3 scripts/build_gate.py
+      - uses: actions/cache@v4
+        with:
+          path: .runway-download-cache
+          key: runway-zips-v1-${{ hashFiles('collection-catalog.json.gz', 'runway-supplement.json.gz', 'history-feed.json') }}
+          restore-keys: runway-zips-v1-
+      - name: Package runway photographs
+        run: /usr/bin/python3 scripts/runway_downloads.py
       - name: Verify public membership entry
         run: |
           test -s dist/index.html

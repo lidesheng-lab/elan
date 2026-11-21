@@ -117,7 +117,8 @@ function appendFilm(target, show) {
     frame.allowFullscreen = true;
     section.append(frame);
   }
-  const source = link(film.originalPage, "在品牌官网观看", "text-action");
+  const sourceLabels = {brandChannel: "在品牌官方频道观看", fashionWeek: "在时装周官方页面观看"};
+  const source = link(film.originalPage, sourceLabels[film.sourceKind] || "在品牌官网观看", "text-action");
   source.target = "_blank";
   source.rel = "noopener noreferrer";
   section.append(source);

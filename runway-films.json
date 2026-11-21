@@ -71,7 +71,8 @@
   "chanel-spring-2027": {
     "url": "https://www.youtube.com/watch?v=weNFjc2l1Hw",
     "embed": "https://www.youtube-nocookie.com/embed/weNFjc2l1Hw",
-    "bvid": "BV1Vops6DEGm"
+    "bvid": "BV1Vops6DEGm",
+    "originalPage": "https://www.chanel.cn/cn/fashion/collection/spring-summer-2027/"
   },
   "noir-kei-ninomiya-spring-2027": {
     "url": "https://www.youtube.com/watch?v=1glVZGfm-mQ",
@@ -79,7 +80,9 @@
   },
   "louis-vuitton-spring-2027": {
     "url": "https://www.youtube.com/watch?v=eWOl2RhllrE",
-    "embed": "https://www.youtube-nocookie.com/embed/eWOl2RhllrE"
+    "embed": "https://www.youtube-nocookie.com/embed/eWOl2RhllrE",
+    "originalMp4": "https://vod-cloud.freecaster.cn/louisvuitton-fashion-shows/a2f69be3-bb51-4b5f-baed-145a9ce79161/uhTlOCz7ZQtRzg6ta6DcJlC1_11.mp4",
+    "originalPage": "https://www.louisvuitton.cn/zhs-cn/magazine/articles/women-spring-summer-2027-show"
   },
   "willy-chavarria-spring-2027": {
     "url": "https://www.youtube.com/watch?v=SbDDwvn7gEg",
@@ -151,7 +154,9 @@
   },
   "louis-vuitton": {
     "url": "https://www.youtube.com/watch?v=vK3Jq8AJO5s",
-    "embed": "https://www.youtube-nocookie.com/embed/vK3Jq8AJO5s"
+    "embed": "https://www.youtube-nocookie.com/embed/vK3Jq8AJO5s",
+    "originalMp4": "https://vod-cloud.freecaster.cn/louisvuitton-fashion-shows/a0068c52-74aa-4569-affe-67fa34fc111f/VEhwADvFjBpCEDfdENnG4tFI_11.mp4",
+    "originalPage": "https://www.louisvuitton.cn/zhs-cn/magazine/articles/women-spring-summer-2026-show"
   },
   "maison-margiela": {
     "url": "https://www.youtube.com/watch?v=lZkBje3zeCs",
@@ -247,11 +252,15 @@
   },
   "prada-spring-2020": {
     "url": "https://www.youtube.com/watch?v=ovkSh5EtuEs",
-    "embed": "https://www.youtube-nocookie.com/embed/ovkSh5EtuEs"
+    "embed": "https://www.youtube-nocookie.com/embed/ovkSh5EtuEs",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder3/women_SS20_final_2_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2020/ss-womenswear.html"
   },
   "prada-spring-2019": {
     "url": "https://www.youtube.com/watch?v=IjstV0xWRkE",
-    "embed": "https://www.youtube-nocookie.com/embed/IjstV0xWRkE"
+    "embed": "https://www.youtube-nocookie.com/embed/IjstV0xWRkE",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder2/PRADA_WSS19-SHOW-001_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2019/ss-womenswear.html"
   },
   "maison-margiela-fall-2018": {
     "url": "https://www.youtube.com/watch?v=-YWoaqfWOkU",
@@ -267,11 +276,15 @@
   },
   "prada-spring-2022": {
     "url": "https://www.youtube.com/watch?v=MY_yjWeQCvI",
-    "embed": "https://www.youtube-nocookie.com/embed/MY_yjWeQCvI"
+    "embed": "https://www.youtube-nocookie.com/embed/MY_yjWeQCvI",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder3/1632573818PRADA_SS_22_V3_LOGHI_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2022/ss-womenswear.html"
   },
   "prada-spring-2021": {
     "url": "https://www.youtube.com/watch?v=RCQxPSNzU2Q",
-    "embed": "https://www.youtube-nocookie.com/embed/RCQxPSNzU2Q"
+    "embed": "https://www.youtube-nocookie.com/embed/RCQxPSNzU2Q",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder3/PRADA_SS_21_FASHION_SHOW_RAF_CUT_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2021/ss-womenswear.html"
   },
   "saint-laurent-spring-2027": {
     "url": "https://www.youtube.com/watch?v=qSivoNv3Rnc",
@@ -318,19 +331,29 @@
     "embed": "https://www.youtube-nocookie.com/embed/6xOLDalFBc4"
   },
   "prada-spring-2011": {
-    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2011/ss-womenswear.html"
+    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2011/ss-womenswear.html",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder1/2011_ss_womenswear_fashionshow.mp4_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2011/ss-womenswear.html"
   },
   "prada-spring-2012": {
-    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2012/ss-womenswear.html"
+    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2012/ss-womenswear.html",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder1/2012_ss_women.mp4_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2012/ss-womenswear.html"
   },
   "prada-spring-2014": {
-    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2014/ss-womenswear.html"
+    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2014/ss-womenswear.html",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder1/2014_SS_W_FS_VIDEO_001_1800.mp4_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2014/ss-womenswear.html"
   },
   "prada-spring-2015": {
-    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2015/ss-womenswear.html"
+    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2015/ss-womenswear.html",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder1/PRADA-W-SS15-H264-1080P-YOUTUBE-l_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2015/ss-womenswear.html"
   },
   "prada-spring-2016": {
-    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2016/ss-womenswear.html"
+    "url": "https://www.prada.com/us/en/pradasphere/fashion-shows/2016/ss-womenswear.html",
+    "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder1/Prada_Womenswear_SS16_Show_1800.mp4_prada.mp4",
+    "originalPage": "https://www.prada.cn/cn/zh/pradasphere/fashion-shows/2016/ss-womenswear.html"
   },
   "christian-dior-spring-2027": {
     "url": "https://www.youtube.com/watch?v=DB7oO82OeD4",
@@ -1291,5 +1314,10 @@
   "zimmermann-spring-2027": {
     "url": "https://www.youtube.com/watch?v=B3sbIHNujK8",
     "embed": "https://www.youtube-nocookie.com/embed/B3sbIHNujK8"
+  },
+  "louis-vuitton-fall-2026": {
+    "originalMp4": "https://vod-cloud.freecaster.cn/louisvuitton/a14a3208-dc5f-4172-82cd-871f8f3ec850/JNxDM9dCmVuH5B1jb8fRsXUX_11.mp4",
+    "originalPage": "https://www.louisvuitton.cn/zhs-cn/magazine/articles/women-fall-winter-2026-show",
+    "url": "https://player.freecaster.com/embed/a148646d-18be-40fc-a9d4-f0f9378cf1e4"
   }
 }

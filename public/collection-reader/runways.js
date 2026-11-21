@@ -98,37 +98,30 @@ function appendFilm(target, show) {
     action.rel = "noopener noreferrer";
     controls.append(action);
   }
-  if (film.mainlandMp4) {
+  if (film.originalMp4) {
     const video = element("video");
     video.controls = true;
     video.playsInline = true;
     video.preload = "none";
     video.style.width = "100%";
     video.poster = show.cover;
-    video.src = film.mainlandMp4;
+    video.src = film.originalMp4;
+    video.setAttribute("aria-label", title);
+    video.addEventListener("error", () => {
+      slot.append(element("p", "视频加载失败，请打开下方的品牌官网观看。"));
+    }, {once: true});
     slot.append(video);
+  } else if (film.embed && !film.originalPage) {
+    const url = new URL(film.embed);
+    if (["www.youtube.com", "www.youtube-nocookie.com"].includes(url.hostname)) {
+      url.searchParams.set("origin", location.origin);
+      url.searchParams.set("playsinline", "1");
+    }
+    player(url.href);
   }
-  if (film.bvid) {
-    if (!film.mainlandMp4) player("https://player.bilibili.com/player.html?autoplay=0&bvid=" + film.bvid);
-    external("https://www.bilibili.com/video/" + film.bvid + "/", "在哔哩哔哩观看");
-  } else if (!film.mainlandMp4) {
-    const query = show.brand + " " + show.season + " 秀场";
-    external("https://search.bilibili.com/all?keyword=" + encodeURIComponent(query), "在哔哩哔哩搜索本场");
-  }
-  if (film.embed) {
-    const original = element("button", "播放国际版", "member-secondary");
-    original.type = "button";
-    original.onclick = () => {
-      const url = new URL(film.embed);
-      if (["www.youtube.com", "www.youtube-nocookie.com"].includes(url.hostname)) {
-        url.searchParams.set("origin", location.origin);
-        url.searchParams.set("playsinline", "1");
-      }
-      player(url.href);
-    };
-    controls.append(original);
-  }
+  if (film.originalPage) external(film.originalPage, "在品牌中国官网观看原片");
   external(film.url, "国际原站");
+  if (film.bvid) external("https://www.bilibili.com/video/" + film.bvid + "/", "国内备用视频");
   section.append(slot, controls);
   target.append(section);
 }

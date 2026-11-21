@@ -1,4 +1,4 @@
-import { attachDownload } from "./download.js";
+import { attachDownload } from "./download.js?v=2";
 import { shareControl } from "/community.js";
 
 const element = (tag, text, className) => {

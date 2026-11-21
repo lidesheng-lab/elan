@@ -388,6 +388,24 @@ for row in history_rows:
         known.add(slug)
     if row["public"].get("gallery"):
         galleries[study["date"] + "-" + slug] = row["public"]["gallery"]
+for path in sorted((ROOT / "data" / "matched-runways").glob("*.json.gz")):
+    with gzip.open(path, "rt", encoding="utf-8") as stream:
+        for row in json.load(stream):
+            slug = row["slug"]
+            if slug in known:
+                continue
+            known.add(slug)
+            photos = [{"url": url, "thumbnailUrl": thumb, "number": number}
+                      for url, thumb, number in row["images"]]
+            study = {"slug": slug, "designer": row["brand"], "season": row["season"],
+                     "date": row["date"], "title": row["brand"] + " · " + row["season"],
+                     "summary": "", "images": photos[:1], "libraryOnly": True,
+                     "fabric": "", "color": "", "silhouette": "", "palette": [], "techniques": [],
+                     "tags": [], "sources": [{"title": "本季系列", "url": row["url"]}],
+                     "externalCollection": {"sourceUrl": row["url"], "matchedArchive": True}}
+            catalog["studies"].append(study)
+            if photos:
+                galleries[study["date"] + "-" + slug] = {"images": photos, "sourceUrl": row["url"]}
 catalog["studies"].sort(key=lambda study: study["date"], reverse=True)
 write_json(reader_dir / "catalog.json", catalog)
 (reader_dir / "galleries").mkdir()
@@ -462,6 +480,7 @@ entry_js = (OUT / "member-entry.js").read_text(encoding="utf-8")
 runway_script = reader_dir / "runways.js"
 runway_version = sha256((reader_dir / "catalog.json").read_bytes() + (ROOT / "runway-films.json").read_bytes())
 runway_version.update((ROOT / "runway-brand-links.json").read_bytes())
+runway_version.update((ROOT / "data" / "matched-runway-films.json").read_bytes())
 for media_file in sorted((ROOT / "data" / "runway-galleries").glob("*.json.gz")):
     runway_version.update(media_file.read_bytes())
 runway_script.write_text(runway_script.read_text().replace("RUNWAY_DATA_VERSION", runway_version.hexdigest()[:12]))

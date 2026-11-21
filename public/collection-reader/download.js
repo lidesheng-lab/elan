@@ -1,15 +1,21 @@
 const endpoint = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 
-async function readLook(slug, index, signal) {
+async function readLook(show, index, signal) {
   const url = new URL(endpoint);
-  url.search = new URLSearchParams({view: "runway-look", show: slug, look: String(index + 1)});
+  url.search = new URLSearchParams({view: "runway-look", show: show.slug, look: String(index + 1)});
+  if (show.externalCollection?.matchedArchive) {
+    const photo = new URL(show.images[index].url);
+    if (photo.origin !== "https://assets.vogue.com") throw Error("图片地址无效");
+    url.href = "https://wsrv.nl/";
+    url.search = new URLSearchParams({url: photo.href});
+  }
   for (let attempt = 0; attempt < 3; attempt++) {
     signal.throwIfAborted();
     try {
       const response = await fetch(url, {signal: AbortSignal.any([signal, AbortSignal.timeout(25000)])});
       if (!response.ok) throw Error("图片读取失败");
       const blob = await response.blob();
-      const extension = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/avif": "avif"}[blob.type.split(";")[0]];
+      const extension = {"image/gif": "gif", "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/avif": "avif"}[blob.type.split(";")[0]];
       if (!extension || !blob.size) throw Error("图片格式无效");
       return {bytes: await blob.arrayBuffer(), extension};
     } catch (error) {
@@ -43,7 +49,7 @@ export function attachDownload(actions, show) {
         while (next < show.images.length) {
           if (!button.isConnected) controller.abort();
           const index = next++;
-          const {bytes, extension} = await readLook(show.slug, index, controller.signal);
+          const {bytes, extension} = await readLook(show, index, controller.signal);
           zip.file(String(index + 1).padStart(3, "0") + "-Look-" + (show.images[index].number || index + 1) + "." + extension, bytes);
           status.textContent = "已读取 " + (++completed) + " / " + show.images.length + " 张";
         }

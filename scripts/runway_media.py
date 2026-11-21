@@ -23,6 +23,7 @@ def publish_runway_media(root, out, catalog, galleries):
         with gzip.open(path, "rt", encoding="utf-8") as stream:
             supplements.update(json.load(stream))
     films = json.loads((root / "runway-films.json").read_text())
+    films.update(json.loads((root / "data" / "matched-runway-films.json").read_text()))
     for slug, film in films.items():
         players = [film[key] for key in ("originalMp4", "embed") if film.get(key)]
         if not film.get("originalPage") or len(players) != 1:
@@ -47,7 +48,7 @@ def publish_runway_media(root, out, catalog, galleries):
         images = []
         for picture in raw:
             url = picture.get("url", "")
-            if not url.startswith("https://") or not re.search(r"\.(jpe?g|png|webp|avif)(?:[?#]|$)", url, re.I):
+            if not url.startswith("https://") or not re.search(r"\.(jpe?g|png|webp|avif|gif)(?:[?#]|$)", url, re.I):
                 continue
             images.append({key: picture[key] for key in ("url", "thumbnailUrl", "number") if picture.get(key)})
         external = study.get("externalCollection")
@@ -72,6 +73,8 @@ def publish_runway_media(root, out, catalog, galleries):
             data["brandLinks"].append(profile)
         if collection:
             data["brandLinks"].append(["官网查看本季系列", collection])
+        if external and external.get("matchedArchive") and not data["brandLinks"]:
+            data["brandLinks"].append(["查看本季系列", source])
         index.append({**item, "brandLink": data["brandLinks"][-1] if data["brandLinks"] else None})
         if external and not images:
             raise ValueError(f"Missing images for linked collection {slug}")

@@ -280,6 +280,7 @@ export async function renderProfile(target,request,logout) {
     const signout=button("退出登录");
     const actions=node("div",null,"community-actions");
     if(model.admin===true) actions.append(link("会员与认证审核","/?panel=admin"));
+    if(!model.premium) actions.append(link("兑换体验码","#redeem"));
     if(!model.premium) actions.append(link(model.premiumPending ? "高级会员待审核" : "申请高级会员","#upgrade"));
     actions.append(signout);
     signout.onclick=()=>void logout();

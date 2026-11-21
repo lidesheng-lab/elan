@@ -267,7 +267,7 @@ function publicRoute() {
   if (/^contests\/[a-z0-9-]{1,110}$/.test(route)) return "contests";
   if (/^square\/[a-f0-9-]{36}$/.test(route)) return "square";
   return sections.some(([key]) => key === route) || accessRoutes.has(route) || communityRoutes.has(route) ||
-    route === "upgrade" ? route : "home";
+    (route === "upgrade" || route === "redeem") ? route : "home";
 }
 function articleLink(slug) { return publicDetailHref("trends", slug); }
 function trendStory(post, variant="") {
@@ -639,10 +639,20 @@ function entry() {
     const title = route === "beauty" ? "美妆" : "品牌索引";
     content = lockedPreview(title, account ? "免费体验已结束，开通高级会员可继续浏览。" :
       "注册普通会员，立即体验品牌索引和美妆 15 分钟，每个账号限一次。",
-      account ? '<a class="primary" href="#upgrade">申请高级会员</a>' :
+      account ? '<a class="primary" href="#redeem">兑换体验码</a> <a class="text-action" href="#upgrade">申请高级会员</a>' :
       '<a class="primary" href="#register">注册体验</a> <a class="text-action" href="#login">会员登录</a>');
   } else if (readerSections.has(route)) {
     content = '<div class="public-collection-reader"><p role="status">正在打开栏目…</p></div>';
+  } else if (route === "redeem") {
+    content = !account ? lockedPreview("兑换体验码", "登录后可为当前账号兑换品牌索引和美妆体验时间。",
+      '<a class="primary" href="#login">会员登录</a>') : account.premium ?
+      lockedPreview("兑换体验码", "当前账号已是高级会员，可直接浏览这两个栏目。", '<a class="primary" href="#designers">进入品牌索引</a>') :
+      `<section class="member-panel public-access"><h1>兑换体验码</h1>
+      <p>可兑换 1 小时或 24 小时，品牌索引和美妆共用。剩余体验时间会自动累加。</p>
+      <form class="community-form" id="redeem-form"><label for="trial-code">兑换码</label>
+      <input id="trial-code" name="code" required maxlength="79" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <button class="primary" type="submit">立即兑换</button></form>
+      <p id="redeem-result" role="status"></p><div id="redeem-links" hidden><a href="#designers">进入品牌索引</a> · <a href="#beauty">进入美妆</a></div></section>`;
   } else if (route === "upgrade") {
     content = `<section class="member-panel public-access"><h1>申请高级会员</h1>
       <p>提交申请后，管理员将收到邮件。获得授权后即可查看完整品牌档案、美妆和线稿工作台。</p>
@@ -690,6 +700,27 @@ function entry() {
     target.replaceChildren();
     void communityPage[1](target);
   }
+  const redeemForm = document.getElementById("redeem-form");
+  if (redeemForm) redeemForm.onsubmit = async event => {
+    event.preventDefault();
+    const button = redeemForm.querySelector("button");
+    if (button.disabled) return;
+    button.disabled = true;
+    const message = document.getElementById("redeem-result");
+    const links = document.getElementById("redeem-links");
+    message.textContent = "正在兑换…";
+    try {
+      const result = await request({memberAction:"redeemTrial", code:redeemForm.elements.code.value.trim()});
+      setTrialDeadline(result);
+      if (!redeemForm.isConnected) return;
+      const end = new Date(result.trialEndsAt).toLocaleString("zh-CN", {hour12:false});
+      message.textContent = (result.repeated ? "此码已兑换到当前账号。" : "兑换成功。") + "体验到期时间为 " + end + "（本地时间）。";
+      links.hidden = !canReadCollections();
+      redeemForm.reset();
+    } catch (error) {
+      message.textContent = error.message || "兑换暂时失败，请重试。";
+    } finally { button.disabled = false; }
+  };
   const apply=document.getElementById("apply-premium");
   if(apply) {
     apply.disabled=true;
@@ -747,15 +778,18 @@ function startSession(token) {
   session = token;
   sessionStorage.setItem(storageKey, token);
 }
+function setTrialDeadline(result) {
+  clearTimeout(expiryTimer);
+  const remaining = Math.max(0, result.trialEndsAt - result.serverNow) || 0;
+  trialDeadline = performance.now() + remaining;
+  if (!account?.premium && remaining) expiryTimer = setTimeout(expireReader, remaining + 10);
+}
 async function loadMember() {
   panel("会员中心", "正在读取会员权限…", "");
   try {
     const profile = await request({ memberAction: "profile" });
     account = profile;
-    clearTimeout(expiryTimer);
-    const remaining = Math.max(0, profile.trialEndsAt - profile.serverNow) || 0;
-    trialDeadline = performance.now() + remaining;
-    if (!profile.premium && remaining) expiryTimer = setTimeout(expireReader, remaining + 10);
+    setTrialDeadline(profile);
     if (profile.admin===true && wantsAdmin()) await adminPanel(profile);
     else if(wantsAdmin()) {
       history.replaceState(null,"","/#profile");

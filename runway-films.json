@@ -15,6 +15,18 @@
     "originalMp4": "https://cdn.shopify.com/videos/c/o/v/f78a934499cb4be4a57fb9c260206935.mp4",
     "label": "本季官网影像"
   },
+  "aaron-esh-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=YPWwMC-VLD0",
+    "embed": "https://www.youtube-nocookie.com/embed/YPWwMC-VLD0",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "abra-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=TVNEk_0iA6U",
+    "embed": "https://www.youtube-nocookie.com/embed/TVNEk_0iA6U",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "acne-studios": {
     "originalPage": "https://www.youtube.com/watch?v=9i9dqTUOA4o",
     "embed": "https://www.youtube-nocookie.com/embed/9i9dqTUOA4o",
@@ -38,11 +50,29 @@
     "originalMp4": "https://d31flwjaqugbgy.cloudfront.net/source/26ss/26ss_edi/main_pc_1920x900_1.mp4",
     "label": "官网系列短片"
   },
+  "advisry-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=W8mM2BrRz-Q",
+    "embed": "https://www.youtube-nocookie.com/embed/W8mM2BrRz-Q",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "ahluwalia-studio-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=T4laMbuUALk",
     "embed": "https://www.youtube-nocookie.com/embed/T4laMbuUALk",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "ahluwalia-studio-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=1VBd0MkbgwA",
+    "embed": "https://www.youtube-nocookie.com/embed/1VBd0MkbgwA",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "aisling-camps-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=zY4u_zEd9oo",
+    "embed": "https://www.youtube-nocookie.com/embed/zY4u_zEd9oo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "akris-fall-2026": {
     "originalPage": "https://akris.com/pages/fall-2026-fashion-show-collection-inspiration",
@@ -122,6 +152,18 @@
     "originalPage": "https://www.alexandermcqueen.com/en-us/cp/spring-summer-2027-show",
     "embed": "https://players.brightcove.net/6139825499001/default_default/index.html?videoId=6405369965112"
   },
+  "alexander-wang-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=gKUoe2cn0Yg",
+    "embed": "https://www.youtube-nocookie.com/embed/gKUoe2cn0Yg",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "all-in-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=PWZyiUHNj3I",
+    "embed": "https://www.youtube-nocookie.com/embed/PWZyiUHNj3I",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "altuzarra-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=qEqYa2TFSHk",
     "embed": "https://www.youtube-nocookie.com/embed/qEqYa2TFSHk",
@@ -139,6 +181,24 @@
     "embed": "https://www.youtube-nocookie.com/embed/aXm5JDs6VcI",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "andreas-kronthaler-for-vivienne-westwood-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=2hdD1U52xw4",
+    "embed": "https://www.youtube-nocookie.com/embed/2hdD1U52xw4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "andreas-kronthaler-for-vivienne-westwood-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=MUWHdqYZa14",
+    "embed": "https://www.youtube-nocookie.com/embed/MUWHdqYZa14",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "andreas-kronthaler-for-vivienne-westwood-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=u04wOsUsFw4",
+    "embed": "https://www.youtube-nocookie.com/embed/u04wOsUsFw4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "ann-demeulemeester": {
     "originalPage": "https://anndemeulemeester.com/pages/spring-summer-26-show",
@@ -163,6 +223,12 @@
   "anna-sui-spring-2026": {
     "originalPage": "https://annasui.com/pages/spring-2026-lookbook",
     "embed": "https://www.youtube-nocookie.com/embed/R-vp6UkgzVI",
+    "label": "秀场视频"
+  },
+  "anna-sui-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=G8rrb_RUSZA",
+    "embed": "https://www.youtube-nocookie.com/embed/G8rrb_RUSZA",
+    "sourceKind": "runwayFilm",
     "label": "秀场视频"
   },
   "anrealage": {
@@ -243,6 +309,24 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "area-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=eozEJMFuaQM",
+    "embed": "https://www.youtube-nocookie.com/embed/eozEJMFuaQM",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "ashish-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=chAIrgweqxs",
+    "embed": "https://www.youtube-nocookie.com/embed/chAIrgweqxs",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "ashley-williams-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=KZIY2VBJkpk",
+    "embed": "https://www.youtube-nocookie.com/embed/KZIY2VBJkpk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "ashlyn-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=q_AJmyjrhjQ",
     "embed": "https://www.youtube-nocookie.com/embed/q_AJmyjrhjQ",
@@ -254,6 +338,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/2KLbdyANPVY",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "ashlyn-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=DxMrzPxP2KE",
+    "embed": "https://www.youtube-nocookie.com/embed/DxMrzPxP2KE",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "attico-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=r4XW0tQ0gpU",
+    "embed": "https://www.youtube-nocookie.com/embed/r4XW0tQ0gpU",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "attico-spring-2027": {
     "originalPage": "https://milanofashionweek.cameramoda.it/en/brand/13678",
@@ -273,6 +369,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "bach-mai-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=fVNo_QAXdc8",
+    "embed": "https://www.youtube-nocookie.com/embed/fVNo_QAXdc8",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "balenciaga": {
     "originalPage": "https://www.balenciaga.com/en-us/summer-26",
     "embed": "https://players.brightcove.net/6159029845001/default_default/index.html?videoId=6382087274112"
@@ -280,6 +382,12 @@
   "balenciaga-fall-2026": {
     "originalPage": "https://www.balenciaga.com/en-us/winter-26",
     "embed": "https://players.brightcove.net/6159029845001/default_default/index.html?videoId=6390590201112"
+  },
+  "balenciaga-spring-2017": {
+    "originalPage": "https://www.youtube.com/watch?v=w8el5VA1nVc",
+    "embed": "https://www.youtube-nocookie.com/embed/w8el5VA1nVc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "balenciaga-spring-2027": {
     "originalPage": "https://www.balenciaga.com/en-us/summer-27",
@@ -303,6 +411,18 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "baro-lucas-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=8ioxzIVjWRs",
+    "embed": "https://www.youtube-nocookie.com/embed/8ioxzIVjWRs",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "bianca-saunders": {
+    "originalPage": "https://www.fhcm.paris/en/collection/bianca-saunders-menswear-fallwinter-2025-2026",
+    "embed": "https://www.youtube-nocookie.com/embed/ZNwQraC-geg",
+    "sourceKind": "fashionWeek",
+    "label": "秀场视频"
+  },
   "bibhu-mohapatra-fall-2026": {
     "originalPage": "https://bibhu.com/pages/fall-2026",
     "embed": "https://player.vimeo.com/video/1166088101",
@@ -324,11 +444,23 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "blumarine-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=JZSypoyHKfE",
+    "embed": "https://www.youtube-nocookie.com/embed/JZSypoyHKfE",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "blumarine-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=QbVvRWTKZ7Y",
     "embed": "https://www.youtube-nocookie.com/embed/QbVvRWTKZ7Y",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "boloria-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=KXqDFCX22Z8",
+    "embed": "https://www.youtube-nocookie.com/embed/KXqDFCX22Z8",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "bora-aksu-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=5pijrO_TH-A",
@@ -347,6 +479,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/AkV90d-aC8c",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "bosideng-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=mSCTnVoOQPE",
+    "embed": "https://www.youtube-nocookie.com/embed/mSCTnVoOQPE",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "bottega-veneta": {
     "originalPage": "https://www.bottegaveneta.com/en-hr/summer-2026.html",
@@ -402,6 +540,12 @@
     "sourceKind": "fashionWeek",
     "label": "巴黎时装周官方影像"
   },
+  "burc-akyol-spring-2026": {
+    "originalPage": "https://www.fhcm.paris/en/collection/burc-akyol-womenswear-springsummer-2026",
+    "embed": "https://www.youtube-nocookie.com/embed/54gEyv64LAY",
+    "sourceKind": "fashionWeek",
+    "label": "秀场视频"
+  },
   "burc-akyol-spring-2027": {
     "originalPage": "https://www.fhcm.paris/en/collection/burc-akyol-womenswear-springsummer-2027",
     "embed": "https://www.youtube-nocookie.com/embed/26IB2BQvWr0",
@@ -425,6 +569,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/W7xOCyZby0s",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "campillo-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=iQxzRU4ckHM",
+    "embed": "https://www.youtube-nocookie.com/embed/iQxzRU4ckHM",
+    "sourceKind": "runwayFilm",
+    "label": "系列短片"
   },
   "campillo-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=ulasMIEDe60",
@@ -455,6 +605,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/1owvoALS7f8",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "caroline-hu-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=ST_j2vd3_AQ",
+    "embed": "https://www.youtube-nocookie.com/embed/ST_j2vd3_AQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "caroline-hu-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=rXn8axffJSg",
+    "embed": "https://www.youtube-nocookie.com/embed/rXn8axffJSg",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "carven-fall-2026": {
     "originalPage": "https://www.fhcm.paris/en/collection/carven-womenswear-fallwinter-2026-2027",
@@ -504,6 +666,12 @@
     "sourceKind": "fashionWeek",
     "label": "巴黎时装周官方影像"
   },
+  "cfcl-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=1u6i7dn-WrA",
+    "embed": "https://www.youtube-nocookie.com/embed/1u6i7dn-WrA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "cfcl-spring-2027": {
     "originalPage": "https://www.fhcm.paris/en/collection/cfcl-womenswear-springsummer-2027",
     "embed": "https://www.youtube-nocookie.com/embed/xJnJQXeUCHo",
@@ -525,6 +693,18 @@
   "chanel-spring-2027": {
     "originalPage": "https://www.chanel.com/us/fashion/collection/spring-summer-2027/",
     "originalMp4": "https://ovp2.chanel.com/media/v1/pmp4/static/clear/6057940567001/91003f4f-c3b0-4157-a436-7cbf754a1f7e/2d1cd564-18ef-49a6-845c-a55ff5a673e4/main.mp4"
+  },
+  "charles-jeffrey-loverboy": {
+    "originalPage": "https://www.fhcm.paris/en/collection/charles-jeffrey-loverboy-menswear-fallwinter-2026-2027",
+    "embed": "https://www.youtube-nocookie.com/embed/zB3GJibhqa4",
+    "sourceKind": "fashionWeek",
+    "label": "秀场视频"
+  },
+  "charlie-constantinou-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=kt4XwYIrNuo",
+    "embed": "https://www.youtube-nocookie.com/embed/kt4XwYIrNuo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "charlotte-knowles-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=x4sSHxzzI5o",
@@ -554,6 +734,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/Aav3j-1tkvI",
     "label": "本季官网影像"
   },
+  "christian-cowan-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=8R0TL06fuD4",
+    "embed": "https://www.youtube-nocookie.com/embed/8R0TL06fuD4",
+    "sourceKind": "runwayFilm",
+    "label": "系列短片"
+  },
   "christian-dior": {
     "originalPage": "https://www.dior.com/en_us/fashion/womens-fashion/ready-to-wear-shows/spring-summer-2026-ready-to-wear-show",
     "originalMp4": "https://secure.massmotionmedia.com/onedior/projects/dior_women_springsummer26_show_finalvideo_desktop/videos/20251006103235_1280x720_3500_3b538f3a-b51f-4394-9f1b-8eab3c8931b9.mp4"
@@ -565,6 +751,24 @@
   "christian-dior-spring-2027": {
     "originalPage": "https://www.dior.com/en_gb/fashion/womens-fashion/ready-to-wear-shows/summer-2027-show",
     "originalMp4": "https://secure.massmotionmedia.com/onedior/projects/dior_women_summer27show_finalvideo_16x9/videos/20261005081341_1280x720_3500_1975895e-a7fd-4a31-8076-0106fa2eb627.mp4"
+  },
+  "christian-siriano-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=qV9RxYwwIwY",
+    "embed": "https://www.youtube-nocookie.com/embed/qV9RxYwwIwY",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "christian-siriano-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=f2_yREyPp8g",
+    "embed": "https://www.youtube-nocookie.com/embed/f2_yREyPp8g",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "christian-siriano-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=KC11KSpJFUE",
+    "embed": "https://www.youtube-nocookie.com/embed/KC11KSpJFUE",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "christian-wijnants-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=RyAGyl4wfUM",
@@ -614,9 +818,27 @@
     "originalPage": "https://www.coach.com/shop/fall-2026",
     "embed": "https://www.youtube.com/embed/jmhE247pUDA"
   },
+  "coach-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=c_4lV8BoTG0",
+    "embed": "https://www.youtube-nocookie.com/embed/c_4lV8BoTG0",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "coach-spring-2027": {
     "originalPage": "https://www.coach.com/shop/spring-2027",
     "embed": "https://www.youtube.com/embed/tzLN2ptuWPM"
+  },
+  "collina-strada-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=WtF-eep6d2k",
+    "embed": "https://www.youtube-nocookie.com/embed/WtF-eep6d2k",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "collina-strada-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=rrIGPHYL-Cg",
+    "embed": "https://www.youtube-nocookie.com/embed/rrIGPHYL-Cg",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "comme-des-garcons": {
     "originalPage": "https://www.youtube.com/watch?v=lDfRkNFnh1A",
@@ -722,6 +944,36 @@
     "embed": "https://www.youtube-nocookie.com/embed/zSwhKQCeCY0",
     "label": "本季官网影像"
   },
+  "david-koma-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=9mZpTJp_MJA",
+    "embed": "https://www.youtube-nocookie.com/embed/9mZpTJp_MJA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "david-koma-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=gdF_cdrn39A",
+    "embed": "https://www.youtube-nocookie.com/embed/gdF_cdrn39A",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "david-koma-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=Ou_Xck-XWOg",
+    "embed": "https://www.youtube-nocookie.com/embed/Ou_Xck-XWOg",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "di-petsa-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=HQYbXlvC_dg",
+    "embed": "https://www.youtube-nocookie.com/embed/HQYbXlvC_dg",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "di-petsa-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=3bFjhCCMMpE",
+    "embed": "https://www.youtube-nocookie.com/embed/3bFjhCCMMpE",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "di-petsa-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=KIvPMup5a64",
     "embed": "https://www.youtube-nocookie.com/embed/KIvPMup5a64",
@@ -740,6 +992,42 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "diesel-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=elcbuFFD0gg",
+    "embed": "https://www.youtube-nocookie.com/embed/elcbuFFD0gg",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "diesel-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=MId9V-3jF1M",
+    "embed": "https://www.youtube-nocookie.com/embed/MId9V-3jF1M",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "dilara-findikoglu": {
+    "originalPage": "https://www.youtube.com/watch?v=SX3P5SG-PQk",
+    "embed": "https://www.youtube-nocookie.com/embed/SX3P5SG-PQk",
+    "sourceKind": "runwayFilm",
+    "label": "系列短片"
+  },
+  "diotima-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=9b1eE8YCoCk",
+    "embed": "https://www.youtube-nocookie.com/embed/9b1eE8YCoCk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "diotima-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=jIXqye0dtYo",
+    "embed": "https://www.youtube-nocookie.com/embed/jIXqye0dtYo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "dolce-gabbana": {
+    "originalPage": "https://www.youtube.com/watch?v=mNUEAw_2v6A",
+    "embed": "https://www.youtube-nocookie.com/embed/mNUEAw_2v6A",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "dolce-gabbana-fall-2026": {
     "originalPage": "https://world.dolcegabbana.com/fashion-shows/women-fall-winter-2026-fashion-show",
     "embed": "https://www.youtube-nocookie.com/embed/Mp7y7Jn3UP0"
@@ -753,6 +1041,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/Xo0xJY22JcQ",
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
+  },
+  "doublet": {
+    "originalPage": "https://www.youtube.com/watch?v=y19cd-UlIlQ",
+    "embed": "https://www.youtube-nocookie.com/embed/y19cd-UlIlQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "dries-van-noten": {
     "originalPage": "https://www.youtube.com/watch?v=ZCKKfRbPFQs",
@@ -781,6 +1075,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/3YUaLswCPXk",
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
+  },
+  "duran-lantink-fall-2025": {
+    "originalPage": "https://www.youtube.com/watch?v=yX7IFbrnxEg",
+    "embed": "https://www.youtube-nocookie.com/embed/yX7IFbrnxEg",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "eckhaus-latta-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=1HbT_anKsqA",
+    "embed": "https://www.youtube-nocookie.com/embed/1HbT_anKsqA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "edeline-lee-spring-2026": {
     "originalPage": "https://londonfashionweek.co.uk/designers/edeline-lee",
@@ -835,6 +1141,18 @@
     "originalMp4": "https://cdn.shopify.com/videos/c/o/v/3a774909170d4d11b2036c774574213e.mp4",
     "label": "本季官网影像"
   },
+  "emporio-armani-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=k3G1Atf6q-k",
+    "embed": "https://www.youtube-nocookie.com/embed/k3G1Atf6q-k",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "emporio-armani-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=x2dq_Xaj3Tk",
+    "embed": "https://www.youtube-nocookie.com/embed/x2dq_Xaj3Tk",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "enfants-riches-deprimes-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=7d7Yj2HtayA",
     "embed": "https://www.youtube-nocookie.com/embed/7d7Yj2HtayA",
@@ -867,6 +1185,12 @@
     "embed": "https://player.vimeo.com/video/1228521206",
     "label": "本季官网影像"
   },
+  "ermanno-scervino-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=2PbNUnFxENA",
+    "embed": "https://www.youtube-nocookie.com/embed/2PbNUnFxENA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "ermanno-scervino-spring-2026": {
     "originalPage": "https://ermannoscervino.com/pages/fashion-show-ss26",
     "originalMp4": "https://ermannoscervino.com/cdn/shop/videos/c/vp/56919c7fd90e444f95d031a9767311d6/56919c7fd90e444f95d031a9767311d6.HD-1080p-7.2Mbps-76953155.mp4?v=0",
@@ -882,6 +1206,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/7KghE3PaidA",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "etro-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=z2NqI3BiZXQ",
+    "embed": "https://www.youtube-nocookie.com/embed/z2NqI3BiZXQ",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "etro-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=nuN73Ag6Edw",
@@ -927,6 +1257,54 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "fforme-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=UCubdq8JUOo",
+    "embed": "https://www.youtube-nocookie.com/embed/UCubdq8JUOo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "fforme-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=qLqIkV3r4H0",
+    "embed": "https://www.youtube-nocookie.com/embed/qLqIkV3r4H0",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "fforme-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=cwqaCSw2NYo",
+    "embed": "https://www.youtube-nocookie.com/embed/cwqaCSw2NYo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "fila-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=RsIY0iGNx20",
+    "embed": "https://www.youtube-nocookie.com/embed/RsIY0iGNx20",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "francesco-murano-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=WMLqtK5RsFo",
+    "embed": "https://www.youtube-nocookie.com/embed/WMLqtK5RsFo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "francesco-murano-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=toCso-JcYE0",
+    "embed": "https://www.youtube-nocookie.com/embed/toCso-JcYE0",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "frederick-anderson-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=LvYFBQeRi9k",
+    "embed": "https://www.youtube-nocookie.com/embed/LvYFBQeRi9k",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "frederick-anderson-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=Hg5bbj112Ss",
+    "embed": "https://www.youtube-nocookie.com/embed/Hg5bbj112Ss",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "gabriela-hearst-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=U9mYXd7sw1Y",
     "embed": "https://www.youtube-nocookie.com/embed/U9mYXd7sw1Y",
@@ -944,6 +1322,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/SvIQdOVQOhw",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "gcds-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=OtEYT3jYo7w",
+    "embed": "https://www.youtube-nocookie.com/embed/OtEYT3jYo7w",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "genny-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=M_UyfzAQPKA",
@@ -974,10 +1358,22 @@
     "originalMp4": "https://mediastorage.livestory.io/armani/posts/optimized/69a49f80342f0cb8d73a6459.mp4",
     "label": "品牌官方秀场精华"
   },
+  "giorgio-armani-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=bsCVFboCAo8",
+    "embed": "https://www.youtube-nocookie.com/embed/bsCVFboCAo8",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "giorgio-armani-spring-2027": {
     "originalPage": "https://www.armani.com/en-hk/giorgio-armani/experience/fashion-show-spring-summer-women/",
     "originalMp4": "https://mediastorage.livestory.io/armani/posts/optimized/6aba2322614e660ffb1dbd88.mp4",
     "label": "品牌官方秀场精华"
+  },
+  "giuseppe-di-morabito-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=Iu-gW_p2yxc",
+    "embed": "https://www.youtube-nocookie.com/embed/Iu-gW_p2yxc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "givenchy": {
     "originalPage": "https://www.givenchy.com/us/en-US/cm/explore/collections/spring-summer-26-womenswear-show",
@@ -991,6 +1387,18 @@
     "originalPage": "https://www.givenchy.com/coremedia/givenchy-en/explore/collections/spring-summer-2027-womenswear-show",
     "originalMp4": "https://www.givenchy.com/coremedia/resource/blob/2183960/f092b88b4f8a260f2a1d4eca917c955c/hp-ss27show-editversion-video16-9-data.mp4"
   },
+  "grace-ling-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=hVCDvMuzYsk",
+    "embed": "https://www.youtube-nocookie.com/embed/hVCDvMuzYsk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "gucci": {
+    "originalPage": "https://www.youtube.com/watch?v=WCEaJW2q9gM",
+    "embed": "https://www.youtube-nocookie.com/embed/WCEaJW2q9gM",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "gucci-fall-2026": {
     "originalPage": "https://www.gucci.com/uk/en_gb/nst/fashion-show/gucci-primavera",
     "embed": "https://players.brightcove.net/2924921183001/default_default/index.html?videoId=6390256947112"
@@ -998,6 +1406,18 @@
   "gucci-spring-2027": {
     "originalPage": "https://www.gucci.com/us/en/nst/fashion-show/the-store-show",
     "embed": "https://players.brightcove.net/2924921183001/default_default/index.html?videoId=6405629622112"
+  },
+  "harris-reed-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=13QTTodbNEc",
+    "embed": "https://www.youtube-nocookie.com/embed/13QTTodbNEc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "helmut-lang-fall-2024": {
+    "originalPage": "https://www.youtube.com/watch?v=_p9bsAhzTJ4",
+    "embed": "https://www.youtube-nocookie.com/embed/_p9bsAhzTJ4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "hermes-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=ziJxAXYHs7E",
@@ -1017,15 +1437,63 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "hodakova-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=n-j-0HvJDDk",
+    "embed": "https://www.youtube-nocookie.com/embed/n-j-0HvJDDk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "hugo-boss-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=f5gm86CUXh4",
     "embed": "https://www.youtube-nocookie.com/embed/f5gm86CUXh4",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "hugo-boss-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=OlYCij_Ujig",
+    "embed": "https://www.youtube-nocookie.com/embed/OlYCij_Ujig",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "hui-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=ptaY4E3xMlk",
+    "embed": "https://www.youtube-nocookie.com/embed/ptaY4E3xMlk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "hui-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=YTD323A7hi8",
+    "embed": "https://www.youtube-nocookie.com/embed/YTD323A7hi8",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "hui-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=a14OR_QAFXI",
+    "embed": "https://www.youtube-nocookie.com/embed/a14OR_QAFXI",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "im-men-spring-2027-menswear": {
     "originalPage": "https://eu.isseymiyake.com/blogs/news/18623",
     "embed": "https://player.vimeo.com/video/1202774119"
+  },
+  "institution-by-galib-gassanoff-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=BnJRBCvK_LA",
+    "embed": "https://www.youtube-nocookie.com/embed/BnJRBCvK_LA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "institution-by-galib-gassanoff-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=ydvVTTn9ftY",
+    "embed": "https://www.youtube-nocookie.com/embed/ydvVTTn9ftY",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "iris-van-herpen": {
+    "originalPage": "https://www.fhcm.paris/en/collection/iris-van-herpen-haute-couture-fallwinter-2026-2027",
+    "embed": "https://www.youtube-nocookie.com/embed/G2qAd3G4BZQ",
+    "sourceKind": "fashionWeek",
+    "label": "秀场视频"
   },
   "isabel-marant-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=s4Kt69YPdhU",
@@ -1069,6 +1537,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
   },
+  "jacquemus": {
+    "originalPage": "https://www.youtube.com/watch?v=coxzAPgpsdA",
+    "embed": "https://www.youtube-nocookie.com/embed/coxzAPgpsdA",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "jacquemus-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=Y-D6x53F0gw",
     "embed": "https://www.youtube-nocookie.com/embed/Y-D6x53F0gw",
@@ -1080,6 +1554,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/LXOJ1FpDm8M",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "jason-wu-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=NF8T0qwLAoo",
+    "embed": "https://www.youtube-nocookie.com/embed/NF8T0qwLAoo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "jean-paul-gaultier": {
+    "originalPage": "https://www.youtube.com/watch?v=4vbfLxXAHu8",
+    "embed": "https://www.youtube-nocookie.com/embed/4vbfLxXAHu8",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "jean-paul-gaultier-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=h4whVEkLNxo",
@@ -1111,6 +1597,18 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "johanna-parv-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=4sLAInMUa-Q",
+    "embed": "https://www.youtube-nocookie.com/embed/4sLAInMUa-Q",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "jonathan-simkhai-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=98toDtM2xC0",
+    "embed": "https://www.youtube-nocookie.com/embed/98toDtM2xC0",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "jonathan-simkhai-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=8zRkC0UDizY",
     "embed": "https://www.youtube-nocookie.com/embed/8zRkC0UDizY",
@@ -1128,6 +1626,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/opZpcttxDUs",
     "sourceKind": "fashionWeek",
     "label": "巴黎时装周官方影像"
+  },
+  "julie-kegels-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=aWc0D4UDgvo",
+    "embed": "https://www.youtube-nocookie.com/embed/aWc0D4UDgvo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "junya-watanabe": {
     "originalPage": "https://www.youtube.com/watch?v=fcnErSyygCU",
@@ -1191,6 +1695,18 @@
     "originalPage": "https://kikokostadinov.com/blogs/archive/spring-summer-2026-womenswear",
     "embed": "https://player.vimeo.com/video/1125522798?h=7cb2779557"
   },
+  "kiko-kostadinov-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=bg8nZS7weuU",
+    "embed": "https://www.youtube-nocookie.com/embed/bg8nZS7weuU",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "kiko-kostadinov-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=qmpinRYL2HI",
+    "embed": "https://www.youtube-nocookie.com/embed/qmpinRYL2HI",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "kim-shui-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=ZMhxh9C07oE",
     "embed": "https://www.youtube-nocookie.com/embed/ZMhxh9C07oE",
@@ -1220,6 +1736,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/xe9HS2VYRn0",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "labrum-london-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=Ji10gKTxRaY",
+    "embed": "https://www.youtube-nocookie.com/embed/Ji10gKTxRaY",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "labrum-london-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=ZqYP_Cs6aqQ",
@@ -1263,16 +1785,40 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "laquan-smith-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=1NtXcu6VEG4",
+    "embed": "https://www.youtube-nocookie.com/embed/1NtXcu6VEG4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "lemaire": {
     "originalPage": "https://www.lemaire.fr/pages/runway-fall-winter-2026",
     "embed": "https://player.vimeo.com/video/1157664357",
     "label": "官网系列短片"
+  },
+  "libertine-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=L_29yP-UHrI",
+    "embed": "https://www.youtube-nocookie.com/embed/L_29yP-UHrI",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "libertine-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=6-W3U709nwc",
+    "embed": "https://www.youtube-nocookie.com/embed/6-W3U709nwc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "lii-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=NjEyqPs1hYU",
     "embed": "https://www.youtube-nocookie.com/embed/NjEyqPs1hYU",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "lii-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=S9ls7a8l6fA",
+    "embed": "https://www.youtube-nocookie.com/embed/S9ls7a8l6fA",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "lii-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=tEYZZfg5jlo",
@@ -1340,6 +1886,30 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "ludovic-de-saint-sernin-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=xbQ1Q4R9QAQ",
+    "embed": "https://www.youtube-nocookie.com/embed/xbQ1Q4R9QAQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "luisa-beccaria-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=Xa5hQvn2qyM",
+    "embed": "https://www.youtube-nocookie.com/embed/Xa5hQvn2qyM",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "luisa-beccaria-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=jR4pgPJe9hY",
+    "embed": "https://www.youtube-nocookie.com/embed/jR4pgPJe9hY",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "luisa-beccaria-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=zzX8VfVk7SI",
+    "embed": "https://www.youtube-nocookie.com/embed/zzX8VfVk7SI",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "luisa-spagnoli-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=NyflcohsEv8",
     "embed": "https://www.youtube-nocookie.com/embed/NyflcohsEv8",
@@ -1375,6 +1945,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/n9N5I2h6QDQ",
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
+  },
+  "mains-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=iMjAgRKIGV4",
+    "embed": "https://www.youtube-nocookie.com/embed/iMjAgRKIGV4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "maison-margiela": {
     "originalPage": "https://www.youtube.com/watch?v=lZkBje3zeCs",
@@ -1418,6 +1994,24 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "marc-jacobs-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=oPtfQAFIk-4",
+    "embed": "https://www.youtube-nocookie.com/embed/oPtfQAFIk-4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "marco-rambaldi-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=Ggt2INYYTyU",
+    "embed": "https://www.youtube-nocookie.com/embed/Ggt2INYYTyU",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "marco-rambaldi-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=bkfwRRkZ51Q",
+    "embed": "https://www.youtube-nocookie.com/embed/bkfwRRkZ51Q",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "margaret-howell-fall-2026": {
     "originalPage": "https://www.fhcm.paris/en/collection/margaret-howell-womenswear-fallwinter-2026-2027",
     "embed": "https://player.vimeo.com/video/1169599414?h=56f65479bf",
@@ -1435,6 +2029,18 @@
     "embed": "https://player.vimeo.com/video/1230210115?h=76fdae7928",
     "sourceKind": "fashionWeek",
     "label": "巴黎时装周官方影像"
+  },
+  "marie-adam-leenaerdt-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=zouzbh8aowk",
+    "embed": "https://www.youtube-nocookie.com/embed/zouzbh8aowk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "marie-adam-leenaerdt-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=in0w7W4bdwo",
+    "embed": "https://www.youtube-nocookie.com/embed/in0w7W4bdwo",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "mark-fast-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=pzwQAO4kj9Y",
@@ -1455,6 +2061,24 @@
   "marni-spring-2027": {
     "originalPage": "https://www.marni.com/en-ie/marni-ss27-vol2.html",
     "embed": "https://players.brightcove.net/6275895331001/default_default/index.html?videoId=6405725449112"
+  },
+  "marques-almeida-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=CzjokAcHNig",
+    "embed": "https://www.youtube-nocookie.com/embed/CzjokAcHNig",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "marques-almeida-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=-y9gBv07XDM",
+    "embed": "https://www.youtube-nocookie.com/embed/-y9gBv07XDM",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "matieres-fecales-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=LepWI2BFhJU",
+    "embed": "https://www.youtube-nocookie.com/embed/LepWI2BFhJU",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "matieres-fecales-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=_UfYGl0WYfg",
@@ -1496,11 +2120,23 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "maxhosa-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=TMPJ-Ljw3XE",
+    "embed": "https://www.youtube-nocookie.com/embed/TMPJ-Ljw3XE",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "michael-kors-collection-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=Y-lvUYp8ecA",
     "embed": "https://www.youtube-nocookie.com/embed/Y-lvUYp8ecA",
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
+  },
+  "michael-kors-collection-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=ytggkrD1tls",
+    "embed": "https://www.youtube-nocookie.com/embed/ytggkrD1tls",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "michael-kors-collection-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=sJo8pArLKjo",
@@ -1634,6 +2270,24 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
   },
+  "msgm-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=RWow1g59S1M",
+    "embed": "https://www.youtube-nocookie.com/embed/RWow1g59S1M",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "msgm-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=59B2RqqWyTM",
+    "embed": "https://www.youtube-nocookie.com/embed/59B2RqqWyTM",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "msgm-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=pp2jG62QqvY",
+    "embed": "https://www.youtube-nocookie.com/embed/pp2jG62QqvY",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "mugler": {
     "originalPage": "https://fashion.mugler.com/pages/spring-summer-2026",
     "embed": "https://www.youtube-nocookie.com/embed/12uXR5YZ_Ak"
@@ -1657,6 +2311,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/2Dcem1RB8FY",
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
+  },
+  "nehera-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=2jxkWOgJtJw",
+    "embed": "https://www.youtube-nocookie.com/embed/2jxkWOgJtJw",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "nehera-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=anVpgxV1hkU",
+    "embed": "https://www.youtube-nocookie.com/embed/anVpgxV1hkU",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "nehera-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=_IdO1lvw2xs",
@@ -1688,6 +2354,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "nina-ricci-fall-2026": {
+    "originalPage": "https://www.fhcm.paris/en/collection/nina-ricci-womenswear-fallwinter-2026-2027",
+    "embed": "https://www.youtube-nocookie.com/embed/fP2pex8ZPTY",
+    "sourceKind": "fashionWeek",
+    "label": "秀场视频"
+  },
   "nina-ricci-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=-5jQI4LQ5fA",
     "embed": "https://www.youtube-nocookie.com/embed/-5jQI4LQ5fA",
@@ -1706,6 +2378,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "noir-kei-ninomiya-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=akhaVJqU-W4",
+    "embed": "https://www.youtube-nocookie.com/embed/akhaVJqU-W4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "noir-kei-ninomiya-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=1glVZGfm-mQ",
     "embed": "https://www.youtube-nocookie.com/embed/1glVZGfm-mQ",
@@ -1723,6 +2401,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/Mr-Qx3ewGDc",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "norma-kamali-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=6i0miZo8Nys",
+    "embed": "https://www.youtube-nocookie.com/embed/6i0miZo8Nys",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "off-white-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=TqWxn5Bmae8",
@@ -1784,6 +2468,18 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "patou-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=w6CiPyvL4iA",
+    "embed": "https://www.youtube-nocookie.com/embed/w6CiPyvL4iA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "patou-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=PTU7MDoOkhQ",
+    "embed": "https://www.youtube-nocookie.com/embed/PTU7MDoOkhQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "patrick-mcdowell-fall-2026": {
     "originalPage": "https://londonfashionweek.co.uk/designers/patrick-mcdowell",
     "embed": "https://www.youtube-nocookie.com/embed/nsQ-yrB8TIg",
@@ -1813,6 +2509,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/tji24bEka3Q",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "philipp-plein-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=5AlJNyZbwbk",
+    "embed": "https://www.youtube-nocookie.com/embed/5AlJNyZbwbk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "philipp-plein-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=7IHt2-WmLJw",
+    "embed": "https://www.youtube-nocookie.com/embed/7IHt2-WmLJw",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "prabal-gurung-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=vJ4ft_81130",
@@ -1904,6 +2612,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "proenza-schouler-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=WC1T7E2FlPw",
+    "embed": "https://www.youtube-nocookie.com/embed/WC1T7E2FlPw",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "proenza-schouler-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=eZAtpEPY9YQ",
     "embed": "https://www.youtube-nocookie.com/embed/eZAtpEPY9YQ",
@@ -1922,6 +2636,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "rachel-comey-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=mNV7dTR_D1o",
+    "embed": "https://www.youtube-nocookie.com/embed/mNV7dTR_D1o",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "ralph-lauren-fall-2026": {
     "originalPage": "https://www.ralphlauren.co.kr/fall-runway",
     "embed": "https://install.blivenyc.com/speed/landing/campaign/4369/responsive/1/tags/flagship,integrated/"
@@ -1936,6 +2656,18 @@
     "originalPage": "https://www.ralphlauren.co.kr/content/spring-runway",
     "embed": "https://install.blivenyc.com/speed/landing/campaign/4449/responsive/1/tags/flagship,integrated/"
   },
+  "richard-quinn-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=_wdivh3JDsk",
+    "embed": "https://www.youtube-nocookie.com/embed/_wdivh3JDsk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "richard-quinn-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=DcDzVgqUyB8",
+    "embed": "https://www.youtube-nocookie.com/embed/DcDzVgqUyB8",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "rick-owens-concordians": {
     "originalPage": "https://www.youtube.com/watch?v=BZPtl8UiJws",
     "embed": "https://www.youtube-nocookie.com/embed/BZPtl8UiJws",
@@ -1947,6 +2679,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/S19VKDVd25k",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "rick-owens-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=wP66J_NZs6s",
+    "embed": "https://www.youtube-nocookie.com/embed/wP66J_NZs6s",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "rick-owens-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=eMBTG1i0i-c",
@@ -1978,6 +2716,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "rokh": {
+    "originalPage": "https://www.youtube.com/watch?v=gTwBBExUb8w",
+    "embed": "https://www.youtube-nocookie.com/embed/gTwBBExUb8w",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "roksanda": {
     "originalPage": "https://londonfashionweek.co.uk/designers/roksanda",
     "embed": "https://www.youtube-nocookie.com/embed/1wrbd2ZzbIc",
@@ -1990,11 +2734,35 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "romeo-hunte-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=yCW24TgjFOk",
+    "embed": "https://www.youtube-nocookie.com/embed/yCW24TgjFOk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "romeo-hunte-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=96KQNQU0H4g",
+    "embed": "https://www.youtube-nocookie.com/embed/96KQNQU0H4g",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "romeo-hunte-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=tFPit8vAVxc",
+    "embed": "https://www.youtube-nocookie.com/embed/tFPit8vAVxc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "rue-agthonis-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=yxI45luiaPc",
     "embed": "https://www.youtube-nocookie.com/embed/yxI45luiaPc",
     "sourceKind": "brandChannel",
     "label": "品牌官方系列短片"
+  },
+  "sabyasachi-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=KNX_6awIJBY",
+    "embed": "https://www.youtube-nocookie.com/embed/KNX_6awIJBY",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "sacai-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=lP1l3ThhV8U",
@@ -2033,6 +2801,30 @@
   "salvatore-ferragamo-spring-2027": {
     "originalPage": "https://www.ferragamo.com/shop/aus/en/sf/stories-ss27-show",
     "embed": "https://players.brightcove.net/3418428625001/ryhXEqW0f_default/index.html?videoId=6405734649112"
+  },
+  "sandy-liang-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=juTLNlCo2pE",
+    "embed": "https://www.youtube-nocookie.com/embed/juTLNlCo2pE",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "sandy-liang-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=8T-7QPvtxQA",
+    "embed": "https://www.youtube-nocookie.com/embed/8T-7QPvtxQA",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "sandy-liang-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=LfZnSXxot-Q",
+    "embed": "https://www.youtube-nocookie.com/embed/LfZnSXxot-Q",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "sc103-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=qFNv-pdl6nk",
+    "embed": "https://www.youtube-nocookie.com/embed/qFNv-pdl6nk",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "schiaparelli": {
     "originalPage": "https://www.youtube.com/watch?v=VeFIAWTEQGU",
@@ -2088,6 +2880,18 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "shushu-tong": {
+    "originalPage": "https://www.youtube.com/watch?v=CZOX4HqsArU",
+    "embed": "https://www.youtube-nocookie.com/embed/CZOX4HqsArU",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "shuting-qiu-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=6qEeWfWYJPQ",
+    "embed": "https://www.youtube-nocookie.com/embed/6qEeWfWYJPQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "simone-rocha": {
     "originalPage": "https://www.youtube.com/watch?v=YuYx9cPk56g",
     "embed": "https://www.youtube-nocookie.com/embed/YuYx9cPk56g",
@@ -2099,6 +2903,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/-ttyB6a6HSs",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "simone-rocha-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=cu2xIy2TJsE",
+    "embed": "https://www.youtube-nocookie.com/embed/cu2xIy2TJsE",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "simorra-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=L80vezTXB8Y",
+    "embed": "https://www.youtube-nocookie.com/embed/L80vezTXB8Y",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "situationist-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=KNQExBfwP6c",
@@ -2123,6 +2939,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/1RLUlGmjplA",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "stein-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=cmreN7xR6S4",
+    "embed": "https://www.youtube-nocookie.com/embed/cmreN7xR6S4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "stella-mccartney-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=UI13sxthbtg",
@@ -2171,6 +2993,18 @@
     "embed": "https://www.youtube-nocookie.com/embed/__U4Hur1Dp4",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "temperley-london-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=K7R5PH0Berg",
+    "embed": "https://www.youtube-nocookie.com/embed/K7R5PH0Berg",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "the-label-edition-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=mohWZd66tFI",
+    "embed": "https://www.youtube-nocookie.com/embed/mohWZd66tFI",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "theophilio-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=8-rSk3xlUlQ",
@@ -2236,6 +3070,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "tokyo-james-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=4BzmRQXqnEQ",
+    "embed": "https://www.youtube-nocookie.com/embed/4BzmRQXqnEQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "tolu-coker-spring-2026": {
     "originalPage": "https://www.youtube.com/watch?v=FRRGKlOaJJM",
     "embed": "https://www.youtube-nocookie.com/embed/FRRGKlOaJJM",
@@ -2276,6 +3116,12 @@
     "originalPage": "https://www.toryburch.sa/en/fw-26-runway.html",
     "originalMp4": "https://res.cloudinary.com/dkbnpozos/video/upload/v1771224825/toryburch/TB_FW26_FullRunwayEdit_ME_compressed_1920x1080.mp4"
   },
+  "tory-burch-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=-nqNPEGJZpY",
+    "embed": "https://www.youtube-nocookie.com/embed/-nqNPEGJZpY",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "tory-burch-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=NJnlNiiC2Rw",
     "embed": "https://www.youtube-nocookie.com/embed/NJnlNiiC2Rw",
@@ -2287,6 +3133,24 @@
     "embed": "https://www.youtube-nocookie.com/embed/ZRUHPz_6y8k",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "toteme-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=ybMCVTyoSDM",
+    "embed": "https://www.youtube-nocookie.com/embed/ybMCVTyoSDM",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "twp-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=6CMYJ7oQ60Q",
+    "embed": "https://www.youtube-nocookie.com/embed/6CMYJ7oQ60Q",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "twp-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=aepOxTOAWNQ",
+    "embed": "https://www.youtube-nocookie.com/embed/aepOxTOAWNQ",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "ulla-johnson-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=CQDrIceajDw",
@@ -2348,6 +3212,12 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "venerdi-pomeriggio-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=NFyZwo0T3Ss",
+    "embed": "https://www.youtube-nocookie.com/embed/NFyZwo0T3Ss",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
   "versace": {
     "originalPage": "https://www.versace.com/us/en/stories/fashion-shows/spring-summer-2026.html",
     "originalMp4": "https://ver-videos.s3.eu-central-1.amazonaws.com/ss26-video-runway-desk.mp4"
@@ -2396,6 +3266,42 @@
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
   },
+  "who-decides-war-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=mYDqCABKul4",
+    "embed": "https://www.youtube-nocookie.com/embed/mYDqCABKul4",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "wiederhoeft-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=so9HXie4C28",
+    "embed": "https://www.youtube-nocookie.com/embed/so9HXie4C28",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "wiederhoeft-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=SIa7vG3QtPc",
+    "embed": "https://www.youtube-nocookie.com/embed/SIa7vG3QtPc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "willy-chavarria-spring-2027": {
+    "originalPage": "https://www.fhcm.paris/en/collection/willy-chavarria-menswear-springsummer-2027",
+    "embed": "https://www.youtube-nocookie.com/embed/SbDDwvn7gEg",
+    "sourceKind": "fashionWeek",
+    "label": "秀场视频"
+  },
+  "y-3-fall-2010": {
+    "originalPage": "https://www.youtube.com/watch?v=MlCXQ8sLb-Y",
+    "embed": "https://www.youtube-nocookie.com/embed/MlCXQ8sLb-Y",
+    "sourceKind": "runwayFilm",
+    "label": "系列短片"
+  },
+  "yaku-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=PO6RrwWKqsk",
+    "embed": "https://www.youtube-nocookie.com/embed/PO6RrwWKqsk",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
   "yaku-spring-2026": {
     "originalPage": "https://londonfashionweek.co.uk/designers/yaku",
     "embed": "https://www.youtube-nocookie.com/embed/_QDe3mVAVKw",
@@ -2407,6 +3313,12 @@
     "embed": "https://www.youtube-nocookie.com/embed/jk7JM55xrX4",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "yohji-yamamoto-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=EhRQpH5heEs",
+    "embed": "https://www.youtube-nocookie.com/embed/EhRQpH5heEs",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
   },
   "yohji-yamamoto-spring-2027": {
     "originalPage": "https://www.youtube.com/watch?v=APY89HpIaWk",
@@ -2431,6 +3343,24 @@
     "embed": "https://www.youtube-nocookie.com/embed/vCWgr23nsE0",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "zaldy-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=gAFzjGhaoMU",
+    "embed": "https://www.youtube-nocookie.com/embed/gAFzjGhaoMU",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "zankov-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=lC5rlk3J8fc",
+    "embed": "https://www.youtube-nocookie.com/embed/lC5rlk3J8fc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
+  },
+  "zegna": {
+    "originalPage": "https://www.youtube.com/watch?v=RA3FBd_6xBs",
+    "embed": "https://www.youtube-nocookie.com/embed/RA3FBd_6xBs",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   },
   "zimmermann-fall-2026": {
     "originalPage": "https://www.youtube.com/watch?v=dV93ugaQCAA",
@@ -2460,5 +3390,23 @@
     "embed": "https://www.youtube-nocookie.com/embed/Xe7P7kRumvQ",
     "sourceKind": "brandChannel",
     "label": "品牌官方秀场影像"
+  },
+  "zuhair-murad-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=oCQj1ipPa7Y",
+    "embed": "https://www.youtube-nocookie.com/embed/oCQj1ipPa7Y",
+    "sourceKind": "brandChannel",
+    "label": "秀场视频"
+  },
+  "zuhair-murad-spring-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=kG3y-NP9ku8",
+    "embed": "https://www.youtube-nocookie.com/embed/kG3y-NP9ku8",
+    "sourceKind": "brandChannel",
+    "label": "系列短片"
+  },
+  "zuhair-murad-spring-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=mtATKllCvYc",
+    "embed": "https://www.youtube-nocookie.com/embed/mtATKllCvYc",
+    "sourceKind": "runwayFilm",
+    "label": "秀场视频"
   }
 }

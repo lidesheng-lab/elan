@@ -87,8 +87,9 @@ function appendFilm(target, show) {
   const film = show.film;
   if (!film) return;
   const section = element("section", null, "show-film");
-  section.append(element("h2", film.label || "秀场视频"));
-  const title = show.brand + " · " + show.season + " 官方视频";
+  const shortFilm = /短片|精华/.test(film.label || "");
+  section.append(element("h2", shortFilm ? "系列短片" : "秀场视频"));
+  const title = show.brand + " · " + show.season + (shortFilm ? " 系列短片" : " 秀场视频");
   if (film.originalMp4) {
     const video = element("video");
     video.controls = true;
@@ -117,8 +118,7 @@ function appendFilm(target, show) {
     frame.allowFullscreen = true;
     section.append(frame);
   }
-  const sourceLabels = {brandChannel: "在品牌官方频道观看", fashionWeek: "在时装周官方页面观看"};
-  const source = link(film.originalPage, sourceLabels[film.sourceKind] || "在品牌官网观看", "text-action");
+  const source = link(film.originalPage, "打开原片", "text-action");
   source.target = "_blank";
   source.rel = "noopener noreferrer";
   section.append(source);

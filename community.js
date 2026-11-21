@@ -420,6 +420,14 @@ function contestStatus(item,today) {
   return item.kind==="award" ? "获奖公示" : item.deadline<today ? "已截止" : "征稿中";
 }
 const contestRegions = /* CONTEST_REGIONS */ {};
+const contestCountries = /* CONTEST_COUNTRIES */ {};
+function contestWithCountry(item) {
+  const country=item.country || contestCountries[item.id];
+  if(!country || item.title.startsWith("【")) return item;
+  const prefix=country+"｜";
+  const title=item.title.startsWith(prefix) ? item.title.slice(prefix.length).trim() : item.title;
+  return {...item,title:"【"+country+"】"+title};
+}
 function contestRegion(item) {
   return item.region || contestRegions[item.id];
 }
@@ -495,7 +503,9 @@ export async function renderContests(target,request,loadContests,signedIn,select
   message.textContent="正在读取赛事…";
   target.append(message);
   try {
-    const {items,canonical}=await loadContests();
+    const catalog=await loadContests();
+    const canonical=catalog.canonical;
+    const items=catalog.items.map(contestWithCountry);
     if(!target.isConnected) return;
     const today=dateKey.format(new Date());
     message.remove();

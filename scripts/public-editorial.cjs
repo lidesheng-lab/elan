@@ -7,6 +7,7 @@ function contestPage(item) {
   return {
     kind, title, category, organizer, summary,
     ...(["domestic","overseas"].includes(item.region) && {region:item.region}),
+    ...(item.country && {country:item.country}),
     ...(kind === "recruit" ? { deadline } : { date }),
     source: source(item.source),
     ...(details && { details: details.map(({ title, text }) => ({ title, text })) }),

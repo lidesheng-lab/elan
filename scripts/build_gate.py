@@ -19,9 +19,11 @@ if OUT.exists():
 OUT.mkdir()
 
 shutil.copyfile(ROOT / "member-entry.js", OUT / "member-entry.js")
-share_page_version = sha256(b"".join((ROOT / "scripts" / name).read_bytes() for name in ("contest_share.py", "contest_poster.py"))).hexdigest()[:10]
+share_page_version = sha256(b"".join((ROOT / name).read_bytes() for name in ("scripts/contest_share.py", "scripts/contest_poster.py", "contest-countries.json"))).hexdigest()[:10]
 community_js = (ROOT / "community.js").read_text(encoding="utf-8")
 contest_regions = json.loads((ROOT / "contest-regions.json").read_text())
+contest_countries = json.loads((ROOT / "contest-countries.json").read_text())
+community_js = community_js.replace("/* CONTEST_COUNTRIES */ {}", json.dumps(contest_countries, ensure_ascii=False))
 community_js = community_js.replace("/* CONTEST_REGIONS */ {}", json.dumps(contest_regions))
 community_js = community_js.replace('sharePageVersion="current"', f'sharePageVersion="{share_page_version}"')
 (OUT / "community.js").write_text(community_js, encoding="utf-8")
@@ -144,6 +146,12 @@ def contest_entry(row):
     region = data.get("region", contest_regions.get(entry["id"]))
     if region in ("domestic", "overseas"):
         entry["region"] = region
+    country = data.get("country") or contest_countries.get(entry["id"])
+    if region == "overseas" and country:
+        title = re.sub(r"^" + re.escape(country) + r"\s*[｜|]\s*", "", entry["title"])
+        if re.fullmatch(r"World of WearableArt 20[0-9]{2}", title):
+            title = "世界可穿戴艺术大赛 · " + title
+        entry["title"] = f"【{country}】{title}"
     if entry["kind"] == "recruit":
         entry["deadline"] = date.fromisoformat(data["deadline"]).isoformat()
     elif entry["kind"] == "award" and re.fullmatch(r"20\d{2}(?:-\d{2}(?:-\d{2})?)?", data["date"]):
@@ -454,6 +462,8 @@ runway_script.write_text(runway_script.read_text().replace("RUNWAY_DATA_VERSION"
 entry_js = entry_js.replace('"/collection-reader/runways.js"', '"/' + versioned("collection-reader/runways.js") + '"')
 for module in ("community.js", "photo-viewer.js"):
     entry_js = entry_js.replace(f'"./{module}"', f'"./{fingerprinted(module)}"')
+if public_contests:
+    entry_js = entry_js.replace("./public-contests.json", "/" + versioned("public-contests.json"))
 entry_js = entry_js.replace("trend-articles.json?view=current", versioned("trend-articles.json"))
 issue_version = sha256((OUT / "trend-vault.json").read_bytes() + (OUT / "trend-articles.json").read_bytes()).hexdigest()[:10]
 entry_js = entry_js.replace('slug + ".json?view=current"', 'slug + ".json?v=' + issue_version + '"')

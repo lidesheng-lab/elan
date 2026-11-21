@@ -169,6 +169,11 @@
     "embed": "https://www.youtube-nocookie.com/embed/jZErHTjX41s",
     "label": "本季秀场影像"
   },
+  "chanel-pre-fall-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=afbCCkgVGHY",
+    "embed": "https://www.youtube-nocookie.com/embed/afbCCkgVGHY",
+    "label": "品牌官方秀场影像"
+  },
   "chanel-resort-2026": {
     "originalPage": "https://www.youtube.com/watch?v=iGg3ooLc2J8",
     "embed": "https://www.youtube-nocookie.com/embed/iGg3ooLc2J8",
@@ -409,6 +414,11 @@
     "embed": "https://www.youtube-nocookie.com/embed/J2K1B8nPURE",
     "label": "本季秀场影像"
   },
+  "giorgio-armani-fall-2026-menswear": {
+    "originalPage": "https://www.youtube.com/watch?v=M359I4gJ9Os",
+    "embed": "https://www.youtube-nocookie.com/embed/M359I4gJ9Os",
+    "label": "本季秀场影像"
+  },
   "giorgio-armani-resort-2027": {
     "originalPage": "https://www.youtube.com/watch?v=C8FwL7vbz4A",
     "embed": "https://www.youtube-nocookie.com/embed/C8FwL7vbz4A",
@@ -482,6 +492,11 @@
   "julie-de-libran-fall-2026-couture": {
     "originalPage": "https://www.youtube.com/watch?v=i5noCcM3kvg",
     "embed": "https://www.youtube-nocookie.com/embed/i5noCcM3kvg",
+    "label": "本季秀场影像"
+  },
+  "julie-de-libran-spring-2026-couture": {
+    "originalPage": "https://www.youtube.com/watch?v=c--Tekw2Bhw",
+    "embed": "https://www.youtube-nocookie.com/embed/c--Tekw2Bhw",
     "label": "本季秀场影像"
   },
   "junya-watanabe-fall-2026-menswear": {
@@ -562,6 +577,11 @@
   "louis-vuitton-fall-2026-menswear": {
     "originalPage": "https://www.youtube.com/watch?v=3VSghNTL_pY",
     "embed": "https://www.youtube-nocookie.com/embed/3VSghNTL_pY",
+    "label": "本季秀场影像"
+  },
+  "louis-vuitton-resort-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=VhRDos9tyfg",
+    "embed": "https://www.youtube-nocookie.com/embed/VhRDos9tyfg",
     "label": "本季秀场影像"
   },
   "louis-vuitton-resort-2027": {
@@ -704,6 +724,11 @@
     "originalPage": "https://www.prada.com/us/en/pradasphere/fashion-shows/2027/ss-menswear.html",
     "label": "品牌官方秀场影像"
   },
+  "pronounce-spring-2026-menswear": {
+    "originalPage": "https://www.youtube.com/watch?v=cf9GfD6shzY",
+    "embed": "https://www.youtube-nocookie.com/embed/cf9GfD6shzY",
+    "label": "本季秀场影像"
+  },
   "pronounce-spring-2027-menswear": {
     "originalPage": "https://www.youtube.com/watch?v=FP30yFwv_s0",
     "embed": "https://www.youtube-nocookie.com/embed/FP30yFwv_s0",
@@ -749,6 +774,11 @@
     "embed": "https://www.youtube-nocookie.com/embed/My_1mUYGe9I",
     "label": "本季秀场影像"
   },
+  "rick-owens-spring-2026-menswear": {
+    "originalPage": "https://www.youtube.com/watch?v=paAgI1j2iV0",
+    "embed": "https://www.youtube-nocookie.com/embed/paAgI1j2iV0",
+    "label": "本季秀场影像"
+  },
   "rick-owens-spring-2027-menswear": {
     "originalPage": "https://www.youtube.com/watch?v=O0WrybfEypI",
     "embed": "https://www.youtube-nocookie.com/embed/O0WrybfEypI",
@@ -764,10 +794,20 @@
     "embed": "https://www.youtube-nocookie.com/embed/aZTkzrVoLKE",
     "label": "本季秀场影像"
   },
+  "saint-laurent-fall-2026-menswear": {
+    "originalPage": "https://www.youtube.com/watch?v=LxQhqbOn8ws",
+    "embed": "https://www.youtube-nocookie.com/embed/LxQhqbOn8ws",
+    "label": "本季秀场影像"
+  },
   "saint-laurent-spring-2027-menswear": {
     "originalPage": "https://www.youtube.com/watch?v=arIRXcM_BxA",
     "embed": "https://www.youtube-nocookie.com/embed/arIRXcM_BxA",
     "label": "本季秀场影像"
+  },
+  "salvatore-ferragamo-resort-2026": {
+    "originalPage": "https://www.youtube.com/watch?v=9srq4kSOYPA",
+    "embed": "https://www.youtube-nocookie.com/embed/9srq4kSOYPA",
+    "label": "本季系列短片"
   },
   "saul-nash-fall-2026-menswear": {
     "originalPage": "https://www.youtube.com/watch?v=8LPu9kS6MPY",
@@ -972,6 +1012,11 @@
   "zegna-spring-2027-menswear": {
     "originalPage": "https://www.youtube.com/watch?v=ANcBckXMMyI",
     "embed": "https://www.youtube-nocookie.com/embed/ANcBckXMMyI",
+    "label": "本季秀场影像"
+  },
+  "zimmermann-resort-2027": {
+    "originalPage": "https://www.youtube.com/watch?v=JetU_LaTy8Y",
+    "embed": "https://www.youtube-nocookie.com/embed/JetU_LaTy8Y",
     "label": "本季秀场影像"
   },
   "zuhair-murad-fall-2026-couture": {

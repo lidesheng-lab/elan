@@ -3,38 +3,11 @@ from html import escape
 from shutil import copytree
 import json
 import re
-import subprocess
+from contest_poster import poster
 
 SITE = "https://elan.lidesheng.art"
 LABELS = {"recruit": "赛事征稿", "award": "获奖公示"}
 TOPICS = {"color": "色彩趋势", "fabric": "面料趋势", "silhouette": "廓形趋势"}
-
-
-def poster(path, title, label, date):
-    from PIL import Image, ImageDraw, ImageFont
-    family = subprocess.check_output(["fc-match", "-f", "%{file}", "serif:lang=zh-cn"], text=True)
-    image = Image.new("RGB", (640, 640), "#f7f3ea")
-    pen = ImageDraw.Draw(image)
-    def font(size):
-        return ImageFont.truetype(family, size)
-    pen.rectangle((0, 0, 640, 14), fill="#681c35")
-    pen.text((40, 33), "ÉLAN", font=font(68), fill="#2a1c22")
-    pen.line((40, 144, 600, 144), fill="#a69991", width=2)
-    pen.text((40, 163), label, font=font(28), fill="#782944")
-    for size in range(53, 11, -2):
-        face = font(size)
-        lines = [""]
-        for token in re.findall(r"[A-Za-z0-9]+|.", title):
-            if lines[-1] and pen.textlength(lines[-1]+token,font=face)>550:
-                lines.append("")
-            lines[-1] += token if lines[-1] else token.lstrip()
-        if len(lines)*(size+15)<=303 and all(pen.textlength(line,font=face)<=554 for line in lines):
-            break
-    pen.multiline_text((40, 223), "\n".join(line.rstrip() for line in lines),
-                       font=face, spacing=11, fill="#231c20")
-    pen.line((40, 558, 600, 558), fill="#a69991", width=2)
-    pen.text((40, 576), date, font=font(26), fill="#782944")
-    image.save(path, format="JPEG", quality=88, optimize=True)
 
 
 def page(out, section, slug, title, label, summary, image, css, entry_module, share_version, credit=""):
@@ -129,9 +102,9 @@ def contest_share_pages(out, public_dir, contests, stylesheet, entry_module, sha
         title = item["title"]
         if re.fullmatch(r"World of WearableArt 20[0-9]{2}", title):
             title = "新西兰世界可穿戴艺术大赛 · " + title
-        poster(path / "cover.jpg", title, label, date)
+        poster(path / "cover.jpg", item, title, label, date)
         page(out, "contests", slug, title, label, item["summary"],
-             f"{SITE}/contests/{slug}/cover.jpg", stylesheet, entry_module, share_version)
+             f"{SITE}/contests/{slug}/cover.jpg?v={share_version}", stylesheet, entry_module, share_version)
 
 
 def trend_share_page(out, article, stylesheet, entry_module, share_version):

@@ -419,8 +419,15 @@ export async function mountTrendDiscussion(output,request,slug,signedIn) {
 function contestStatus(item,today) {
   return item.kind==="award" ? "获奖公示" : item.deadline<today ? "已截止" : "征稿中";
 }
-function contestListHref(kind) {
-  return kind==="award" ? "#contests?tab=award" : "#contests";
+const contestRegions = /* CONTEST_REGIONS */ {};
+function contestRegion(item) {
+  return item.region || contestRegions[item.id];
+}
+function contestListHref(kind,region) {
+  const params=new URLSearchParams();
+  if(kind==="award") params.set("tab","award");
+  if(region && region!=="all") params.set("region",region);
+  return "#contests"+(params.size ? "?"+params : "");
 }
 function contestDate(item) {
   const time=node("time",item.deadline || item.date);
@@ -466,7 +473,7 @@ function renderContestDetail(target,request,item,signedIn,today) {
   copy.append(source,tools,discussion);
   const aside=node("aside");
   const image=node("img");
-  image.src=`/contests/${item.id}/cover.jpg`;
+  image.src=`/contests/${item.id}/cover.jpg?v=${sharePageVersion}`;
   image.alt=item.title+" · ÉLAN 赛事分享封面";
   image.width=640;
   image.height=640;
@@ -474,7 +481,7 @@ function renderContestDetail(target,request,item,signedIn,today) {
   aside.append(image,facts);
   content.append(aside,copy);
   article.append(header,content);
-  target.replaceChildren(link("← 返回赛事目录",contestListHref(item.kind),"reader-back"),article);
+  target.replaceChildren(link("← 返回赛事目录",contestListHref(item.kind,contestRegion(item)),"reader-back"),article);
   request({memberAction:"communityContestEngagement",ids:[item.id]}).then(({items})=>{
     if(discussion.isConnected && items[item.id]) discussion.append(thread(request,"contest:"+item.id,items[item.id],signedIn));
   },()=>{
@@ -509,28 +516,46 @@ export async function renderContests(target,request,loadContests,signedIn,select
     search.type="search";
     search.placeholder="搜索赛事、类别或主办方";
     search.setAttribute("aria-label","搜索赛事");
-    toolbar.append(tabs,search);
+    const regionTabs=node("div",null,"pills");
+    regionTabs.setAttribute("aria-label","举办地区");
+    toolbar.append(regionTabs,tabs,search);
     const list=node("div",null,"community-contest-list");
     const more=button("查看更多赛事");
     target.append(toolbar,list,more);
     const params=new URLSearchParams(location.hash.split("?")[1]);
     let selection=params.get("tab")==="award" ? "award" : "recruit";
+    const regions=[["all","全部"],["domestic","国内赛事"],["overseas","国外赛事"]];
+    let region=regions.some(([id])=>id===params.get("region")) ? params.get("region") : "all";
     let visible=12;
+    function updateFilters() {
+      visible=12;
+      history.replaceState(null,"",location.pathname+location.search+contestListHref(selection,region));
+      paint();
+    }
+    const regionButtons=regions.map(([id,label])=>{
+      const control=button(label,"");
+      control.onclick=()=>{region=id;updateFilters();};
+      regionTabs.append(control);
+      return control;
+    });
     const controls=filters.map(([kind,label])=>{
       const control=button(label+" · "+items.filter(item=>item.kind===kind).length,"");
       control.onclick=()=>{
         selection=kind;
-        visible=12;
-        history.replaceState(null,"",location.pathname+location.search+contestListHref(kind));
-        paint();
+        updateFilters();
       };
       tabs.append(control);
       return control;
     });
     function paint() {
       const term=search.value.trim().toLowerCase();
-      for(const [i,[kind]] of filters.entries()) controls[i].setAttribute("aria-pressed",String(kind===selection));
-      const rows=items.filter(item=>item.kind===selection && [item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
+      const scoped=region==="all" ? items : items.filter(item=>contestRegion(item)===region);
+      regions.forEach(([id],i)=>regionButtons[i].setAttribute("aria-pressed",String(id===region)));
+      filters.forEach(([id,label],i)=>{
+        controls[i].textContent=label+" · "+scoped.filter(item=>item.kind===id).length;
+        controls[i].setAttribute("aria-pressed",String(id===selection));
+      });
+      const rows=scoped.filter(item=>item.kind===selection && [item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
         .sort((a,b)=>selection==="award" ? b.date.localeCompare(a.date) :
           Number(a.deadline<today)-Number(b.deadline<today) || a.deadline.localeCompare(b.deadline));
       list.replaceChildren();

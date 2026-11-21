@@ -6,6 +6,7 @@ function contestPage(item) {
   const { kind, title, category, organizer, summary, date, deadline, details, references } = item;
   return {
     kind, title, category, organizer, summary,
+    ...(["domestic","overseas"].includes(item.region) && {region:item.region}),
     ...(kind === "recruit" ? { deadline } : { date }),
     source: source(item.source),
     ...(details && { details: details.map(({ title, text }) => ({ title, text })) }),

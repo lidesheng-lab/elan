@@ -19,8 +19,10 @@ if OUT.exists():
 OUT.mkdir()
 
 shutil.copyfile(ROOT / "member-entry.js", OUT / "member-entry.js")
-share_page_version = sha256((ROOT / "scripts" / "contest_share.py").read_bytes()).hexdigest()[:10]
+share_page_version = sha256(b"".join((ROOT / "scripts" / name).read_bytes() for name in ("contest_share.py", "contest_poster.py"))).hexdigest()[:10]
 community_js = (ROOT / "community.js").read_text(encoding="utf-8")
+contest_regions = json.loads((ROOT / "contest-regions.json").read_text())
+community_js = community_js.replace("/* CONTEST_REGIONS */ {}", json.dumps(contest_regions))
 community_js = community_js.replace('sharePageVersion="current"', f'sharePageVersion="{share_page_version}"')
 (OUT / "community.js").write_text(community_js, encoding="utf-8")
 shutil.copyfile(ROOT / "photo-viewer.js", OUT / "photo-viewer.js")
@@ -139,6 +141,9 @@ def contest_entry(row):
     data = row["public"]
     entry = texts(data, ("kind", "title", "category", "organizer", "summary"))
     entry["id"] = editorial_slug(row, "contest")
+    region = data.get("region", contest_regions.get(entry["id"]))
+    if region in ("domestic", "overseas"):
+        entry["region"] = region
     if entry["kind"] == "recruit":
         entry["deadline"] = date.fromisoformat(data["deadline"]).isoformat()
     elif entry["kind"] == "award" and re.fullmatch(r"20\d{2}(?:-\d{2}(?:-\d{2})?)?", data["date"]):

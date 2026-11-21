@@ -1,8 +1,43 @@
 {
+  "16arlington-spring-2026": {
+    "originalPage": "https://16arlington.co.uk/pages/ss26-collection-overview",
+    "originalMp4": "https://16arlington.co.uk/cdn/shop/videos/c/vp/59d2e3bddd904c80a79c488c5beb39ba/59d2e3bddd904c80a79c488c5beb39ba.HD-1080p-7.2Mbps-90000032.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "7-for-all-mankind-spring-2027": {
+    "originalPage": "https://7forallmankind.com/pages/ss27-runway-show",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/f78a934499cb4be4a57fb9c260206935.mp4",
+    "label": "本季官网影像"
+  },
   "adererror": {
     "originalPage": "https://www.adererror.com/jp/curated/2026ss",
     "originalMp4": "https://d31flwjaqugbgy.cloudfront.net/source/26ss/26ss_edi/main_pc_1920x900_1.mp4",
     "label": "官网系列短片"
+  },
+  "akris-fall-2026": {
+    "originalPage": "https://akris.com/pages/fall-2026-fashion-show-collection-inspiration",
+    "originalMp4": "https://akris.com/cdn/shop/videos/c/vp/d088bd3d62774ac1b187b4238443ddbe/d088bd3d62774ac1b187b4238443ddbe.HD-1080p-4.8Mbps-90844739.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "akris-spring-2026": {
+    "originalPage": "https://akris.com/pages/spring-2026-fashion-show-collection-inspiration",
+    "originalMp4": "https://akris.com/cdn/shop/videos/c/vp/6ac32839319442618971dcab40c736fb/6ac32839319442618971dcab40c736fb.HD-1080p-7.2Mbps-90843524.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "alberta-ferretti-fall-2026": {
+    "originalPage": "https://www.albertaferretti.com/pages/fall-winter-2026",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/ca835f56447d46a89b313943d12360d3.mp4",
+    "label": "本季官网影像"
+  },
+  "alberta-ferretti-spring-2026": {
+    "originalPage": "https://www.albertaferretti.com/pages/spring-summer-2026",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/926916a47f294bb3865a06e176bf2858.mp4",
+    "label": "本季官网影像"
+  },
+  "alberta-ferretti-spring-2027": {
+    "originalPage": "https://www.albertaferretti.com/pages/spring-summer-2027",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/71d7dc5ade45456684064616073fc720.mp4",
+    "label": "本季官网影像"
   },
   "alexander-mcqueen-fall-2026": {
     "originalPage": "https://www.alexandermcqueen.com/en-us/cp/autumn-winter-2026-show",
@@ -16,6 +51,21 @@
     "originalPage": "https://www.alexandermcqueen.com/en-us/cp/spring-summer-2027-show",
     "embed": "https://players.brightcove.net/6139825499001/default_default/index.html?videoId=6405369965112"
   },
+  "ann-demeulemeester": {
+    "originalPage": "https://anndemeulemeester.com/pages/spring-summer-26-show",
+    "embed": "https://player.vimeo.com/video/1124907570",
+    "label": "本季官网影像"
+  },
+  "ann-demeulemeester-fall-2026": {
+    "originalPage": "https://anndemeulemeester.com/pages/fall-winter-26-show",
+    "embed": "https://player.vimeo.com/video/1172550213",
+    "label": "本季官网影像"
+  },
+  "ann-demeulemeester-spring-2027": {
+    "originalPage": "https://anndemeulemeester.com/pages/spring-summer-27-show",
+    "embed": "https://player.vimeo.com/video/1233009898",
+    "label": "本季官网影像"
+  },
   "balenciaga": {
     "originalPage": "https://www.balenciaga.com/en-us/summer-26",
     "embed": "https://players.brightcove.net/6159029845001/default_default/index.html?videoId=6382087274112"
@@ -27,6 +77,21 @@
   "balenciaga-spring-2027": {
     "originalPage": "https://www.balenciaga.com/en-us/summer-27",
     "embed": "https://players.brightcove.net/6159029845001/default_default/index.html?videoId=6406105612112"
+  },
+  "bibhu-mohapatra-fall-2026": {
+    "originalPage": "https://bibhu.com/pages/fall-2026",
+    "embed": "https://player.vimeo.com/video/1166088101",
+    "label": "本季官网影像"
+  },
+  "bibhu-mohapatra-spring-2026": {
+    "originalPage": "https://bibhu.com/pages/spring-2026-collection",
+    "embed": "https://player.vimeo.com/video/1123290368",
+    "label": "本季官网影像"
+  },
+  "bibhu-mohapatra-spring-2027": {
+    "originalPage": "https://bibhu.com/pages/spring-2027-collection",
+    "embed": "https://player.vimeo.com/video/1227079101",
+    "label": "本季官网影像"
   },
   "bottega-veneta": {
     "originalPage": "https://www.bottegaveneta.com/en-hr/summer-2026.html",
@@ -68,9 +133,59 @@
     "originalPage": "https://www.chanel.com/us/fashion/collection/spring-summer-2027/",
     "originalMp4": "https://ovp2.chanel.com/media/v1/pmp4/static/clear/6057940567001/91003f4f-c3b0-4157-a436-7cbf754a1f7e/2d1cd564-18ef-49a6-845c-a55ff5a673e4/main.mp4"
   },
+  "chloe": {
+    "originalPage": "https://www.chloe.com/en-gb/fashionshow/winter-26.html",
+    "embed": "https://e.video-cdn.net/video?video-id=6Si8x6BoVntV3dvL6PabSB&player-id=344r7URoM4aiKkBJp84wen"
+  },
+  "chloe-spring-2026": {
+    "originalPage": "https://www.chloe.com/en-gb/fashionshow/summer-26.html",
+    "embed": "https://e.video-cdn.net/video?video-id=C-Vmw1S7EWJjdGSEzmFeee&player-id=344r7URoM4aiKkBJp84wen"
+  },
+  "chloe-spring-2027": {
+    "originalPage": "https://www.chloe.com/en-hk/summer-27-edito.html",
+    "embed": "https://e.video-cdn.net/video?video-id=8_37K4ZAf1CzrmXsULmSCX&player-id=344r7URoM4aiKkBJp84wen"
+  },
+  "chopova-lowena": {
+    "originalPage": "https://chopovalowena.com/pages/ss26",
+    "embed": "https://www.youtube-nocookie.com/embed/0y6UCHJLvpA",
+    "label": "本季官网影像"
+  },
+  "chopova-lowena-spring-2027": {
+    "originalPage": "https://chopovalowena.com/pages/ss27",
+    "embed": "https://www.youtube-nocookie.com/embed/Aav3j-1tkvI",
+    "label": "本季官网影像"
+  },
+  "christian-dior": {
+    "originalPage": "https://www.dior.com/en_us/fashion/womens-fashion/ready-to-wear-shows/spring-summer-2026-ready-to-wear-show",
+    "originalMp4": "https://secure.massmotionmedia.com/onedior/projects/dior_women_springsummer26_show_finalvideo_desktop/videos/20251006103235_1280x720_3500_3b538f3a-b51f-4394-9f1b-8eab3c8931b9.mp4"
+  },
+  "christian-dior-fall-2026": {
+    "originalPage": "https://www.dior.com/en_us/fashion/womens-fashion/ready-to-wear-shows/autumn-winter-2026-2027-show",
+    "originalMp4": "https://secure.massmotionmedia.com/onedior/projects/dior_women_winter_2627_fullshow_16x9/videos/20260309101138_1280x720_3500_88ec7a83-052d-42bc-b3ee-4f78e360561d.mp4"
+  },
   "christian-dior-spring-2027": {
     "originalPage": "https://www.dior.com/en_gb/fashion/womens-fashion/ready-to-wear-shows/summer-2027-show",
     "originalMp4": "https://secure.massmotionmedia.com/onedior/projects/dior_women_summer27show_finalvideo_16x9/videos/20261005081341_1280x720_3500_1975895e-a7fd-4a31-8076-0106fa2eb627.mp4"
+  },
+  "christopher-esber-spring-2026": {
+    "originalPage": "https://christopheresber.com/pages/spring-summer-2026",
+    "originalMp4": "https://christopheresber.com/cdn/shop/videos/c/vp/9e060df5df0d4f869d0df9a00ba6f19e/9e060df5df0d4f869d0df9a00ba6f19e.HD-1080p-7.2Mbps-83466945.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "christopher-esber-spring-2027": {
+    "originalPage": "https://christopheresber.com/pages/spring-summer-2027",
+    "originalMp4": "https://christopheresber.com/cdn/shop/videos/c/vp/ff4b7e71230b4cb0bc5952910d102beb/ff4b7e71230b4cb0bc5952910d102beb.HD-1080p-7.2Mbps-96736649.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "cinq-a-sept-fall-2026": {
+    "originalPage": "https://cinqasept.nyc/pages/nyfw-fw26",
+    "embed": "https://player.vimeo.com/video/1164361084",
+    "label": "本季官网影像"
+  },
+  "co-fall-2026": {
+    "originalPage": "https://co-collections.com/pages/fall-winter-2026-lookbook",
+    "originalMp4": "https://player.vimeo.com/progressive_redirect/download/1170027463/rendition/1440p/co_aw26%20%281440p%29.mp4?loc=external&signature=e0d788497a5f1f68bfa152ad3b6490c50363989a9971e4d00c0b90f8236d53e2",
+    "label": "本季官网影像"
   },
   "coach-fall-2026": {
     "originalPage": "https://www.coach.com/shop/fall-2026",
@@ -80,6 +195,21 @@
     "originalPage": "https://www.coach.com/shop/spring-2027",
     "embed": "https://www.youtube.com/embed/tzLN2ptuWPM"
   },
+  "cult-gaia-fall-2026": {
+    "originalPage": "https://cultgaia.com/pages/fall-2026-runway",
+    "originalMp4": "https://cultgaia.com/cdn/shop/videos/c/vp/c9ad76b80af742c7b6339465e3e09642/c9ad76b80af742c7b6339465e3e09642.HD-1080p-7.2Mbps-91898598.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "cult-gaia-spring-2027": {
+    "originalPage": "https://cultgaia.com/pages/spring-summer-2027-runway",
+    "originalMp4": "https://cultgaia.com/cdn/shop/videos/c/vp/9417cdfd42f645e581c3ba150ea366a8/9417cdfd42f645e581c3ba150ea366a8.HD-720p-4.5Mbps-94071361.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "cynthia-rowley-spring-2026": {
+    "originalPage": "https://cynthiarowley.com/pages/spring-summer-2026",
+    "embed": "https://www.youtube-nocookie.com/embed/zSwhKQCeCY0",
+    "label": "本季官网影像"
+  },
   "dolce-gabbana-fall-2026": {
     "originalPage": "https://world.dolcegabbana.com/fashion-shows/women-fall-winter-2026-fashion-show",
     "embed": "https://www.youtube-nocookie.com/embed/Mp7y7Jn3UP0"
@@ -88,9 +218,44 @@
     "originalPage": "https://world.dolcegabbana.com/fashion-shows/women-spring-summer-2027-fashion-show",
     "embed": "https://www.youtube-nocookie.com/embed/VqHnckhBUiA"
   },
+  "dries-van-noten-fall-2026": {
+    "originalPage": "https://www.driesvannoten.com/pages/show-aw-26-27-women",
+    "originalMp4": "https://www.driesvannoten.com/cdn/shop/videos/c/vp/a0a672850a764b079d62769a2bfb0dc5/a0a672850a764b079d62769a2bfb0dc5.HD-1080p-7.2Mbps-77147267.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "dries-van-noten-spring-2027": {
+    "originalPage": "https://www.driesvannoten.com/pages/show-ss-27-women",
+    "originalMp4": "https://www.driesvannoten.com/cdn/shop/videos/c/vp/e58d917468e340efa19b578453d4c84d/e58d917468e340efa19b578453d4c84d.HD-1080p-7.2Mbps-96160079.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "emilia-wickstead-spring-2027": {
+    "originalPage": "https://emiliawickstead.com/pages/spring-summer-2027-runway-collection",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/3a774909170d4d11b2036c774574213e.mp4",
+    "label": "本季官网影像"
+  },
   "erdem": {
     "originalPage": "https://erdem.com/pages/spring-summer-2026-collection",
     "embed": "https://player.vimeo.com/video/1120642406"
+  },
+  "erdem-fall-2026": {
+    "originalPage": "https://erdem.com/pages/autumn-winter-2026-collection",
+    "embed": "https://player.vimeo.com/video/1167133216",
+    "label": "本季官网影像"
+  },
+  "erdem-spring-2027": {
+    "originalPage": "https://erdem.com/pages/spring-summer-2027-collection",
+    "embed": "https://player.vimeo.com/video/1228521206",
+    "label": "本季官网影像"
+  },
+  "ermanno-scervino-spring-2026": {
+    "originalPage": "https://ermannoscervino.com/pages/fashion-show-ss26",
+    "originalMp4": "https://ermannoscervino.com/cdn/shop/videos/c/vp/56919c7fd90e444f95d031a9767311d6/56919c7fd90e444f95d031a9767311d6.HD-1080p-7.2Mbps-76953155.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "ermanno-scervino-spring-2027": {
+    "originalPage": "https://ermannoscervino.com/pages/fashion-show-ss27",
+    "originalMp4": "https://ermannoscervino.com/cdn/shop/videos/c/vp/f728154fb3634e799e76813a3310ff4a/f728154fb3634e799e76813a3310ff4a.HD-1080p-7.2Mbps-95779429.mp4?v=0",
+    "label": "本季官网影像"
   },
   "fendi-spring-2027": {
     "originalPage": "https://www.fendi.com/us-en/cm/fashion-shows/spring-summer-2027-show",
@@ -99,6 +264,16 @@
   "ferragamo": {
     "originalPage": "https://www.ferragamo.com/shop/eu/en/sf/gallery-ss26-show",
     "embed": "https://players.brightcove.net/3418428625001/ryhXEqW0f_default/index.html?videoId=6380188338112"
+  },
+  "giorgio-armani": {
+    "originalPage": "https://www.armani.com/en-id/giorgio-armani/experience/fashion-show-fall-winter-woman/",
+    "originalMp4": "https://mediastorage.livestory.io/armani/posts/optimized/69a49f80342f0cb8d73a6459.mp4",
+    "label": "品牌官方秀场精华"
+  },
+  "giorgio-armani-spring-2027": {
+    "originalPage": "https://www.armani.com/en-hk/giorgio-armani/experience/fashion-show-spring-summer-women/",
+    "originalMp4": "https://mediastorage.livestory.io/armani/posts/optimized/6aba2322614e660ffb1dbd88.mp4",
+    "label": "品牌官方秀场精华"
   },
   "givenchy": {
     "originalPage": "https://www.givenchy.com/us/en-US/cm/explore/collections/spring-summer-26-womenswear-show",
@@ -181,6 +356,31 @@
     "originalPage": "https://www.marni.com/en-ie/marni-ss27-vol2.html",
     "embed": "https://players.brightcove.net/6275895331001/default_default/index.html?videoId=6405725449112"
   },
+  "max-mara": {
+    "originalPage": "https://kr.maxmara.com/editorial/runway-fall-winter",
+    "embed": "https://players.brightcove.net/6415707688001/default_default/index.html?videoId=6389995096112",
+    "label": "品牌官方秀场精华 · 约3分钟"
+  },
+  "max-mara-spring-2027": {
+    "originalPage": "https://kr.maxmara.com/editorial/runway-spring-summer",
+    "embed": "https://players.brightcove.net/6415707688001/default_default/index.html?videoId=6405548834112",
+    "label": "品牌官方秀场精华 · 约3分钟"
+  },
+  "mithridate-fall-2026": {
+    "originalPage": "https://shop.mithridate.com/pages/autumn-winter-26",
+    "originalMp4": "https://shop.mithridate.com/cdn/shop/videos/c/vp/13b4cba8c74a476199c079027e4a3317/13b4cba8c74a476199c079027e4a3317.HD-1080p-4.8Mbps-79356123.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "mithridate-spring-2026": {
+    "originalPage": "https://shop.mithridate.com/pages/spring-summer-26",
+    "originalMp4": "https://shop.mithridate.com/cdn/shop/videos/c/vp/d08b93f3f3084166995816f140e11ddd/d08b93f3f3084166995816f140e11ddd.HD-1080p-4.8Mbps-57907940.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "mithridate-spring-2027": {
+    "originalPage": "https://shop.mithridate.com/pages/spring-summer-27",
+    "originalMp4": "https://shop.mithridate.com/cdn/shop/videos/c/vp/1eba35bb8e95426480fac856ca9f2c8c/1eba35bb8e95426480fac856ca9f2c8c.HD-1080p-7.2Mbps-98149426.mp4?v=0",
+    "label": "本季官网影像"
+  },
   "miu-miu": {
     "originalPage": "https://www.miumiu.com/us/en/miumiu-club/fashion-shows/ss26-fashion-show.html",
     "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder2/1760097330MIUMIUss26_16x9_prada.mp4"
@@ -192,6 +392,41 @@
   "miu-miu-spring-2027": {
     "originalPage": "https://www.miumiu.com/us/en/miumiu-club/fashion-shows/ss27-fashion-show.html",
     "originalMp4": "https://videoprada-meride-tv.akamaized.net/video/folder2/1791275072MIU_MIU_SS27_Show_Video_18h02_prada.mp4"
+  },
+  "monique-lhuillier-spring-2027": {
+    "originalPage": "https://moniquelhuillier.com/pages/lookbook-runway-spring-2027",
+    "originalMp4": "https://moniquelhuillier.com/cdn/shop/videos/c/vp/071dbf8971cc4b759b38eeafd6054900/071dbf8971cc4b759b38eeafd6054900.HD-1080p-3.3Mbps-93438755.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "monse-fall-2026": {
+    "originalPage": "https://monse.com/pages/fall-winter-2026",
+    "originalMp4": "https://monse.com/cdn/shop/videos/c/vp/bedce30f433547f38fc86d23c3864926/bedce30f433547f38fc86d23c3864926.HD-1080p-4.8Mbps-74392155.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "monse-spring-2026": {
+    "originalPage": "https://monse.com/pages/spring-summer-2026-runway",
+    "originalMp4": "https://monse.com/cdn/shop/videos/c/vp/925820750ee540dfaaaceaaab69704ab/925820750ee540dfaaaceaaab69704ab.HD-1080p-4.8Mbps-70535596.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "monse-spring-2027": {
+    "originalPage": "https://monse.com/pages/spring-summer-2027",
+    "originalMp4": "https://monse.com/cdn/shop/videos/c/vp/1fac363e405844f290572ce9fd4381bc/1fac363e405844f290572ce9fd4381bc.HD-1080p-4.8Mbps-94541084.mp4?v=0",
+    "label": "本季官网影像"
+  },
+  "moschino": {
+    "originalPage": "https://www.moschino.com/pages/womens-ss26",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/47cda61ff1b747f68e705d3ec89a24e4.mp4",
+    "label": "本季官网影像"
+  },
+  "moschino-fall-2026": {
+    "originalPage": "https://www.moschino.com/pages/womens-fw26",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/76e8ce18ad364059934aa0f5b2354136.mp4",
+    "label": "本季官网影像"
+  },
+  "moschino-spring-2027": {
+    "originalPage": "https://www.moschino.com/pages/womens-ss27",
+    "originalMp4": "https://cdn.shopify.com/videos/c/o/v/695e389986104dc1a3336498c4654d3b.mp4",
+    "label": "本季官网影像"
   },
   "mugler": {
     "originalPage": "https://fashion.mugler.com/pages/spring-summer-2026",
@@ -305,9 +540,29 @@
     "originalPage": "https://www.versace.com/us/en/stories/fashion-shows/spring-summer-2026.html",
     "originalMp4": "https://ver-videos.s3.eu-central-1.amazonaws.com/ss26-video-runway-desk.mp4"
   },
+  "victoria-beckham-fall-2026": {
+    "originalPage": "https://www.victoriabeckham.com/pages/aw26-lookbook",
+    "originalMp4": "https://scdn.speedsize.com/6b02940e-2889-4c46-936f-7fb33eb522ba/cdn.shopify.com/videos/c/o/v/e206fd86e79f46879453878d43f12fc5.mp4",
+    "label": "本季官网影像"
+  },
+  "victoria-beckham-spring-2026": {
+    "originalPage": "https://www.victoriabeckham.com/pages/spring-summer-2026",
+    "embed": "https://player.vimeo.com/video/1124480576?h=0e425f67b5",
+    "label": "本季官网影像"
+  },
+  "victoria-beckham-spring-2027": {
+    "originalPage": "https://www.victoriabeckham.com/pages/spring-summer-2027",
+    "embed": "https://player.vimeo.com/video/1232814620?h=301c61e3ac",
+    "label": "本季官网影像"
+  },
   "viktor-rolf": {
     "originalPage": "https://www.viktor-rolf.com/pages/spring-summer-2026",
     "embed": "https://player.vimeo.com/video/1175093722",
     "label": "官网造型短片 · Look 5"
+  },
+  "zomer-fall-2026": {
+    "originalPage": "https://zomerparis.com/pages/autumn-winter-26",
+    "originalMp4": "https://zomerparis.com/cdn/shop/videos/c/vp/e8bbdc2b3e2b48308cf7d57bbcf88fe4/e8bbdc2b3e2b48308cf7d57bbcf88fe4.HD-1080p-7.2Mbps-79292875.mp4?v=0",
+    "label": "本季官网影像"
   }
 }

@@ -12,12 +12,14 @@
   "lvmh-prize-2027": {
     "awards": "LVMH 青年时装设计师大奖、Karl Lagerfeld 奖与 Savoir-Faire 工艺奖。",
     "prize": "大奖 40 万欧元，另两项各 20 万欧元。三项均附品牌发展指导。",
-    "url": "https://www.lvmh.com/en/news-lvmh/lvmh-prize-opens-applications-for-its-14th-edition"
+    "url": "https://www.lvmh.com/en/news-lvmh/lvmh-prize-opens-applications-for-its-14th-edition",
+    "eligibility": "18–40 岁、已完成至少两个成衣系列的设计师。"
   },
   "lvmh-young-fashion-graduates-2027": {
     "awards": "三名青年时装毕业生获奖，分别进入集团旗下品牌的创意工作室工作一年。",
     "prize": "每位毕业生获 1 万欧元，其毕业院校另获 1 万欧元。",
-    "url": "https://www.lvmh.com/en/news-lvmh/lvmh-prize-opens-applications-for-its-14th-edition"
+    "url": "https://www.lvmh.com/en/news-lvmh/lvmh-prize-opens-applications-for-its-14th-edition",
+    "eligibility": "超过 18 岁，原则上于 2027 年完成至少三年时装院校课程；特别优秀的 2026 届申请可获酌情考虑。"
   },
   "redress-2026": {
     "awards": "冠军、亚军、香港最佳奖及公众投票奖。另设校友奖。",
@@ -32,7 +34,8 @@
   "wow-2027": {
     "awards": "设最高奖及亚军、各主题组奖、国际设计优秀奖、可持续奖、学生奖等。",
     "prize": "本届奖金合计超过 20 万新西兰元。2027 征集公告未单列各项金额。",
-    "url": "https://www.worldofwearableart.com/content-hub/2027-wow-competition-open"
+    "url": "https://www.worldofwearableart.com/content-hub/2027-wow-competition-open",
+    "eligibility": "面向国际成人创作者；儿童主题组也须由成人设计制作。"
   },
   "wow-2026": {
     "awards": "本届颁出 25 项奖励，包括最高奖及亚军、主题组奖、国际设计优秀奖及 Dame Suzie Moncrieff 奖。",
@@ -42,12 +45,14 @@
   "french-fashion-rising-stars-2027": {
     "awards": "按评分设铂金、金、银奖。各主类别最高分的铂金作品可获得该类最高荣誉。",
     "prize": "当届奖项页列出评级、荣誉和展示机会，未列现金奖金。",
-    "url": "https://www.frenchfashionawards.com/fashion-awards.php"
+    "url": "https://www.frenchfashionawards.com/fashion-awards.php",
+    "eligibility": "面向新锐设计师和初创时装品牌，可提交首个系列或设计作品集。"
   },
   "green-vill-fashion-week-2027": {
     "awards": "评出新锐设计师冠军，获主办方奖项及品牌展示机会。",
     "prize": "冠军获 500 美元现金，另享主办方公布的推广支持。",
-    "url": "https://www.gvlfashionweek.com/copy-of-model-faq-1"
+    "url": "https://www.gvlfashionweek.com/copy-of-model-faq-1",
+    "eligibility": "有服装学习、设计师从业、设计经营或纺织制作经验者按章程择一满足；18 岁及以下须获监护人许可。"
   },
   "hm-design-award-2026": {
     "awards": "八名决赛选手中评出一名大奖得主，本届为 Macy Grimshaw。",
@@ -122,27 +127,32 @@
   "id-dunedin-emerging-2027": {
     "awards": "国际新锐设计师评选；入围者到但尼丁时装周展演，羊毛设计可申报专项。",
     "prize": "主办方公布本届奖项总价值超过 3 万新西兰元，首轮入围公告未列单奖金额。",
-    "url": "https://www.idfashion.co.nz/emerging-designer-awards"
+    "url": "https://www.idfashion.co.nz/emerging-designer-awards",
+    "eligibility": "全球时装或纺织设计毕业生，须在取得相关学历后七年内参赛。"
   },
   "dotek-fashion-open-call-2027": {
     "awards": "专家评审选出入围系列，于 2027 年 3 月在兹林展示，另有作品参与慈善拍卖。",
     "prize": "入选奖励为系列展演。征集公告未列现金奖金，拍卖所得用于指定慈善项目。",
-    "url": "https://fashioneventdotek.cz/en/open-call-en/"
+    "url": "https://fashioneventdotek.cz/en/open-call-en/",
+    "eligibility": "中学、职业院校及大学的服装设计学生；跨专业学生须用作品集证明服装制作经验。"
   },
   "national-embroidery-awards-2027": {
     "awards": "六个参赛小组分别设冠军、亚军，另设全场最佳。",
     "prize": "全场最佳获绣线套装（标价 499 英镑）及缝纫刺绣机（标价 1,199 英镑）等实物。教育组三个小组冠军各获 100 英镑购物券等。",
-    "url": "https://www.creativecraftshow.co.uk/wp-content/uploads/2026/08/National-Embroidery-Awards-2027-28072026-v6-compressed.pdf"
+    "url": "https://www.creativecraftshow.co.uk/wp-content/uploads/2026/08/National-Embroidery-Awards-2027-28072026-v6-compressed.pdf",
+    "eligibility": "限不列颠群岛刺绣创作者；学生组覆盖在读本科生、研究生及毕业三年内的创作者。"
   },
   "jfda-54-2026": {
     "awards": "实物组设大奖、最优秀奖、优秀奖、金奖各 1 名，银奖和铜奖各 2 名。AI 组设最优秀奖 1 名、优秀奖 2 名。两组另设鼓励奖。",
     "prize": "实物组大奖 300 万韩元、最优秀奖 100 万韩元，优秀奖及金、银、铜奖每人 50 万韩元。AI 组最优秀奖 100 万韩元、两个优秀奖各 50 万韩元。",
-    "url": "https://www.jfda.or.kr/ko/contest/apply/cmsgcvtw80000jl04vlsn1ozi"
+    "url": "https://www.jfda.or.kr/ko/contest/apply/cmsgcvtw80000jl04vlsn1ozi",
+    "eligibility": "韩国及海外学生和社会人士均可参加，分成衣与 AI 设计两组。"
   },
   "ksfd-fashion-17-2026": {
     "awards": "大奖、特别奖和金奖各 1 件，银奖 2 件、铜奖 5 件、鼓励奖 20 件、特选 30 件、入选 50 件。",
     "prize": "特别奖为现金 100 万韩元，鼓励奖每件现金 10 万韩元。大奖、金奖、银奖及铜奖发放 MUSINSA 平台购物金，面额依次为 100 万、50 万、30 万、20 万韩元。",
-    "url": "https://www.2026ksfdcontest.com/"
+    "url": "https://www.2026ksfdcontest.com/",
+    "eligibility": "服装相关专业在校生及一般设计者。"
   },
   "next-fashion-designer-tokyo-2026": {
     "awards": "自由设计和包容性设计两组各设东京都知事大奖 1 名、优秀奖 2 名、特别选拔奖 1 名（组）。",
@@ -177,7 +187,8 @@
   "soen-award-101": {
     "awards": "装苑赏、佳作第一名、佳作第二名，各 1 名。",
     "prize": "装苑赏 100 万日元，佳作第一名与第二名各 30 万日元。三奖均另颁奖状、奖杯及赞助商奖品。",
-    "url": "https://soen-award.com/soensho/information/schedule101260817/"
+    "url": "https://soen-award.com/soensho/information/schedule101260817/",
+    "eligibility": "以尚未在商业品牌担任设计师者为主；首次发布系列未满两年或从事独件创作等情况可按章程报名。"
   },
   "tokyo-fashion-award-2027": {
     "awards": "男装和女装方向各选 4 个品牌，共 8 个品牌。",
@@ -192,12 +203,14 @@
   "aomori-junior-fashion-illustration-6-2026": {
     "awards": "最优秀奖 1 件、优秀奖 3 件，均颁发奖状。",
     "prize": "最优秀奖获面值 5,000 日元的图书卡，优秀奖每件获面值 3,000 日元的图书卡。",
-    "url": "https://f-koshien.com/news261117.html"
+    "url": "https://f-koshien.com/news261117.html",
+    "eligibility": "须在日本 2026 学年就读青森县内的初中。"
   },
   "korea-textile-fashion-7-2026": {
     "awards": "大奖 1 名、最优秀奖 2 名、金奖 1 名、银奖 2 名、铜奖 3 名、特别奖 12 名、鼓励奖 15 名，另设特选、入选。",
     "prize": "大奖 100 万韩元及价值 150 万韩元的面料课程。最优秀奖各 80 万韩元、金奖 70 万韩元、银奖各 50 万韩元、铜奖各 30 万韩元。",
-    "url": "https://thinkyou.co.kr/extAct/67743/"
+    "url": "https://thinkyou.co.kr/extAct/67743/",
+    "eligibility": "韩国及海外大学生、公众均可参加，无年龄限制，作品须为未发表原创。"
   },
   "bainiaoyi-2026": {
     "awards": "成衣、配饰成品和两类设计方案均设金1、银2、铜3。成衣另设5项单项奖，其他组另设优秀奖。",
@@ -313,5 +326,41 @@
     "awards": "金浪奖1名、浪潮奖2名、浪花奖3名、十佳设计师10名。另设制作补贴5名。",
     "prize": "金、银、铜每名人民币30万、20万、10万元。十佳每名1万元，服装制作补贴每名5000元。",
     "url": "https://dasai.cfw.cn/ds/945.html"
+  },
+  "aatcc-slumberstyle-2027": {
+    "awards": "设前三名与 Bedsure 专项机会。团队共用该名次奖励。",
+    "prize": "第一名 5,200 美元；第二名 3,800 美元；第三名 1,200 美元及床品。金额已合计协会与赞助方现金。",
+    "url": "https://www.aatcc.org/students/awards-competition/c2c-student-merchandising-competition",
+    "eligibility": "全球在读本科生、研究生。可个人报名或最多四人组队，每名队员均须参加一次指定线上教育活动。"
+  },
+  "awaf-wearable-art-2027": {
+    "awards": "设最高奖及专项奖。入围作品自动进入适用奖项评选，另设观众选择奖。",
+    "prize": "最高奖 10,000 澳元；整届总奖池 25,500 澳元，包含最高奖。",
+    "url": "https://australianwearableart.com.au/artist-entry-now-open/",
+    "eligibility": "面向海内外年满 18 岁的个人和设计团队，队员均须满 18 岁。作品此前不得参赛、展览或完整公开展示。"
+  },
+  "reborn-denim-schools-2027": {
+    "awards": "设学生一至三等奖和获胜学校奖，以缝纫设备和材料奖励。",
+    "prize": "章程列实物奖。一等学生奖含参考价 449 英镑的 Janome 缝纫机，获胜学校获参考价 429 英镑的包缝机。",
+    "url": "https://www.creativecraftshow.co.uk/reborn-schools-competition-2027/",
+    "eligibility": "限 13–18 岁学生。报名须另交照片使用同意书；公告未明确说明境外学校是否可报名。"
+  },
+  "a-design-fashion-2027": {
+    "awards": "设铂金、金、银、铜、铁五个等级，获奖权益随等级与报名方案而异。",
+    "prize": "公开征集资料未列固定现金奖金；奖杯、证书、年鉴与展示属于获奖权益。",
+    "url": "https://competition.adesignaward.com/ada-catalog-cats.php?CATEGORY=4&PAGE=888",
+    "eligibility": "面向全球服装设计师、服装品牌、时装屋与制造商等。个人及机构按相应账户类型申报。"
+  },
+  "sfwrunway-sustainability-2026": {
+    "eligibility": "全球年满 18 岁、在读或毕业三年内、专业时装设计工作经验不足四年者。个人参赛，每人一件。",
+    "awards": "一名获选者获洛杉矶时装周秀场制作支持，另选十二名入围者。",
+    "prize": "主办方提供秀场制作、摄影及品牌指导，公告未列现金奖金；往返洛杉矶交通由获选者安排。",
+    "url": "https://www.sfwrunway.com/pages/sustainability-competition"
+  },
+  "aspire-graduation-gown-2026": {
+    "eligibility": "全球设计师、学生、毕业生及创意从业者，国籍和专业不限。",
+    "awards": "选出一项用于学院毕业典礼的礼袍设计。",
+    "prize": "获选设计 5,000 美元。",
+    "url": "https://www.fitnyc.edu/creative-nexus/contests/external.php"
   }
 }

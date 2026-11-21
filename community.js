@@ -569,6 +569,17 @@ export async function renderContests(target,request,loadContests,signedIn,select
         open.append(node("p",contestStatus(item,today)+" · "+item.category,"eyebrow"),heading,meta,
           node("p",item.summary,"contest-card-copy"),action);
         card.append(open);
+        if(item.kind==="recruit" && contestRegion(item)==="overseas") {
+          const fields=(item.details || []).filter(d=>["参赛资格","奖项设置","赛事奖金"].includes(d.title));
+          if(fields.length) {
+            const panel=node("details",null,"contest-entry-facts");
+            panel.append(node("summary","参赛资格、奖项与奖金"));
+            const facts=node("dl");
+            for(const field of fields) facts.append(node("dt",field.title),node("dd",field.text));
+            panel.append(facts);
+            card.append(panel);
+          }
+        }
         list.append(card);
       }
       if(!rows.length) list.append(node("p","暂无相关赛事。","notice"));

@@ -165,6 +165,12 @@ def contest_entry(row):
     if award:
         entry["details"][:0] = [{"title": "奖项设置", "text": award["awards"]},
                                 {"title": "赛事奖金", "text": award["prize"]}]
+        if award.get("eligibility"):
+            entry["details"] = [d for d in entry["details"] if not (d["title"] == "参赛资格" and d["text"] == award["eligibility"])]
+            for detail in entry["details"]:
+                if detail["title"] == "参赛资格":
+                    detail["title"] = "资格细则"
+            entry["details"].insert(0, {"title": "参赛资格", "text": award["eligibility"]})
         ref = source({"title": "奖项与奖金依据", "url": award["url"]})
         if ref["url"] not in {r["url"] for r in [entry["source"], *entry["references"]]}:
             entry["references"].append(ref)

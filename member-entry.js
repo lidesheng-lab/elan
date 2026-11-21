@@ -1,4 +1,4 @@
-import { enableMemberPhotoZoom, photoTrigger } from "./photo-viewer.js";
+import { enableMemberPhotoZoom, photoTrigger, enableMobileSwipes } from "./photo-viewer.js";
 import { favoriteControl, publicDetailHref, shareControl, mountTrendDiscussion, renderProfile, renderContests, renderSquare, renderReviewQueue } from "./community.js";
 
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
@@ -44,6 +44,7 @@ const wantsAdmin = () => new URLSearchParams(location.search).get("panel")==="ad
 const detailRoute = root.dataset.detailRoute || "";
 const detailTitle = document.title;
 const currentRoute = () => location.hash.slice(1).split("?")[0] || detailRoute;
+enableMobileSwipes(currentRoute);
 const sectionDetail = () => currentRoute().split("/")[1] || "";
 const visitorActions = new Set(["communityContestEngagement","communityPosts","communityThread","communityLike","communityPost","communityComment","communityPostRemove"]);
 let visitorId;
@@ -1002,7 +1003,7 @@ if (detailRoute) root.addEventListener("click", event => {
   const route = link.hash.slice(1);
   if (!sections.some(([key]) => key === route)) return;
   event.preventDefault();
-  history.pushState(null, "", "/" + link.hash);
+  history.pushState({elanPrevious: location.href}, "", "/" + link.hash);
   entry();
 });
 if (detailRoute) root.addEventListener("click", event => {

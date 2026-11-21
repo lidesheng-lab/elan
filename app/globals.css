@@ -677,3 +677,8 @@ body:has(.editorial-viewer[open]){overflow:hidden}
 .contest-entry-facts summary{cursor:pointer;color:var(--accent);font-weight:600}
 .contest-entry-facts dt{margin-top:.8em;font-weight:600}
 .contest-entry-facts dd{margin:.25em 0 0;line-height:1.55}
+
+@media (pointer: coarse) {
+  html, body { overscroll-behavior-x: none; }
+  .runway-lightbox, .photo-dialog { overscroll-behavior-x: contain; touch-action: pan-y pinch-zoom; }
+}

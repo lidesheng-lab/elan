@@ -211,3 +211,97 @@ export function photoTrigger(image, photos, index) {
   });
   return trigger;
 }
+
+export function enableMobileSwipes(currentRoute) {
+  const forwardKey = "elan-swipe-forward";
+  const gallerySelector = "dialog.runway-lightbox[open], dialog.photo-dialog[open]";
+  let gesture;
+  function local(url) {
+    if (!url) return "";
+    const target = new URL(url, location.href);
+    return target.origin === location.origin ? target.href : "";
+  }
+  function rememberPrevious(url) {
+    if (history.state?.elanPrevious === undefined) {
+      history.replaceState({...history.state, elanPrevious: url !== location.href ? local(url) : ""}, "");
+    }
+  }
+  rememberPrevious(history.length > 1 ? document.referrer : "");
+  window.addEventListener("hashchange", e => {
+    // Traversal restores the entry's existing state. Record only newly created entries.
+    if (history.state === null) rememberPrevious(e.oldURL);
+  });
+  function forwardRoute(value) {
+    try {
+      if (value) sessionStorage.setItem(forwardKey, JSON.stringify(value));
+      else return JSON.parse(sessionStorage.getItem(forwardKey) || "null");
+    } catch {}
+  }
+  function navigate(back) {
+    const nav = window.navigation;
+    const entry = nav?.currentEntry;
+    const adjacent = entry && nav.entries()[entry.index + (back ? -1 : 1)];
+    if (adjacent && local(adjacent.url)) {
+      if (back) forwardRoute([adjacent.url, location.href, false]);
+      history.go(back ? -1 : 1);
+      return;
+    }
+    if (!back) {
+      const saved = forwardRoute();
+      if (saved?.[0] === location.href && local(saved[1])) {
+        if (saved[2]) location.assign(saved[1]);
+        else history.forward();
+      }
+      return;
+    }
+    const previous = local(history.state?.elanPrevious);
+    if (!entry && previous && history.length > 1) {
+      forwardRoute([previous, location.href, false]);
+      history.back();
+      return;
+    }
+    const route = currentRoute();
+    if (!route || route === "home") return;
+    const parent = route.includes("/") ? route.split("/")[0] : "home";
+    const target = new URL("/#" + parent, location.href).href;
+    forwardRoute([target, location.href, true]);
+    location.replace(target);
+  }
+  document.addEventListener("touchstart", e => {
+    gesture = null;
+    if (e.touches.length !== 1 || (window.visualViewport?.scale || 1) > 1.05) return;
+    const target = e.target;
+    const photo = target.closest?.(gallerySelector);
+    const touch = e.touches[0];
+    const edge = touch.clientX <= 28 ? "left" : touch.clientX >= innerWidth - 28 ? "right" : "";
+    if (photo?.querySelector('[data-zoom="manual"]') ||
+        (!photo && (!edge || document.querySelector("dialog[open]"))) ||
+        target.closest?.('input,textarea,select,[contenteditable="true"],video')) return;
+    gesture = {x:touch.clientX, y:touch.clientY, edge, photo, horizontal:false};
+    // WebKit chooses its native history gesture as soon as an edge touch begins.
+    if (edge && e.cancelable && !target.closest?.("button,a,label")) e.preventDefault();
+  }, {passive:false});
+  document.addEventListener("touchmove", e => {
+    if (!gesture || e.touches.length !== 1) { gesture = null; return; }
+    const dx = Math.abs(e.touches[0].clientX - gesture.x);
+    const dy = Math.abs(e.touches[0].clientY - gesture.y);
+    if (!gesture.horizontal && dy > 10 && dy > dx) { gesture = null; return; }
+    if (dx > 10 && dx > 1.5 * dy) gesture.horizontal = true;
+    if (gesture.horizontal && e.cancelable) e.preventDefault();
+  }, {passive:false});
+  document.addEventListener("touchcancel", () => { gesture = null; });
+  document.addEventListener("touchend", e => {
+    const start = gesture;
+    gesture = null;
+    if (!start || e.touches.length || !e.changedTouches.length) return;
+    const dx = e.changedTouches[0].clientX - start.x;
+    const dy = e.changedTouches[0].clientY - start.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < 1.5 * Math.abs(dy)) return;
+    if (start.photo) {
+      if (!start.photo.open) return;
+      const buttons = start.photo.querySelectorAll(".runway-view-nav button, .photo-controls button");
+      const button = buttons[dx < 0 ? 1 : 0];
+      if (button && !button.disabled) button.click();
+    } else if (start.edge === (dx < 0 ? "right" : "left")) navigate(dx < 0);
+  });
+}

@@ -205,23 +205,6 @@ function showDetail(target, show, favorite, readFile) {
     open.onclick = () => openLook(0);
     actions.append(open);
   }
-  let startTouch = null;
-  large.addEventListener("touchstart", event => {
-    const finger = event.touches[0];
-    startTouch = event.touches.length === 1 ? { x: finger.clientX, y: finger.clientY } : null;
-  }, { passive: true });
-  large.addEventListener("touchcancel", () => { startTouch = null; });
-  large.addEventListener("touchend", event => {
-    const start = startTouch;
-    startTouch = null;
-    if (!start || event.touches.length || (window.visualViewport?.scale || 1) > 1.05) return;
-    const finger = event.changedTouches[0];
-    const dx = finger.clientX - start.x;
-    const dy = finger.clientY - start.y;
-    if (Math.abs(dx) < 45 || Math.abs(dx) < 1.5 * Math.abs(dy)) return;
-    const index = active + (dx < 0 ? 1 : -1);
-    if (index >= 0 && index < show.images.length) select(index);
-  }, { passive: true });
   close.onclick=()=>viewer.close();
   prev.onclick=()=>select(active-1);
   next.onclick=()=>select(active+1);

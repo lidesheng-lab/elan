@@ -24,7 +24,7 @@ const communityRoutes = new Map([
 const accessRoutes = new Set(["login", "register", "reset", "subscribe"]);
 const accessCopy = {
   login: ["会员登录", "使用注册邮箱和密码登录。"],
-  register: ["注册普通会员", "验证邮箱并设置密码后，即可免费登录。"],
+  register: ["注册普通会员", "验证邮箱并设置密码后，品牌索引和美妆立即开放 15 分钟，每个账号限一次。同时订阅流行趋势和大赛信息，可在邮件底部退订。"],
   reset: ["找回密码", "输入你的注册邮箱。"],
   subscribe: ["免费订阅", "每周收到时尚趋势与国内外服装设计大赛资讯，涵盖色彩、面料、廓形，以及赛事征稿、截稿提醒、赛程变更和获奖公示。登记后请查收确认邮件。"],
 };
@@ -591,6 +591,17 @@ async function showHomeRunways(target) {
   grid.replaceChildren(...picks.map(post=>trendStory(post)));
   target.querySelector(".home-runways").hidden=!picks.length;
 }
+let trialDeadline = 0;
+let expiryTimer;
+const protectedSection = route => route === "designers" || route === "beauty";
+function canReadCollections() {
+  return account && (account.premium || performance.now() < trialDeadline);
+}
+function expireReader() {
+  if (protectedSection(publicRoute()) && !canReadCollections() && root.querySelector(".public-collection-reader")) entry();
+}
+document.addEventListener("visibilitychange", expireReader);
+window.addEventListener("pageshow", expireReader);
 function entry() {
   surface = "public";
   const current = wantsAdmin() && !account && !accessRoutes.has(publicRoute()) ? "login" : publicRoute();
@@ -624,6 +635,12 @@ function entry() {
   } else if (communityPage) {
     content = readCommunity ? '<p class="notice" role="status">正在读取…</p>' :
       `<div class="section-title"><h1>${communityPage[0]}</h1></div>${lockedPreview("请先登录", "普通会员和高级会员均可使用。", '<a class="primary" href="#login">会员登录</a>')}`;
+  } else if (protectedSection(route) && !canReadCollections()) {
+    const title = route === "beauty" ? "美妆" : "品牌索引";
+    content = lockedPreview(title, account ? "免费体验已结束，开通高级会员可继续浏览。" :
+      "注册普通会员，立即体验品牌索引和美妆 15 分钟，每个账号限一次。",
+      account ? '<a class="primary" href="#upgrade">申请高级会员</a>' :
+      '<a class="primary" href="#register">注册体验</a> <a class="text-action" href="#login">会员登录</a>');
   } else if (readerSections.has(route)) {
     content = '<div class="public-collection-reader"><p role="status">正在打开栏目…</p></div>';
   } else if (route === "upgrade") {
@@ -735,6 +752,10 @@ async function loadMember() {
   try {
     const profile = await request({ memberAction: "profile" });
     account = profile;
+    clearTimeout(expiryTimer);
+    const remaining = Math.max(0, profile.trialEndsAt - profile.serverNow) || 0;
+    trialDeadline = performance.now() + remaining;
+    if (!profile.premium && remaining) expiryTimer = setTimeout(expireReader, remaining + 10);
     if (profile.admin===true && wantsAdmin()) await adminPanel(profile);
     else if(wantsAdmin()) {
       history.replaceState(null,"","/#profile");
@@ -761,28 +782,46 @@ async function logout() {
     window.location.replace("/");
   }
 }
+async function readCollectionFile(path) {
+  if (!canReadCollections()) throw Error("体验已结束");
+  const response = await fetch("/collection-reader/" + path + ".sealed", {cache:"no-cache"});
+  if (!response.ok) throw Error("资料暂时无法读取");
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  const wrapped = btoa(String.fromCharCode(...bytes.subarray(0,256)));
+  const {key} = await request({memberAction:"collectionKey", wrapped});
+  const raw = Uint8Array.from(atob(key), c => c.charCodeAt(0));
+  const aes = await crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["decrypt"]);
+  const data = await crypto.subtle.decrypt({name:"AES-GCM",iv:bytes.subarray(256,268)}, aes, bytes.subarray(268));
+  if (!canReadCollections()) throw Error("体验已结束");
+  return new Response(data);
+}
 async function mountPublicCollection(target) {
   try {
-    if (publicRoute() === "designers") {
+    const route = publicRoute();
+    if (route === "designers") {
       const {showRunways} = await import("/collection-reader/runways.js");
       if (target.isConnected) await showRunways(target, sectionDetail(),
-        slug => favoriteControl(request, "runway", slug, Boolean(account)));
+        slug => favoriteControl(request, "runway", slug, Boolean(account)), readCollectionFile);
       return;
     }
-    const {mountReader} = await import("/collection-reader/reader.js");
+    const {mountReader} = await import("/collection-reader/reader.js?v=member15");
+    const beauty = route === "beauty" ? await (await readCollectionFile("beauty.json")).json() : [];
     if (!target.isConnected) return;
     window.elanMember = {
+      beauty,
       photo: url => url,
       favorite: (kind, id) => favoriteControl(request, kind, id, Boolean(account)),
       async request({memberAction, key}, signal) {
-        let path = "/collection-reader/catalog.json";
-        if (memberAction === "gallery") {
-          if (!/^[a-z0-9-]{1,115}$/.test(key)) throw new Error("无效的系列");
-          path = "/collection-reader/galleries/" + key + ".json";
-        } else if (memberAction !== "archive") throw new Error("未知的栏目请求");
-        const response = await fetch(path, {signal});
-        if (!response.ok) throw new Error("系列资料暂时无法读取");
-        return response.json();
+        if (route === "studio" && memberAction === "archive") {
+          const res = await fetch("/collection-reader/studio.json", {signal});
+          if (!res.ok) throw Error("暂时无法读取线稿参考");
+          return res.json();
+        }
+        if (memberAction === "archive") return (await readCollectionFile("catalog.json")).json();
+        if (memberAction === "gallery" && /^[a-z0-9-]{1,115}$/.test(key)) {
+          return (await readCollectionFile("galleries/" + key + ".json")).json();
+        }
+        throw Error("未知的栏目请求");
       }
     };
     unmountReader = mountReader(target);

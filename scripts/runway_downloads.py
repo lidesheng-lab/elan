@@ -3,6 +3,7 @@ import concurrent.futures
 import hashlib
 import json
 import shutil
+import subprocess
 import time
 import urllib.request
 import zipfile
@@ -76,3 +77,4 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor(max_workers=12) as executor:
         for path in sorted((READER / "shows").glob("*.json")):
             package(path, executor)
+    subprocess.run(["node", str(ROOT / "scripts" / "seal-collections.cjs")], check=True)

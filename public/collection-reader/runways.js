@@ -1,6 +1,6 @@
 import { attachDownload } from "./download.js";
 import { shareControl } from "/community.js";
-const base = "/collection-reader/";
+
 const element = (tag, text, className) => {
   const el = document.createElement(tag);
   if (text) el.textContent = text;
@@ -11,11 +11,6 @@ function link(href, label, cls) {
   const a = element("a", label, cls);
   a.href = href;
   return a;
-}
-async function read(path) {
-  const response = await fetch(base + path + "?v=RUNWAY_DATA_VERSION");
-  if (!response.ok) throw Error("读取失败");
-  return response.json();
 }
 function picture(src, alt, lazy = true) {
   const img = element("img");
@@ -125,7 +120,7 @@ function appendFilm(target, show) {
   target.append(section);
 }
 
-function showDetail(target, show, favorite) {
+function showDetail(target, show, favorite, readFile) {
   const back = link("/#designers","← 品牌索引","reader-back");
   const heading = element("h1",show.brand);
   const meta = element("p",show.season,"eyebrow");
@@ -142,8 +137,20 @@ function showDetail(target, show, favorite) {
   if (show.download) {
     const count = show.download.count;
     const label = count === show.images.length ? "一键下载秀场" : "下载已收录造型";
-    const download = link(show.download.url, label + "（ZIP · " + count + " 张）", "member-secondary");
-    download.download = show.slug + ".zip";
+    const download = element("button", label + "（ZIP · " + count + " 张）", "member-secondary");
+    download.onclick = async () => {
+      download.disabled = true;
+      try {
+        const bytes = await (await readFile("downloads/" + show.slug + ".zip")).blob();
+        if (!download.isConnected) return;
+        const url = URL.createObjectURL(bytes);
+        const anchor = link(url, label);
+        anchor.download = show.slug + ".zip";
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+      } catch { download.textContent = "下载失败，点击重试"; }
+      finally { download.disabled = false; }
+    };
     actions.append(download);
   } else if (show.externalCollection && show.images.length) {
     attachDownload(actions, show);
@@ -274,16 +281,16 @@ function showDetail(target, show, favorite) {
     target.append(slides);paint();
   }
 }
-export async function showRunways(target, slug, favorite) {
+export async function showRunways(target, slug, favorite, readFile) {
   target.classList.add("runway-media");
   try {
-    const data=await read(slug ? "shows/"+encodeURIComponent(slug)+".json" : "shows.json");
+    const data=await (await readFile(slug ? "shows/"+encodeURIComponent(slug)+".json" : "shows.json")).json();
     if(!target.isConnected)return;
     if (slug && location.pathname === "/" && location.hash.startsWith("#designers/")) {
       location.replace("/designers/" + encodeURIComponent(data.slug) + "/");
       return;
     }
-    if(slug) showDetail(target,data,favorite);else showIndex(target,data);
+    if(slug) showDetail(target,data,favorite,readFile);else showIndex(target,data);
   } catch {
     if(target.isConnected)target.replaceChildren(element("p","系列暂时无法读取。"),link("/#designers","返回品牌索引"));
   }

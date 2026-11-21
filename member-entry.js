@@ -6,7 +6,17 @@ const storageKey = "elan-member-session";
 const root = document.getElementById("root");
 const sessionPattern = /^[A-Za-z0-9_-]{43}$/;
 const setPasswordPattern = /^#set-password\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/;
-let session = sessionStorage.getItem(storageKey) || "";
+const emailKey = "elan-remembered-email";
+function stored(area, key, value) {
+  try {
+    const storage = window[area];
+    if (value === undefined) return storage.getItem(key) || "";
+    if (value) storage.setItem(key,value);
+    else storage.removeItem(key);
+    return true;
+  } catch { return value === undefined ? "" : false; }
+}
+let session = stored("sessionStorage",storageKey) || stored("localStorage",storageKey);
 let account = null;
 let surface = "public";
 let pageHash = "#home";
@@ -131,17 +141,18 @@ document.addEventListener("visibilitychange", updateSubscriptionTotal);
 
 function accessForm(mode) {
   if (mode === "subscribe") return `
-    <form id="access-form">
+    <form id="access-form" method="post" autocomplete="on">
       <label for="member-email">订阅邮箱</label>
       <input id="member-email" name="email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254">
       <button class="primary" type="submit">免费订阅</button>
     </form>`;
   const login = mode === "login";
   return `
-    <form id="access-form">
+    <form id="access-form" method="post" autocomplete="on">
       <label for="member-email">邮箱地址</label>
       <input id="member-email" name="email" type="email" autocomplete="username" required maxlength="254">
       ${login ? '<label for="member-password">密码</label><input id="member-password" name="password" type="password" autocomplete="current-password" required maxlength="512">' : ""}
+      ${login ? '<label style="display:flex;align-items:center;gap:.55rem"><input name="remember" type="checkbox" style="width:1rem;min-height:1rem;height:1rem;margin:0">在此设备上记住登录（30 天）</label>' : ""}
       <button class="primary" type="submit">${login ? "登录" : mode === "register" ? "发送注册邮件" : "发送重置邮件"}</button>
     </form>
     <div class="access-actions">
@@ -178,6 +189,11 @@ function showAccess(mode, trigger = document.activeElement) {
   dialog.querySelector(".access-close").onclick = () => dialog.close();
   const address = dialog.querySelector("#member-email");
   address.value = subscribing ? account?.email || "" : email;
+  if (mode === "login") {
+    const rememberedEmail = stored("localStorage",emailKey);
+    if (!address.value && rememberedEmail) address.value = rememberedEmail;
+    dialog.querySelector('[name="remember"]').checked = Boolean(rememberedEmail);
+  }
   address.readOnly = subscribing && Boolean(account?.premium);
   bindAccess(mode);
   if (!dialog.open) dialog.showModal();
@@ -194,9 +210,10 @@ function bindAccess(mode) {
       form.remove();
       message("邮箱已登记。首次订阅请查收确认邮件。");
     } else if (mode === "login") {
-      const result = await request({ memberAction: "passwordLogin", email, password: data.get("password") }, undefined, "");
+      const remember = data.has("remember");
+      const result = await request({ memberAction: "passwordLogin", email, remember, password: data.get("password") }, undefined, "");
       if (!form.isConnected) return;
-      startSession(result.session);
+      startSession(result.session, remember, email);
       const afterLogin = detailRoute ? location.pathname + location.search
         : "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile");
       history.replaceState(null, "", wantsAdmin() ? "/?panel=admin" : afterLogin);
@@ -765,7 +782,7 @@ function setPasswordPage(id, token) {
   bindForm("set-password-form", async data => {
     if (data.get("password") !== data.get("repeat")) throw new Error("两次输入的密码不同。");
     await request({memberAction:"setPassword", id, token, password:data.get("password")}, undefined, "");
-    sessionStorage.removeItem(storageKey);
+    clearSession();
     session = "";
     account = null;
     history.replaceState(null, "", "/#login");
@@ -773,11 +790,25 @@ function setPasswordPage(id, token) {
     message("密码已保存，请登录。");
   });
 }
-function startSession(token) {
-  if (!sessionPattern.test(token)) throw new Error("登录状态无效，请重新登录。");
-  session = token;
-  sessionStorage.setItem(storageKey, token);
+function clearSession() {
+  stored("sessionStorage",storageKey,"");
+  if (stored("localStorage",storageKey) === session) stored("localStorage",storageKey,"");
+  session = "";
 }
+function startSession(token, remember, email) {
+  if (!sessionPattern.test(token)) throw new Error("登录状态无效，请重新登录。");
+  stored("sessionStorage",storageKey,"");
+  stored("localStorage",emailKey,remember ? email : "");
+  if (!remember || !stored("localStorage",storageKey,token)) {
+    stored("localStorage",storageKey,"");
+    stored("sessionStorage",storageKey,token);
+  }
+  session = token;
+}
+window.addEventListener("storage", event => {
+  if (event.key === storageKey && !stored("sessionStorage",storageKey) &&
+      (event.oldValue === session || !session)) location.reload();
+});
 function setTrialDeadline(result) {
   clearTimeout(expiryTimer);
   const remaining = Math.max(0, result.trialEndsAt - result.serverNow) || 0;
@@ -799,7 +830,7 @@ async function loadMember() {
     else entry();
   } catch (error) {
     if ([401,403].includes(error.status)) {
-      sessionStorage.removeItem(storageKey);
+      clearSession();
       session = "";
       account = null;
       entry();
@@ -812,7 +843,7 @@ async function loadMember() {
 async function logout() {
   try { await request({ memberAction: "logout" }); }
   finally {
-    sessionStorage.removeItem(storageKey);
+    clearSession();
     window.location.replace("/");
   }
 }

@@ -2,6 +2,7 @@ import gzip
 import json
 import re
 import zipfile
+from urllib.parse import urlsplit
 from pathlib import Path
 
 
@@ -22,7 +23,20 @@ def publish_runway_media(root, out, catalog, galleries):
         with gzip.open(path, "rt", encoding="utf-8") as stream:
             supplements.update(json.load(stream))
     films = json.loads((root / "runway-films.json").read_text())
+    for slug, film in films.items():
+        players = [film[key] for key in ("originalMp4", "embed") if film.get(key)]
+        if not film.get("originalPage") or len(players) != 1:
+            raise ValueError(f"Missing official film page or player for {slug}")
+        for url in [film["originalPage"], *players]:
+            parsed = urlsplit(url)
+            host = parsed.hostname or ""
+            if parsed.scheme != "https" or not host or any(
+                host == blocked or host.endswith("." + blocked)
+                for blocked in ("bilibili.com", "b23.tv", "bilivideo.com")
+            ):
+                raise ValueError(f"Unsupported runway film URL for {slug}")
     additions = json.loads((root / "runway-study-additions.json").read_text())
+    brand_links = json.loads((root / "runway-brand-links.json").read_text())
     index = []
     for study in catalog["studies"]:
         slug = study["slug"]
@@ -44,10 +58,21 @@ def publish_runway_media(root, out, catalog, galleries):
         if not cover and external:
             cover = external.get("cover", "")
         item = {"slug": slug, "brand": study["designer"].split(" · ")[0], "season": study["season"], "cover": cover}
-        index.append(item)
         source = gallery.get("sourceUrl") or next((p["sourceUrl"] for p in raw if p.get("sourceUrl")), study["sources"][0]["url"])
         data = {**item, "images": images, "film": films.get(slug), "source": source,
                 "credit": gallery.get("credit") or next((p["credit"] for p in raw if p.get("credit")), "")}
+        brand = item["brand"].strip()
+        website = brand_links["brands"].get(brand)
+        profile = brand_links["profiles"].get(brand)
+        collection = brand_links["collections"].get(slug)
+        data["brandLinks"] = []
+        if website:
+            data["brandLinks"].append(["品牌官网", website])
+        elif profile:
+            data["brandLinks"].append(profile)
+        if collection:
+            data["brandLinks"].append(["官网查看本季系列", collection])
+        index.append({**item, "brandLink": data["brandLinks"][-1] if data["brandLinks"] else None})
         if external and not images:
             raise ValueError(f"Missing images for linked collection {slug}")
         if external:

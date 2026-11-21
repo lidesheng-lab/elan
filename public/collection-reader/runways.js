@@ -31,6 +31,12 @@ function runwaySeason(label) {
   return match ? match[1] + " " + match[2] : "";
 }
 let listState = {search:"", year:"current", limit:24};
+function brandAnchor([label, url]) {
+  const anchor = link(url, label, "text-action");
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+  return anchor;
+}
 function showIndex(target, shows) {
   const heading = element("h1","品牌索引");
   const search = element("input");
@@ -61,7 +67,10 @@ function showIndex(target, shows) {
       const card = link("/designers/"+item.slug+"/",null,"show-card");
       if (item.cover) card.append(picture(item.cover,item.brand+" · "+item.season,grid.childElementCount>=6));
       card.append(element("strong",item.brand),element("span",item.season));
-      grid.append(card);
+      const entry = element("article");
+      entry.append(card);
+      if (item.brandLink) entry.append(brandAnchor(item.brandLink));
+      grid.append(entry);
     }
     if (!rows.length) grid.append(element("p","没有找到符合条件的系列。"));
     more.hidden = rows.length <= listState.limit;
@@ -79,25 +88,7 @@ function appendFilm(target, show) {
   if (!film) return;
   const section = element("section", null, "show-film");
   section.append(element("h2", film.label || "秀场视频"));
-  const controls = element("div", null, "show-filters");
-  const slot = element("div");
-  const title = show.brand + " · " + show.season + " 秀场视频";
-  function player(src) {
-    const frame = element("iframe");
-    frame.loading = "lazy";
-    frame.src = src;
-    frame.title = title;
-    frame.referrerPolicy = "strict-origin-when-cross-origin";
-    frame.allow = "fullscreen; picture-in-picture";
-    frame.allowFullscreen = true;
-    slot.replaceChildren(frame);
-  }
-  function external(url, label) {
-    const action = link(url, label, "text-action");
-    action.target = "_blank";
-    action.rel = "noopener noreferrer";
-    controls.append(action);
-  }
+  const title = show.brand + " · " + show.season + " 官方视频";
   if (film.originalMp4) {
     const video = element("video");
     video.controls = true;
@@ -108,21 +99,28 @@ function appendFilm(target, show) {
     video.src = film.originalMp4;
     video.setAttribute("aria-label", title);
     video.addEventListener("error", () => {
-      slot.append(element("p", "视频加载失败，请打开下方的品牌官网观看。"));
+      section.append(element("p", "视频暂时无法加载。"));
     }, {once: true});
-    slot.append(video);
-  } else if (film.embed && !film.originalPage) {
+    section.append(video);
+  } else {
+    const frame = element("iframe");
     const url = new URL(film.embed);
     if (["www.youtube.com", "www.youtube-nocookie.com"].includes(url.hostname)) {
       url.searchParams.set("origin", location.origin);
       url.searchParams.set("playsinline", "1");
     }
-    player(url.href);
+    frame.loading = "lazy";
+    frame.title = title;
+    frame.src = url.href;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    frame.allow = "fullscreen; picture-in-picture; encrypted-media";
+    frame.allowFullscreen = true;
+    section.append(frame);
   }
-  if (film.originalPage) external(film.originalPage, "在品牌中国官网观看原片");
-  external(film.url, "国际原站");
-  if (film.bvid) external("https://www.bilibili.com/video/" + film.bvid + "/", "国内备用视频");
-  section.append(slot, controls);
+  const source = link(film.originalPage, "在品牌官网观看", "text-action");
+  source.target = "_blank";
+  source.rel = "noopener noreferrer";
+  section.append(source);
   target.append(section);
 }
 
@@ -131,6 +129,11 @@ function showDetail(target, show, favorite) {
   const heading = element("h1",show.brand);
   const meta = element("p",show.season,"eyebrow");
   target.replaceChildren(back,heading,meta);
+  if (show.brandLinks?.length) {
+    const links = element("div", null, "show-filters");
+    links.append(...show.brandLinks.map(brandAnchor));
+    target.append(links);
+  }
   const actions=element("div",null,"show-filters");
   const share = shareControl(show.brand + " · " + show.season + " | ÉLAN", "/designers/" + show.slug + "/", {runway:true});
   share.querySelector("button").textContent = "转发";

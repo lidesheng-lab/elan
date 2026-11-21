@@ -36,7 +36,7 @@ const accessCopy = {
   login: ["会员登录", "使用注册邮箱和密码登录。"],
   register: ["注册普通会员", "验证邮箱并设置密码后，品牌索引和美妆立即开放 15 分钟，每个账号限一次。同时订阅流行趋势和大赛信息，可在邮件底部退订。"],
   reset: ["找回密码", "输入你的注册邮箱。"],
-  subscribe: ["免费订阅", "每周收到时尚趋势与国内外服装设计大赛资讯，涵盖色彩、面料、廓形，以及赛事征稿、截稿提醒、赛程变更和获奖公示。登记后请查收确认邮件。"],
+  subscribe: ["免费订阅", "每周收到时尚趋势与国内外服装设计大赛资讯，涵盖色彩、面料、廓形，以及赛事征稿、截稿提醒、赛程变更和获奖公示。"],
 };
 const categories = [["color", "色彩趋势"], ["fabric", "面料趋势"], ["silhouette", "廓形趋势"]];
 const feeds = new Map();
@@ -144,8 +144,8 @@ function accessForm(mode) {
     <form id="access-form" method="post" autocomplete="on">
       <label for="member-email">订阅邮箱</label>
       <input id="member-email" name="email" type="email" autocomplete="email" placeholder="name@example.com" required maxlength="254">
-      <button class="primary" type="submit">免费订阅</button>
-    </form>`;
+      <button class="primary" type="submit">${account ? "订阅周报" : "发送注册邮件"}</button>
+    </form>${account ? "" : '<p>已有账号？ <a class="text-action" href="#login" data-subscription-login>登录后订阅</a></p>'}`;
   const login = mode === "login";
   return `
     <form id="access-form" method="post" autocomplete="on">
@@ -184,7 +184,7 @@ function showAccess(mode, trigger = document.activeElement) {
   const [title, help] = accessCopy[mode];
   const subscribing = mode === "subscribe";
   dialog.innerHTML = `<button class="access-close" type="button" aria-label="${subscribing ? "关闭订阅窗口" : "关闭会员窗口"}"><span aria-hidden="true">×</span> 关闭</button>
-    <h1 id="access-title" tabindex="-1" autofocus>${title}</h1><p>${help}</p>
+    <h1 id="access-title" tabindex="-1" autofocus>${title}</h1><p>${subscribing && !account ? "填写邮箱后，请通过邮件链接设置密码。完成后即成为普通会员，订阅流行趋势和大赛周报，并获赠一次 15 分钟体验。" : help}</p>
     ${accessForm(mode)}<p class="member-message" role="status" id="access-message"></p>`;
   dialog.querySelector(".access-close").onclick = () => dialog.close();
   const address = dialog.querySelector("#member-email");
@@ -194,7 +194,13 @@ function showAccess(mode, trigger = document.activeElement) {
     if (!address.value && rememberedEmail) address.value = rememberedEmail;
     dialog.querySelector('[name="remember"]').checked = Boolean(rememberedEmail);
   }
-  address.readOnly = subscribing && Boolean(account?.premium);
+  address.readOnly = subscribing && Boolean(account);
+  const subscriptionLogin = dialog.querySelector("[data-subscription-login]");
+  if (subscriptionLogin) subscriptionLogin.onclick = event => {
+    event.preventDefault();
+    showAccess("login", trigger);
+    document.getElementById("access-form").dataset.afterLogin = "subscribe";
+  };
   bindAccess(mode);
   if (!dialog.open) dialog.showModal();
   dialog.querySelector("#access-title").focus({preventScroll:true});
@@ -204,7 +210,14 @@ function bindAccess(mode) {
   bindForm("access-form", async data => {
     const email = data.get("email");
     if (mode === "subscribe") {
-      const result = await request({ email }, undefined, "");
+      if (!account) {
+        await request({memberAction:"register", email}, undefined, "");
+        if (!form.isConnected) return;
+        form.remove();
+        message("新用户请查收注册邮件，打开链接并设置密码。已有账号可直接登录后订阅。");
+        return;
+      }
+      const result = await request({ email:account.email }, undefined, "");
       if (!result.registered) throw new Error("暂时无法登记，请稍后再试。");
       if (!form.isConnected) return;
       form.remove();
@@ -218,6 +231,7 @@ function bindAccess(mode) {
         : "/" + (pageHash && pageHash !== "#home" ? pageHash : "#profile");
       history.replaceState(null, "", wantsAdmin() ? "/?panel=admin" : afterLogin);
       await loadMember();
+      if (form.dataset.afterLogin === "subscribe" && account) showAccess("subscribe");
     } else {
       await request({ memberAction: mode, email }, undefined, "");
       if (form.isConnected) message(mode === "register" ? "请查收注册邮件，验证邮箱并设置密码后即可登录。" : "如果邮箱已注册，请查收重置邮件。");

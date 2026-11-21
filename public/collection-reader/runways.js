@@ -74,46 +74,62 @@ function showIndex(target, shows) {
   more.onclick = () => {listState.limit += 24; draw();};
   target.replaceChildren(heading,toolbar,grid,more); draw();
 }
-function appendStudy(target, notes) {
-  if (!notes) return;
-  const section = element("section", null, "runway-study");
-  const columns = element("div", null, "runway-study-columns");
-  for (const [key, title] of [["fabric","面料搭配"], ["color","色彩"], ["silhouette","造型"]]) {
-    if (!notes[key]) continue;
-    const block = element("section");
-    block.append(element("h3", title), element("p", notes[key]));
-    if (key === "color") {
-      const colors = notes.palette?.length ? notes.palette : notes.trialPalette;
-      if (colors?.length) {
-        if (!notes.palette?.length) block.append(element("small", "打样参考配色"));
-        const palette = element("ul", null, "runway-chips");
-        for (const color of colors) {
-          const chip = element("li");
-          const swatch = element("i");
-          swatch.style.backgroundColor = color.hex;
-          chip.append(swatch, document.createTextNode(color.name));
-          palette.append(chip);
-        }
-        block.append(palette);
+function appendFilm(target, show) {
+  const film = show.film;
+  if (!film) return;
+  const section = element("section", null, "show-film");
+  section.append(element("h2", film.label || "秀场视频"));
+  const controls = element("div", null, "show-filters");
+  const slot = element("div");
+  const title = show.brand + " · " + show.season + " 秀场视频";
+  function player(src) {
+    const frame = element("iframe");
+    frame.loading = "lazy";
+    frame.src = src;
+    frame.title = title;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    frame.allow = "fullscreen; picture-in-picture";
+    frame.allowFullscreen = true;
+    slot.replaceChildren(frame);
+  }
+  function external(url, label) {
+    const action = link(url, label, "text-action");
+    action.target = "_blank";
+    action.rel = "noopener noreferrer";
+    controls.append(action);
+  }
+  if (film.mainlandMp4) {
+    const video = element("video");
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "none";
+    video.style.width = "100%";
+    video.poster = show.cover;
+    video.src = film.mainlandMp4;
+    slot.append(video);
+  }
+  if (film.bvid) {
+    if (!film.mainlandMp4) player("https://player.bilibili.com/player.html?autoplay=0&bvid=" + film.bvid);
+    external("https://www.bilibili.com/video/" + film.bvid + "/", "在哔哩哔哩观看");
+  } else if (!film.mainlandMp4) {
+    const query = show.brand + " " + show.season + " 秀场";
+    external("https://search.bilibili.com/all?keyword=" + encodeURIComponent(query), "在哔哩哔哩搜索本场");
+  }
+  if (film.embed) {
+    const original = element("button", "播放国际版", "member-secondary");
+    original.type = "button";
+    original.onclick = () => {
+      const url = new URL(film.embed);
+      if (["www.youtube.com", "www.youtube-nocookie.com"].includes(url.hostname)) {
+        url.searchParams.set("origin", location.origin);
+        url.searchParams.set("playsinline", "1");
       }
-    }
-    columns.append(block);
+      player(url.href);
+    };
+    controls.append(original);
   }
-  section.append(columns);
-  if (notes.techniques?.length) {
-    const steps = element("ol");
-    for (const step of notes.techniques) steps.append(element("li", step));
-    section.append(element("h3","打样方法"), steps);
-  }
-  if (notes.sources?.length) {
-    const sources = element("div",null,"runway-sources");
-    for (const source of notes.sources) {
-      const a = link(source.url, source.title || source.url, "text-action");
-      a.target = "_blank"; a.rel = "noopener noreferrer";
-      sources.append(a);
-    }
-    section.append(element("h3","资料来源"), sources);
-  }
+  external(film.url, "国际原站");
+  section.append(slot, controls);
   target.append(section);
 }
 
@@ -136,9 +152,8 @@ function showDetail(target, show, favorite) {
     attachDownload(actions, show);
   }
   target.append(actions);
-  if (show.summary) target.append(element("p", show.summary));
   if (!show.images.length) {
-    appendStudy(target, show.notes);
+    appendFilm(target, show);
     return;
   }
   target.append(element("h2","秀场造型"));
@@ -232,26 +247,9 @@ function showDetail(target, show, favorite) {
   }
   more.onclick=batch;
   target.append(grid,more);
-  if(show.credit) target.append(element("p",show.credit,"community-meta"));
   batch();
-  appendStudy(target, show.notes);
   if (show.film) {
-    const video = element("section",null,"show-film");
-    video.append(element("h2",show.film.label || "秀场视频"));
-    if (show.film.embed) {
-      const frame=element("iframe");
-      const playerUrl = new URL(show.film.embed);
-      frame.referrerPolicy = "strict-origin-when-cross-origin";
-      if (["www.youtube.com", "www.youtube-nocookie.com"].includes(playerUrl.hostname)) {
-        playerUrl.searchParams.set("origin", location.origin);
-        playerUrl.searchParams.set("playsinline", "1");
-      }
-      frame.loading="lazy"; frame.src=playerUrl.href; frame.title=show.brand+" · "+show.season+" 秀场视频";
-      frame.allow="fullscreen; picture-in-picture";frame.allowFullscreen=true;
-      video.append(frame);
-    }
-    video.append(link(show.film.url,"在原站观看","text-action"));
-    target.append(video);
+    appendFilm(target, show);
   } else {
     const slides=element("section",null,"show-slides");
     const screen=picture(show.cover,show.brand,false);

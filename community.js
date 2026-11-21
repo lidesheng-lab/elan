@@ -426,7 +426,7 @@ function contestRegion(item) {
 function contestListHref(kind,region) {
   const params=new URLSearchParams();
   if(kind==="award") params.set("tab","award");
-  if(region && region!=="all") params.set("region",region);
+  else if(region==="overseas") params.set("region",region);
   return "#contests"+(params.size ? "?"+params : "");
 }
 function contestDate(item) {
@@ -508,7 +508,7 @@ export async function renderContests(target,request,loadContests,signedIn,select
       return;
     }
     sectionTitle(target,"服装设计大赛","浏览国内外赛事征稿、截稿时间与获奖公示。");
-    const filters=[["recruit","征稿"],["award","获奖"]];
+    const filters=[["domestic","国内征稿"],["overseas","国外征稿"],["award","获奖"]];
     const toolbar=node("div",null,"contest-toolbar");
     const tabs=node("div",null,"pills");
     tabs.setAttribute("aria-label","赛事类型");
@@ -516,46 +516,33 @@ export async function renderContests(target,request,loadContests,signedIn,select
     search.type="search";
     search.placeholder="搜索赛事、类别或主办方";
     search.setAttribute("aria-label","搜索赛事");
-    const regionTabs=node("div",null,"pills");
-    regionTabs.setAttribute("aria-label","举办地区");
-    toolbar.append(regionTabs,tabs,search);
+    toolbar.append(tabs,search);
     const list=node("div",null,"community-contest-list");
     const more=button("查看更多赛事");
     target.append(toolbar,list,more);
     const params=new URLSearchParams(location.hash.split("?")[1]);
-    let selection=params.get("tab")==="award" ? "award" : "recruit";
-    const regions=[["all","全部"],["domestic","国内赛事"],["overseas","国外赛事"]];
-    let region=regions.some(([id])=>id===params.get("region")) ? params.get("region") : "all";
+    let selection=params.get("tab")==="award" ? "award" :
+      params.get("region")==="overseas" ? "overseas" : "domestic";
     let visible=12;
-    function updateFilters() {
-      visible=12;
-      history.replaceState(null,"",location.pathname+location.search+contestListHref(selection,region));
-      paint();
-    }
-    const regionButtons=regions.map(([id,label])=>{
+    const groups=new Map(filters.map(([id])=>[id,items.filter(item=>
+      id==="award" ? item.kind==="award" : item.kind==="recruit" && contestRegion(item)===id
+    )]));
+    const controls=filters.map(([id,label])=>{
       const control=button(label,"");
-      control.onclick=()=>{region=id;updateFilters();};
-      regionTabs.append(control);
-      return control;
-    });
-    const controls=filters.map(([kind,label])=>{
-      const control=button(label+" · "+items.filter(item=>item.kind===kind).length,"");
       control.onclick=()=>{
-        selection=kind;
-        updateFilters();
+        selection=id;
+        visible=12;
+        const href=contestListHref(id==="award" ? "award" : "recruit",id);
+        history.replaceState(null,"",location.pathname+location.search+href);
+        paint();
       };
       tabs.append(control);
       return control;
     });
     function paint() {
       const term=search.value.trim().toLowerCase();
-      const scoped=region==="all" ? items : items.filter(item=>contestRegion(item)===region);
-      regions.forEach(([id],i)=>regionButtons[i].setAttribute("aria-pressed",String(id===region)));
-      filters.forEach(([id,label],i)=>{
-        controls[i].textContent=label+" · "+scoped.filter(item=>item.kind===id).length;
-        controls[i].setAttribute("aria-pressed",String(id===selection));
-      });
-      const rows=scoped.filter(item=>item.kind===selection && [item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
+      filters.forEach(([id],i)=>controls[i].setAttribute("aria-pressed",String(id===selection)));
+      const rows=groups.get(selection).filter(item=>[item.title,item.category,item.organizer].join(" ").toLowerCase().includes(term))
         .sort((a,b)=>selection==="award" ? b.date.localeCompare(a.date) :
           Number(a.deadline<today)-Number(b.deadline<today) || a.deadline.localeCompare(b.deadline));
       list.replaceChildren();

@@ -403,6 +403,8 @@ for path in sorted((ROOT / "data" / "matched-runways").glob("*.json.gz")):
                      "fabric": "", "color": "", "silhouette": "", "palette": [], "techniques": [],
                      "tags": [], "sources": [{"title": "本季系列", "url": row["url"]}],
                      "externalCollection": {"sourceUrl": row["url"], "matchedArchive": True}}
+            if row.get("packageImages"):
+                study.pop("externalCollection")
             catalog["studies"].append(study)
             if photos:
                 galleries[study["date"] + "-" + slug] = {"images": photos, "sourceUrl": row["url"]}

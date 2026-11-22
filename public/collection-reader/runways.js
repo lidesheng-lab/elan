@@ -74,7 +74,11 @@ function showIndex(target, shows) {
     listState = {search:search.value,year:year.value,limit:24};
     draw();
   }
-  search.oninput = filter; year.onchange = filter;
+  search.oninput = () => {
+    if (search.value.trim() && year.value === "current") year.value = "";
+    filter();
+  };
+  year.onchange = filter;
   more.onclick = () => {listState.limit += 24; draw();};
   target.replaceChildren(heading,toolbar,grid,more); draw();
 }

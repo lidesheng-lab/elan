@@ -25,7 +25,17 @@ function runwaySeason(label) {
   const match = label.match(/(20\d{2})(?:\/(?:20)?\d{2})?\s*(春夏|秋冬)/);
   return match ? match[1] + " " + match[2] : "";
 }
-let listState = {search:"", year:"current", limit:24};
+const indexStateKey = "elanRunwayIndex";
+function readIndexState() {
+  let saved = history.state?.[indexStateKey];
+  try { saved ??= JSON.parse(sessionStorage.getItem(indexStateKey)); } catch {}
+  return {
+    search: typeof saved?.search === "string" ? saved.search : "",
+    year: typeof saved?.year === "string" ? saved.year : "current",
+    limit: Number.isSafeInteger(saved?.limit) && saved.limit >= 24 ? saved.limit : 24,
+    scroll: Number.isFinite(saved?.scroll) && saved.scroll > 0 ? saved.scroll : 0,
+  };
+}
 function brandAnchor([label, url]) {
   const anchor = link(url, label, "text-action");
   anchor.target = "_blank";
@@ -33,6 +43,11 @@ function brandAnchor([label, url]) {
   return anchor;
 }
 function showIndex(target, shows) {
+  let listState = readIndexState();
+  function saveIndexState() {
+    try { sessionStorage.setItem(indexStateKey, JSON.stringify(listState)); } catch {}
+    try { history.replaceState({...history.state, [indexStateKey]:listState}, ""); } catch {}
+  }
   const heading = element("h1","品牌索引");
   const search = element("input");
   search.type = "search";
@@ -71,7 +86,8 @@ function showIndex(target, shows) {
     more.hidden = rows.length <= listState.limit;
   }
   function filter() {
-    listState = {search:search.value,year:year.value,limit:24};
+    listState = {search:search.value,year:year.value,limit:24,scroll:0};
+    saveIndexState();
     draw();
   }
   search.oninput = () => {
@@ -79,8 +95,16 @@ function showIndex(target, shows) {
     filter();
   };
   year.onchange = filter;
-  more.onclick = () => {listState.limit += 24; draw();};
+  more.onclick = () => {listState.limit += 24; saveIndexState(); draw();};
+  grid.addEventListener("click", event => {
+    if (!event.target.closest(".show-card")) return;
+    listState.scroll = window.scrollY;
+    saveIndexState();
+  });
   target.replaceChildren(heading,toolbar,grid,more); draw();
+  if (listState.scroll) requestAnimationFrame(() => {
+    if (grid.isConnected) window.scrollTo(0, listState.scroll);
+  });
 }
 function appendFilm(target, show) {
   const film = show.film;

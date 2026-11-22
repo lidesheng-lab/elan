@@ -289,29 +289,21 @@ function showDetail(target, show, favorite, readFile) {
     if(event.key==="ArrowLeft" && active>0)select(active-1);
     if(event.key==="ArrowRight" && active+1<show.images.length)select(active+1);
   };
-  let shown=0;
-  const more=element("button","查看更多造型","member-secondary");
-  function batch() {
-    const stop=Math.min(shown+24,show.images.length);
-    while (shown<stop) {
-      const i=shown++, look=show.images[i], label=look.number ? "Look "+look.number : "造型 "+(i+1);
-      const figure=element("figure");
-      const a=link(look.url);
-      a.target="_blank";a.rel="noopener noreferrer";
-      const img=picture(look.thumbnailUrl || look.url,show.brand+" · "+label,i>=6);
-      img.onerror=()=>{img.onerror=null;if(img.src!==look.url)img.src=look.url;};
-      if(i===0 && show.cover)img.src=show.cover;
-      a.onclick=event=>{
-        if(event.metaKey || event.ctrlKey || event.shiftKey || typeof viewer.showModal!=="function")return;
-        event.preventDefault();openLook(i);
-      };
-      a.append(img);figure.append(a,element("figcaption",label));grid.append(figure);
-    }
-    more.hidden=shown>=show.images.length;
-  }
-  more.onclick=batch;
-  target.append(grid,more);
-  batch();
+  show.images.forEach((look, i) => {
+    const label=look.number ? "Look "+look.number : "造型 "+(i+1);
+    const figure=element("figure");
+    const a=link(look.url);
+    a.target="_blank";a.rel="noopener noreferrer";
+    const img=picture(look.thumbnailUrl || look.url,show.brand+" · "+label,i>=6);
+    img.onerror=()=>{img.onerror=null;if(img.src!==look.url)img.src=look.url;};
+    if(i===0 && show.cover)img.src=show.cover;
+    a.onclick=event=>{
+      if(event.metaKey || event.ctrlKey || event.shiftKey || typeof viewer.showModal!=="function")return;
+      event.preventDefault();openLook(i);
+    };
+    a.append(img);figure.append(a,element("figcaption",label));grid.append(figure);
+  });
+  target.append(grid);
   if (show.film) {
     appendFilm(target, show);
   } else {

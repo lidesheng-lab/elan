@@ -3,6 +3,7 @@ import { favoriteControl, publicDetailHref, shareControl, mountTrendDiscussion, 
 
 const api = "https://elan-d8gtdxsaw5a7788d2-1507516836.ap-shanghai.app.tcloudbase.com/newsletter";
 const storageKey = "elan-member-session";
+const profileKey = "elan-member-view-v1";
 const root = document.getElementById("root");
 const sessionPattern = /^[A-Za-z0-9_-]{43}$/;
 const setPasswordPattern = /^#set-password\/([a-f0-9]{64})\/([A-Za-z0-9_-]{43})$/;
@@ -68,7 +69,16 @@ async function request(body, signal, credentials = session) {
   const response = await fetch(api, { method: "POST", headers, body: JSON.stringify(body),
     signal: signal || AbortSignal.timeout(15000) });
   const result = await response.json();
+  if (credentials && credentials === session && response.status === 401) {
+    clearSession();
+    entry();
+  }
   if (!response.ok) throw Object.assign(new Error(result.error || "操作暂不可用，请稍后再试。"), { status: response.status });
+  if (credentials && credentials === session && body.memberAction === "communityAccount" &&
+      account && typeof result.premium === "boolean" && account.premium !== result.premium) {
+    account.premium = result.premium;
+    saveMemberView();
+  }
   return result;
 }
 
@@ -557,7 +567,11 @@ async function showTrendArticles(target) {
 function feed(path, timeout = 12000) {
   if (!feeds.has(path)) {
     feeds.set(path, fetch(path, { signal: AbortSignal.timeout(timeout) }).then(response => {
-      if (!response.ok) throw Object.assign(new Error("feed"), { status:response.status });
+      if (credentials && credentials === session && response.status === 401) {
+    clearSession();
+    entry();
+  }
+  if (!response.ok) throw Object.assign(new Error("feed"), { status:response.status });
       return response.json();
     }).catch(error => { feeds.delete(path); throw error; }));
   }
@@ -633,7 +647,18 @@ function expireReader() {
   if (protectedSection(publicRoute()) && !canReadCollections() && root.querySelector(".public-collection-reader")) entry();
 }
 document.addEventListener("visibilitychange", expireReader);
-window.addEventListener("pageshow", expireReader);
+window.addEventListener("pageshow", event => {
+  if (event.persisted) {
+    const active = stored("sessionStorage", storageKey) || stored("localStorage", storageKey);
+    if (active !== session) { location.reload(); return; }
+    if (session) {
+      const wasAllowed = canReadCollections();
+      restoreMemberView();
+      if (!wasAllowed && canReadCollections() && protectedSection(publicRoute())) entry();
+    }
+  }
+  expireReader();
+});
 function entry() {
   surface = "public";
   const current = wantsAdmin() && !account && !accessRoutes.has(publicRoute()) ? "login" : publicRoute();
@@ -674,7 +699,7 @@ function entry() {
       account ? '<a class="primary" href="#redeem">兑换体验码</a> <a class="text-action" href="#upgrade">申请高级会员</a>' :
       '<a class="primary" href="#register">注册体验</a> <a class="text-action" href="#login">会员登录</a>');
   } else if (readerSections.has(route)) {
-    content = '<div class="public-collection-reader"><p role="status">正在打开栏目…</p></div>';
+    content = '<div class="public-collection-reader"></div>';
   } else if (route === "redeem") {
     content = !account ? lockedPreview("兑换体验码", "登录后可为当前账号兑换品牌索引和美妆体验时间。",
       '<a class="primary" href="#login">会员登录</a>') : account.premium ?
@@ -744,6 +769,7 @@ function entry() {
     try {
       const result = await request({memberAction:"redeemTrial", code:redeemForm.elements.code.value.trim()});
       setTrialDeadline(result);
+      saveMemberView();
       if (!redeemForm.isConnected) return;
       const end = new Date(result.trialEndsAt).toLocaleString("zh-CN", {hour12:false});
       message.textContent = (result.repeated ? "此码已兑换到当前账号。" : "兑换成功。") + "体验到期时间为 " + end + "（本地时间）。";
@@ -805,7 +831,29 @@ function setPasswordPage(id, token) {
     message("密码已保存，请登录。");
   });
 }
+function viewStorage() {
+  return stored("localStorage", storageKey) === session ? "localStorage" : "sessionStorage";
+}
+function saveMemberView() {
+  if (!session || !account) return;
+  const until = Date.now() + Math.max(0, trialDeadline - performance.now());
+  const view = {session, email:account.email, premium:!!account.premium, admin:account.admin === true, until};
+  stored(viewStorage(), profileKey, JSON.stringify(view));
+}
+function restoreMemberView() {
+  try {
+    const view = JSON.parse(stored(viewStorage(), profileKey));
+    if (view?.session !== session || typeof view.email !== "string" || !Number.isFinite(view.until)) return false;
+    account = {email:view.email, premium:view.premium === true, admin:view.admin === true};
+    setTrialDeadline({trialEndsAt:view.until, serverNow:Date.now()});
+    return true;
+  } catch { return false; }
+}
 function clearSession() {
+  if (session) stored(viewStorage(), profileKey, "");
+  clearTimeout(expiryTimer);
+  trialDeadline = 0;
+  account = null;
   stored("sessionStorage",storageKey,"");
   if (stored("localStorage",storageKey) === session) stored("localStorage",storageKey,"");
   session = "";
@@ -831,11 +879,13 @@ function setTrialDeadline(result) {
   if (!account?.premium && remaining) expiryTimer = setTimeout(expireReader, remaining + 10);
 }
 async function loadMember() {
-  panel("会员中心", "正在读取会员权限…", "");
+  const requestedSession = session;
   try {
     const profile = await request({ memberAction: "profile" });
+    if (session !== requestedSession) return;
     account = profile;
     setTrialDeadline(profile);
+    saveMemberView();
     if (profile.admin===true && wantsAdmin()) await adminPanel(profile);
     else if(wantsAdmin()) {
       history.replaceState(null,"","/#profile");
@@ -844,6 +894,7 @@ async function loadMember() {
 
     else entry();
   } catch (error) {
+    if (session !== requestedSession) return;
     if ([401,403].includes(error.status)) {
       clearSession();
       session = "";
@@ -868,7 +919,18 @@ async function readCollectionFile(path) {
   if (!response.ok) throw Error("资料暂时无法读取");
   const bytes = new Uint8Array(await response.arrayBuffer());
   const wrapped = btoa(String.fromCharCode(...bytes.subarray(0,256)));
-  const {key} = await request({memberAction:"collectionKey", wrapped});
+  let key;
+  try {
+    ({key} = await request({memberAction:"collectionKey", wrapped}));
+  } catch (error) {
+    if (error.status === 403 && account) {
+      account.premium = false;
+      setTrialDeadline({trialEndsAt:0, serverNow:0});
+      saveMemberView();
+      expireReader();
+    }
+    throw error;
+  }
   const raw = Uint8Array.from(atob(key), c => c.charCodeAt(0));
   const aes = await crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["decrypt"]);
   const data = await crypto.subtle.decrypt({name:"AES-GCM",iv:bytes.subarray(256,268)}, aes, bytes.subarray(268));
@@ -1030,5 +1092,5 @@ if (setup) {
   setPasswordPage(setup[1], setup[2]);
 }
 else if (newsletter) confirmLink(newsletter[1], newsletter[2], newsletter[3]);
-else if (session) void loadMember();
+else if (session && (wantsAdmin() || !restoreMemberView())) void loadMember();
 else entry();

@@ -881,7 +881,7 @@ async function mountPublicCollection(target) {
     if (route === "designers") {
       const {showRunways} = await import("/collection-reader/runways.js");
       if (target.isConnected) await showRunways(target, sectionDetail(),
-        slug => favoriteControl(request, "runway", slug, Boolean(account)), readCollectionFile);
+        slug => favoriteControl(request, "runway", slug, Boolean(account)), readCollectionFile, account?.email);
       return;
     }
     const {mountReader} = await import("/collection-reader/reader.js?v=member15");

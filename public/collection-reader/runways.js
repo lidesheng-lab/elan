@@ -42,7 +42,7 @@ function brandAnchor([label, url]) {
   anchor.rel = "noopener noreferrer";
   return anchor;
 }
-function showIndex(target, shows) {
+function showIndex(target, shows, email) {
   let listState = readIndexState();
   function saveIndexState() {
     try { sessionStorage.setItem(indexStateKey, JSON.stringify(listState)); } catch {}
@@ -66,6 +66,54 @@ function showIndex(target, shows) {
   year.value = !latest && listState.year === "current" ? "" : listState.year;
   const toolbar = element("div",null,"show-filters");
   toolbar.append(search,year);
+  const historyKey = "elanRunwaySearches:" + (email || "").trim().toLowerCase();
+  let recent = [];
+  function readRecent() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(historyKey) || "[]");
+      if (Array.isArray(saved)) recent = saved.filter(term => typeof term === "string" && term.trim()).slice(0, 20);
+    } catch {}
+  }
+  const records = element("details");
+  const summary = element("summary", "最近搜索");
+  const choices = element("div", null, "show-filters");
+  records.append(summary, choices);
+  function rememberSearch() {
+    const term = search.value.trim();
+    if (!term) return;
+    readRecent();
+    const key = term.normalize("NFKC").toLowerCase();
+    recent = [term, ...recent.filter(old => old.normalize("NFKC").toLowerCase() !== key)].slice(0, 20);
+    records.hidden = false;
+    try { localStorage.setItem(historyKey, JSON.stringify(recent)); } catch {}
+  }
+  readRecent();
+  records.hidden = !recent.length;
+  records.ontoggle = () => {
+    if (!records.open) return;
+    readRecent();
+    choices.replaceChildren();
+    for (const term of recent) {
+      const button = element("button", term, "member-secondary");
+      button.type = "button";
+      button.onclick = () => {
+        search.value = term;
+        year.value = "";
+        filter();
+        rememberSearch();
+        records.open = false;
+      };
+      choices.append(button);
+    }
+  };
+  search.onfocus = () => { records.open = false; };
+  search.onchange = rememberSearch;
+  search.onkeydown = event => {
+    if (event.key === "Enter" && !event.isComposing && event.keyCode !== 229) {
+      rememberSearch();
+      search.blur();
+    }
+  };
   const grid = element("div",null,"show-cards");
   const more = element("button","显示更多系列","member-secondary");
   function draw() {
@@ -98,10 +146,11 @@ function showIndex(target, shows) {
   more.onclick = () => {listState.limit += 24; saveIndexState(); draw();};
   grid.addEventListener("click", event => {
     if (!event.target.closest(".show-card")) return;
+    rememberSearch();
     listState.scroll = window.scrollY;
     saveIndexState();
   });
-  target.replaceChildren(heading,toolbar,grid,more); draw();
+  target.replaceChildren(heading,toolbar,records,grid,more); draw();
   if (listState.scroll) requestAnimationFrame(() => {
     if (grid.isConnected) window.scrollTo(0, listState.scroll);
   });
@@ -292,7 +341,7 @@ function showDetail(target, show, favorite, readFile) {
     target.append(slides);paint();
   }
 }
-export async function showRunways(target, slug, favorite, readFile) {
+export async function showRunways(target, slug, favorite, readFile, email) {
   target.classList.add("runway-media");
   try {
     const data=await (await readFile(slug ? "shows/"+encodeURIComponent(slug)+".json" : "shows.json")).json();
@@ -301,7 +350,7 @@ export async function showRunways(target, slug, favorite, readFile) {
       location.replace("/designers/" + encodeURIComponent(data.slug) + "/");
       return;
     }
-    if(slug) showDetail(target,data,favorite,readFile);else showIndex(target,data);
+    if(slug) showDetail(target,data,favorite,readFile);else showIndex(target,data,email);
   } catch {
     if(target.isConnected)target.replaceChildren(element("p","系列暂时无法读取。"),link("/#designers","返回品牌索引"));
   }

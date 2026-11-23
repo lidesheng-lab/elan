@@ -567,11 +567,7 @@ async function showTrendArticles(target) {
 function feed(path, timeout = 12000) {
   if (!feeds.has(path)) {
     feeds.set(path, fetch(path, { signal: AbortSignal.timeout(timeout) }).then(response => {
-      if (credentials && credentials === session && response.status === 401) {
-    clearSession();
-    entry();
-  }
-  if (!response.ok) throw Object.assign(new Error("feed"), { status:response.status });
+      if (!response.ok) throw Object.assign(new Error("feed"), { status: response.status });
       return response.json();
     }).catch(error => { feeds.delete(path); throw error; }));
   }

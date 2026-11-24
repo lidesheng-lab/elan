@@ -668,7 +668,9 @@ function entry() {
   const route = access ? "home" : current;
   pageHash = access ? "#home" : location.hash;
   const activeSection = route;
-  if (detailRoute) document.title = currentRoute() === detailRoute ? detailTitle : (sections.find(([key]) => key === route)?.[1] || "首页") + "｜ÉLAN";
+  const sectionLabel = sections.find(([key]) => key === route)?.[1];
+  if (detailRoute) document.title = currentRoute() === detailRoute ? detailTitle : (sectionLabel || "首页") + "｜ÉLAN";
+  else document.title = sectionLabel && route !== "home" ? sectionLabel + "｜ÉLAN" : detailTitle;
   const navigation = sections.map(([key, label]) =>
     `<a href="#${key}"${activeSection === key ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   let content;

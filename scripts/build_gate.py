@@ -487,8 +487,10 @@ for media_file in sorted((ROOT / "data" / "runway-galleries").glob("*.json.gz"))
     runway_version.update(media_file.read_bytes())
 runway_script.write_text(runway_script.read_text().replace("RUNWAY_DATA_VERSION", runway_version.hexdigest()[:12]))
 entry_js = entry_js.replace('"/collection-reader/runways.js"', '"/' + versioned("collection-reader/runways.js") + '"')
+static_imports = []
 for module in ("community.js", "photo-viewer.js"):
-    entry_js = entry_js.replace(f'"./{module}"', f'"./{fingerprinted(module)}"')
+    static_imports.append(fingerprinted(module))
+    entry_js = entry_js.replace(f'"./{module}"', f'"./{static_imports[-1]}"')
 if public_contests:
     entry_js = entry_js.replace("./public-contests.json", "/" + versioned("public-contests.json"))
 entry_js = entry_js.replace("trend-articles.json?view=current", versioned("trend-articles.json"))
@@ -500,6 +502,9 @@ entry_module = fingerprinted("member-entry.js")
 for asset in ("site.css", "favicon.svg"):
     shell = shell.replace(f'./{asset}"', f'./{versioned(asset)}"')
 shell = shell.replace('./member-entry.js"', f'./{entry_module}"')
+# Fetch the entry module and its static imports in parallel instead of as a waterfall.
+preloads = "".join(f'  <link rel="modulepreload" href="./{name}">\n' for name in (entry_module, *static_imports))
+shell = shell.replace("</head>", preloads + "</head>", 1)
 (OUT / "index.html").write_text(shell, encoding="utf-8")
 
 stylesheet = versioned("site.css")
@@ -509,3 +514,14 @@ for article in public_articles:
     trend_share_page(OUT, article, stylesheet, entry_module, share_page_version)
 
 runway_share_pages(OUT, json.loads((reader_dir / "shows.json").read_text()), stylesheet, entry_module, share_page_version)
+
+# Let search engines discover the crawlable share pages (the main reader uses #hash routes).
+SITE_ORIGIN = "https://elan.lidesheng.art"
+share_urls = sorted(f"{SITE_ORIGIN}/{page.parent.relative_to(OUT).as_posix()}/"
+                    for section in ("trends", "contests", "designers") if (OUT / section).is_dir()
+                    for page in (OUT / section).glob("*/index.html"))
+(OUT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + "".join(f"<url><loc>{url}</loc></url>\n" for url in [SITE_ORIGIN + "/", *share_urls])
+    + "</urlset>\n", encoding="utf-8")
+(OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE_ORIGIN}/sitemap.xml\n", encoding="utf-8")

@@ -1,38 +1,64 @@
 {
-  "week": "2026-11-16",
+  "week": "2026-11-23",
   "headlines": [
     {
-      "title": "Sacai 将在香港呈现 2027 春夏系列",
-      "summary": "品牌宣布将于 12 月 13 日在香港汇丰总行大厦举行秀场。对关注亚洲时装活动的读者，这是一次在香港观看该系列呈现的机会。",
+      "title": "旧金山开幕｜Azzedine Alaïa 怎样用布料塑形",
+      "summary": "11 月 21 日，旧金山荣誉军团博物馆迎来 Alaïa 在美国的首个大型回顾展。展览把他亲自制版、裁剪和试身的作品，与他收藏的 Balenciaga、Vionnet 等设计并置，展至 2027 年 4 月 11 日。",
       "source": {
-        "title": "Hypebeast · 11 月 18 日报道",
-        "url": "https://hypebeast.com/2026/11/sacai-present-ss27-collection-runway-show-hong-kong-announcement"
+        "title": "Azzedine Alaïa 基金会｜Sculpting Fashion 展览说明",
+        "url": "https://fondationazzedinealaia.org/en/expositions/34631/"
       }
     },
     {
-      "title": "Willy Chavarria 推出首批手袋",
-      "summary": "Bronca 和 W Slouch 两款于 11 月 17 日推出，此前都出现在品牌 2027 春夏男装秀上。可以从这一例观察秀场配饰如何独立成为商品品类。",
+      "title": "品牌动向｜Marc by Marc Jacobs 正筹备回归",
+      "summary": "《Vogue》11 月 24 日刊出对原设计团队的口述采访，并报道这条于 2015 年并入主线的副线正计划在 2027 年回归。首个系列的发布日期和产品细节尚未公布。",
       "source": {
-        "title": "Vogue · 11 月 17 日报道",
-        "url": "https://www.vogue.com/article/willy-chavarria-debuts-his-dream-bitchy-little-bags"
+        "title": "Vogue｜Marc by Marc Jacobs 原团队口述史",
+        "url": "https://www.vogue.com/article/marc-by-marc-jacobs-oral-history-2026"
       }
     },
     {
-      "title": "国内赛事截稿提醒｜“我心中的百鸟衣”壮锦服饰创新设计大赛",
-      "summary": "线上投稿截至 11 月 25 日，线下材料须在 12 月 1 日前送达。实物和设计方案分组征集，报名前可在章程核对各组所需材料。",
+      "title": "国内截稿提醒｜罗敷杯拖鞋设计 11 月 30 日截止",
+      "summary": "广东鞋业厂商会主办的第四届罗敷杯仍在征稿。做楔形厚底或雕塑鞋底的参赛者，除了画出侧面轮廓，还应在方案中交代重心、重量和行走稳定性，这些都列在该赛道的评审要求中。",
       "source": {
-        "title": "大赛征集章程",
-        "url": "https://dasai.cfw.cn/ds/1372.html"
+        "title": "罗敷杯组委会｜征稿章程、赛道要求与报名入口",
+        "url": "https://dasai.cfw.cn/ds/1337.html"
       }
     },
     {
-      "title": "国际赛事征稿｜新西兰 World of WearableArt 2027",
-      "summary": "比赛面向全球设计师、艺术家及首次参赛的创作者。入围作品将在惠灵顿参加舞台展演，主办方提供参赛流程与各阶段交件时间。",
+      "title": "国际截稿提醒｜新西兰 iD 新锐设计师奖第二轮即将截止",
+      "summary": "2027 届 iD 国际新锐设计师奖第二轮于 11 月 30 日截止。首轮落选的申请会自动进入第二轮复评；尚未申请的设计师可从主办方公告进入报名。入围者将有机会在但尼丁时装周展示作品。",
       "source": {
-        "title": "WOW 官方征稿公告",
-        "url": "https://www.worldofwearableart.com/content-hub/2027-wow-competition-open"
+        "title": "iD Dunedin Fashion｜两轮报名日期与参赛说明",
+        "url": "https://www.idfashion.co.nz/news/awards-open"
       }
     }
   ],
-  "trends": []
+  "trends": [
+    {
+      "id": "aw26-shaping-volume-below-the-waist",
+      "category": "silhouette",
+      "date": "2026-11-26",
+      "season": "2026 秋冬",
+      "kind": "已发表系列",
+      "title": "收腰以后，衣服从哪里开始变宽？",
+      "description": "同样用腰带收住上身，Skall Studio 让外套盖过髋骨，长度来自腰下那段平整的前身；Nicklas Skovgaard 在腰带下接一圈短摆，黑布向两侧翻出，窄腰随即衬出髋宽。",
+      "application": "复制同一件齐髋上衣的纸样，保持腰围和总放摆量一致。一版把增量分散到纵向分割线，另一版集中到腰下短摆，再从侧面比较两件样衣最先离开身体的位置。",
+      "palette": [],
+      "sources": [
+        {
+          "title": "ÉLAN｜三套实拍造型与纸样试验",
+          "url": "https://elan.lidesheng.art/trends/aw26-shaping-volume-below-the-waist/"
+        },
+        {
+          "title": "哥本哈根时装周｜Skall Studio 秋冬图集",
+          "url": "https://cphfw.presscloud.com/digitalshowroom/#/gallery/skall-studio"
+        },
+        {
+          "title": "哥本哈根时装周｜Nicklas Skovgaard 秋冬图集",
+          "url": "https://cphfw.presscloud.com/digitalshowroom/#/gallery/nicklas-skovgaard"
+        }
+      ]
+    }
+  ]
 }
